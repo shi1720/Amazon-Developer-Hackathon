@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "protocol": "2025-11-25",
+  "transport": "Streamable HTTP",
+  "calls": 15,
+  "revision": 7,
+  "latency": {
+    "medianMs": 25,
+    "p95Ms": 56
+  },
+  "checks": [
+    "end-to-end recovery",
+    "exact actor authorization",
+    "dependency gating",
+    "same-request retry",
+    "idempotency collision",
+    "stale revision",
+    "persistence",
+    "cross-origin rejection",
+    "missing auth rejection"
+  ]
+}

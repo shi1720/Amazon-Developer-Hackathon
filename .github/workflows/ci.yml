@@ -1,0 +1,28 @@
+name: Verify KindHandoff
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run db:local
+      - name: Exercise live MCP and separate helper sessions
+        run: |
+          npm run dev -- --host 127.0.0.1 --port 3001 > /tmp/kindhandoff-dev.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3001/ > /dev/null; then break; fi
+            sleep 1
+          done
+          BASE_URL=http://127.0.0.1:3001 npm run test:integration
+          BASE_URL=http://127.0.0.1:3001 npm run test:e2e

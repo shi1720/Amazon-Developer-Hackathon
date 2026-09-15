@@ -1,0 +1,108 @@
+<div align="center">
+
+# KindHandoff
+### Care, carried forward.
+
+**One cancellation. Two commitments. A workable afternoon.**
+
+Created by **Shivam Gupta** for the Amazon Developer Hackathon 2026.
+
+[MIT License](LICENSE) · [Demo script](docs/demo-script.md) · [Architecture](docs/architecture.md) · [Product feedback](docs/product-feedback.md) · [Business case](docs/market-and-business.md)
+
+</div>
+
+KindHandoff helps families repair everyday support plans when someone becomes unavailable. It finds feasible replacements, keeps offers open until the named helpers accept, and shows whether the next step is actually ready.
+
+**Alexa+ primary track:** a working, explicitly labelled browser simulation calling a real **MCP 2025-11-25 server over Streamable HTTP**. No API key or paid model is required. Native Alexa+ deployment is a separate, documented integration step; this submission does not claim it.
+
+![KindHandoff on mobile](docs/screenshots/mobile.png)
+
+## The afternoon that explains the product
+
+Maya cannot make it. Her 14:30 library-bag task and 15:00 ride both need a new handoff. Jo can access the home but cannot drive; Dev can drive but is available only from 14:45. KindHandoff proposes **Jo for the bag, Dev for the ride**. Each person accepts their own offer. The ride stays waiting until the bag is recorded complete.
+
+A calendar can show two names. A workable plan also needs agreement, prerequisites, and a clear record of what changed.
+
+## Try it in five minutes
+
+Requires Node.js **22.13 or later** and npm. The database is local; no cloud account or API key is needed for the demo.
+
+```sh
+npm ci
+npm run db:local
+npm run dev -- --host 127.0.0.1 --port 3001
+```
+
+Open [the local app](http://localhost:3001). Each browser receives its own synthetic household. Local development may provide a development sign-in identity; it is not proof of production authentication.
+
+1. Select **“I can’t make it this afternoon.”** in Maya's demo role.
+2. Review the helper, interval, and two affected commitments. Confirm the change.
+3. Review the proposed replacement plan and create the two offers.
+4. Switch to Jo and accept the bag. Switch to Dev and accept the ride. The pending count only drops after acceptance.
+5. Dev's ride is waiting for the bag. As Jo, complete the bag; the ride becomes ready.
+6. Open the handoff brief and acknowledge that content version. Add a note to see why a previous acknowledgment becomes out of date.
+7. Open **Settings → MCP** to inspect real tool calls and generate a scoped external-client token.
+
+**Prove separate identities:** use **Your circle → Invite** to create Jo and Dev invitation links, then open each in a separate browser profile. Invitations sign in the intended helper once. Helper sessions have no role switch. The included four-session test runs this exact flow without impersonation.
+
+## A usable household workflow
+
+- **Coordinator sign-in:** ChatGPT sign-in on Sites; create a blank personal circle.
+- **Helpers:** named profiles, capability and availability windows, private single-use invitations, revocation.
+- **Commitments:** title, practical details, explicit dates/times, required capabilities and earlier prerequisites.
+- **Recovery:** constrained replacement search with visible exclusions; coordinator review before offers.
+- **Acceptance:** the proposed helper accepts or declines; every write is authorized and version checked.
+- **Handoff brief:** attributed notes, unresolved offers, dependency readiness, acknowledgments of an exact content version.
+- **Control:** refresh, activity history, JSON export and confirmed circle deletion.
+- **Accessibility:** keyboard-operable forms, semantic tabs/dialogs, responsive layouts, reduced motion, typed alternative to microphone input.
+
+The microphone uses the browser's speech recognition service when supported. The transcript is reviewed before sending. The language interpreter supports a defined set of requests; it is not a general-purpose LLM. No audio is stored by the application.
+
+## Technology with a job to do
+
+| Layer | Implementation | Purpose |
+|---|---|---|
+| Product | React 19, Vinext, shared accessible primitives | One coherent coordinator/helper experience |
+| MCP | Official TypeScript SDK 1.30; Web Standard Streamable HTTP | Same tools from browser and external MCP clients |
+| Rules | TypeScript + Zod; deterministic bounded planner | Explicit constraints and reviewed state changes |
+| Persistence | Cloudflare D1, SQL migrations, atomic compare-and-swap | Durable, household-scoped state and safe concurrent edits |
+| Login | Sites ChatGPT identity; hashed helper/token credentials | Persistent coordinator identity and scoped helper access |
+| Hosting | Sites Worker deployment | Managed HTTPS and D1 binding |
+
+[Architecture and invariants](docs/architecture.md) · [MCP integration guide](integrations/alexa/README.md) · [Security and operating limits](SECURITY.md)
+
+## Verification
+
+```sh
+npm run check             # lint, typecheck, unit tests, production build
+# With the development server running in another terminal:
+npm run test:integration  # actual SDK initialize + tool calls + failure cases
+npm run test:e2e          # four independent sessions, invitations and authorization
+```
+
+Set `BASE_URL` to test a reachable deployment. The integration tests create only fresh synthetic demo households. They never reset a personal circle or print invitation/token secrets.
+
+Recorded evidence is in [docs/evidence](docs/evidence). It includes MCP protocol/transport, separate-session authorization, dependency rejection, retry behavior, stale writes, atomic token rotation, and persisted results. Latencies in local reports are observations from a local test, not production benchmarks.
+
+## Additional open-source contribution
+
+**[@kindhandoff/guard](https://github.com/shi1720/kindhandoff-guard)** is an additional MIT-licensed, dependency-free library for auditable commitment transitions, coverage accounting and candidate ranking. The app imports its vendored source in `packages/handoff-guard`; task dependencies and brief content revisions belong to the application layer. See [contribution notes](docs/open-source-contribution.md).
+
+## Commercial case
+
+Our first audience is a working adult coordinating routine support for a parent with two or more helpers. We plan to test **$12 per household per month, every helper included**. There are no customer, revenue, or time-saving claims. The [business case](docs/market-and-business.md) names competitors, explains the narrow distinction, models costs with explicit assumptions, and defines [customer discovery and pilot stop/go criteria](docs/customer-discovery.md).
+
+## Submission kit
+
+- [Devpost copy and release checklist](docs/devpost-submission.md)
+- [Word-for-word English narration and timed recording plan](docs/demo-script.md)
+- [Editable pitch deck](docs/deliverables/KindHandoff-Pitch.pptx) · [Pitch PDF](docs/deliverables/KindHandoff-Pitch.pdf)
+- [Two-page judge brief](docs/deliverables/KindHandoff-Judge-Brief.pdf)
+- [Product feedback and observed friction log](docs/product-feedback.md)
+- [Rubric review and changes](docs/rubric-review.md)
+
+All product code and submission materials were created during September 2026 for this entry. Shared framework dependencies and their licenses remain their authors' work. KindHandoff is MIT licensed; attribution to Shivam Gupta appears in the product, repository, and submission materials.
+
+## Current scope
+
+This is a working, tested MVP for practical support, with production deployment work documented in [release status](docs/release-status.md). It has not undergone a clinical, privacy-compliance, independent security, or production-load certification. It does not monitor emergencies, make medication decisions, infer real-world completion, or automatically send notifications. The pilot must validate household adoption and operational costs before a paid launch.
