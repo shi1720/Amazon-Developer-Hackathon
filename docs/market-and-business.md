@@ -5,6 +5,8 @@
 **Business and market brief · 15 September 2026**  
 **Status:** Pre-pilot product hypothesis. No customer interviews, revenue, retention, or measured savings are claimed in this document.
 
+**Release target:** Firebase project `kindhandoff`, with planned public URL [kindhandoff.web.app](https://kindhandoff.web.app). The Firebase migration is in progress; public deployment and the hosted sign-in flow are not yet claimed as verified here.
+
 ### The problem we are choosing
 
 A family can have plenty of goodwill and still have an uncovered afternoon. One person cancels a visit. A second can get into the house but cannot drive. A third can drive, but arrives too late to prepare what is needed. A group chat contains those facts; the coordinator must still assemble a workable plan and discover whether anyone actually agreed to it.
@@ -68,41 +70,75 @@ Amazon's former Alexa Together service is no longer available. KindHandoff shoul
 
 ### An explicit infrastructure-cost scenario
 
-This is arithmetic using published rates and stated assumptions—not measured KindHandoff performance, an invoice, or a complete cost of operating the business. It models the application API and D1 storage on a dedicated Workers Paid account. Actual managed hosting, authentication, support, and optional model charges must be checked separately.
+This is arithmetic using official published rates reviewed on 15 September 2026 and explicit assumptions. It is **not measured usage, a capacity test, an invoice, or a total operating-cost forecast**. The model includes the frequent refreshes that can make a coordination application more expensive than its number of user actions suggests.
 
-Cloudflare lists Workers Paid at **$5/account/month**, including 10 million monthly requests and 30 million CPU milliseconds; additional CPU is $0.02 per million milliseconds. The Free plan has a 100,000 daily request allowance and a 10 ms CPU limit per invocation. [Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/)
+#### Final stack and cost controls
 
-D1 Paid includes 25 billion monthly rows read, 50 million rows written, and 5 GB storage. Additional storage is $0.75/GB-month. D1 meters rows, not merely query count; indexes and query shape affect usage. [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/)
+The target runtime is **Firebase Hosting + Cloud Functions v2 + Firestore Standard + Firebase Authentication email/password**. The function configuration is `us-central1`, 256 MiB memory, 1 CPU, concurrency 40, zero minimum instances, two maximum instances, and a 30-second timeout. Firestore is the `(default)` Standard database in `us-central1`, with the free tier enabled. The runtime service account uses `datastore.user` and `firebaseauth.viewer`; identity and household membership remain separate application checks.
 
-#### Assumptions
+The existing Google Cloud billing account is linked because the server runtime requires the Blaze plan. Free allowances reduce eligible charges; linking billing does not make all future usage free. Zero minimum instances avoids paying to keep a baseline instance warm. Maximum instances is a scaling setting, not a total spending cap. The runtime has not been established to support the larger scenario below. [Firebase serverless hosting](https://firebase.google.com/docs/hosting/serverless-overview), [function resource and scaling controls](https://firebase.google.com/docs/functions/manage-functions)
 
-- 30 days per month.
-- 40 dynamic API requests per household per day, including ordinary reads and mutations.
-- 10 ms mean CPU per dynamic request, strictly a placeholder until profiling.
-- 50 D1 rows read per dynamic request.
-- Six committed changes per household per day, with five billable row writes per change, including an assumed allowance for supporting records and indexes.
-- 2 MB aggregate stored data per household, including current records, indexes, and a bounded event history. No audio/video uploads.
-- No paid model calls, SMS, transactional email, or other metered services in the scenario.
+#### Rates used — USD, on demand
 
-| Monthly scenario | 20 households | 1,000 households | 5,000 households |
+| Service | Allowance and unit price used |
+| --- | --- |
+| Cloud Functions v2 / Cloud Run, request-based billing in Iowa | 180,000 vCPU-seconds, 360,000 GiB-seconds, and 2 million requests per month. Beyond these: $0.000024/vCPU-second, $0.0000025/GiB-second, and $0.40/million requests. The allowance is shared across projects on the billing account. [Pricing](https://cloud.google.com/run/pricing) |
+| Firestore Standard, Iowa | The eligible default database includes 50,000 reads, 20,000 writes, and 20,000 ordinary deletes per day, plus 1 GiB storage. Excess operations cost $0.03/$0.09/$0.01 per 100,000 respectively. Excess storage is $0.000205479/GiB-hour; this model uses 720 hours. [Pricing](https://cloud.google.com/firestore/pricing) |
+| Firebase Hosting | Model 10 GB/month transfer and 10 GB stored at no charge; excess transfer $0.15/GB and storage $0.026/GB-month. [Hosting usage and pricing](https://firebase.google.com/docs/hosting/usage-quotas-pricing) |
+| Firebase Authentication | Ordinary email/password authentication has no usage charge in the published Firebase plan. If upgraded to Identity Platform, the current email/social allowance is 50,000 monthly active users; this model stays below it. No phone authentication or SMS. [Firebase pricing](https://firebase.google.com/pricing), [Auth usage limits](https://firebase.google.com/docs/auth#usage_limits) |
+
+Use the **v2** pricing reference: Google's functions pricing overview directs current Cloud Run functions to Cloud Run pricing, separately from first generation. Do not mix first-generation CPU or memory allowances into this configuration. [Functions pricing overview](https://cloud.google.com/functions/pricing-overview)
+
+#### Load, queries, and retention assumptions
+
+- **Household activity:** Four active people per household; each opens one 15-minute visible session per day. Assume an initial refresh plus 75 scheduled refreshes at 12-second intervals: **304 household refreshes/day**. Polling stops while the page is hidden. This is an intentionally active pilot scenario, not observed engagement.
+- **Refresh cost:** Two HTTP requests per refresh, covering session and circle reads. Budget **five Firestore document reads per refresh**, pending measured telemetry. This gives 608 HTTP requests and 1,520 reads per household/day.
+- **MCP actions:** Six actions per household/day. Budget three HTTP requests per action for initialization, discovery, and the tool call; **20 total document reads per action** cover its authentication, state, and transaction work. Actual client session reuse and exact read counts are not yet measured.
+- **Other requests:** Twelve additional API requests per household/day at five reads each for miscellaneous views, invitation handling, or retries. Total budget: **638 HTTP requests and 1,700 document reads per household/day**. This is more conservative than counting one database read per user action; it remains an assumption, not a guarantee.
+- **Writes:** Six committed changes per household/day, with three document writes per change: **18 writes/day**. Adjust for the actual transaction shape and retries after instrumentation.
+- **Function time:** **0.3 seconds of allocated billable time per HTTP request**, at 1 CPU and 0.25 GiB. This placeholder includes database waiting and a startup/retry allowance. It is not a CPU-profile result. The model assumes no concurrency savings; overlapping requests can share an instance, but slow calls or cold starts can raise time. Long-lived idle streams are excluded.
+- **Stored data:** **2 MiB aggregate per household**, including current records, indexes, and a proposed 90-day event history. No audio/video upload. Assuming one event per committed change, bounded retention eventually needs six ordinary event deletions per household/day. Retention is a proposed operational policy; this document does not claim that an automatic purge already exists. Export or delete pilot data when a household leaves. If automatic Firestore TTL is selected, its deletion charges are separate and have no free allowance.
+- **Transfer:** **16 MB per household/day** through Hosting: roughly 8 MB of browser-delivered static assets across four visits plus 8 MB of API bodies and overhead. Cache hits at the CDN still transfer bytes to users; browser-cache reuse could reduce this assumption. This covers dynamic responses served through the Hosting origin as well as static content. Direct MCP traffic to a function URL and external function egress require their own regional network calculation.
+- **Release assets:** Keep five 20 MB Hosting releases: 0.1 GB total. Function deployment images are a separate Artifact Registry expense below. No paid language-model calls, SMS, uploads, or payment processing are included.
+- **Period and quota treatment:** 30 even-traffic days. Apply Firestore allowances **each day**, not against a pooled monthly total. Assume no other workload in this Firebase project. Cloud Run allowances may already be used by other projects on the existing billing account, so show that sensitivity separately.
+
+Firestore bills documents and some index-entry reads; broad queries, security-rule dependencies, reconnecting listeners, and retries can add work. Confirm real query usage before expanding the pilot. Ordinary deletes and TTL deletes have different allowance treatment. [Firestore operation billing](https://cloud.google.com/firestore/pricing)
+
+#### Results for the stated scenario
+
+| 30-day scenario | 5-household pilot | 20 households | 1,000-household sensitivity |
 | --- | ---: | ---: | ---: |
-| Dynamic requests | 24,000 | 1,200,000 | 6,000,000 |
-| CPU milliseconds | 240,000 | 12,000,000 | 60,000,000 |
-| D1 rows read | 1,200,000 | 60,000,000 | 300,000,000 |
-| D1 rows written | 18,000 | 900,000 | 4,500,000 |
-| Aggregate stored data | 0.04 GB | 2 GB | 10 GB |
-| Workers base charge | $5.00 | $5.00 | $5.00 |
-| Request overage | $0.00 | $0.00 | $0.00 |
-| CPU overage | $0.00 | $0.00 | $0.60 |
-| D1 usage overage | $0.00 | $0.00 | $0.00 |
-| D1 storage overage | $0.00 | $0.00 | $3.75 |
-| **Modelled API + database total** | **$5.00** | **$5.00** | **$9.35** |
+| Monthly active people assumed | 20 | 80 | 4,000 |
+| HTTP requests/month | 95,700 | 382,800 | 19,140,000 |
+| Allocated vCPU-seconds/month | 28,710 | 114,840 | 5,742,000 |
+| GiB-seconds/month | 7,177.5 | 28,710 | 1,435,500 |
+| Firestore reads/day | 8,500 | 34,000 | 1,700,000 |
+| Firestore writes/day | 90 | 360 | 18,000 |
+| Ordinary retention deletes/day | 30 | 120 | 6,000 |
+| Aggregate Firestore storage | 0.0098 GiB | 0.0391 GiB | 1.9531 GiB |
+| Hosting transfer/month | 2.4 GB | 9.6 GB | 480 GB |
+| Cloud Run usage, full allowance available | $0.00 | $0.00 | $143.03 |
+| Firestore operations + storage | $0.00 | $0.00 | $14.99 |
+| Hosting transfer + retained releases | $0.00 | $0.00 | $70.50 |
+| Email/password authentication | $0.00 | $0.00 | $0.00 |
+| **Selected serving subtotal** | **$0.00** | **$0.00** | **$228.52** |
+| **Subtotal if Cloud Run allowances were used elsewhere** | **$0.75** | **$2.98** | **$234.54** |
 
-Example calculations: 5,000 × 40 × 30 = 6 million requests; (60 − 30) million excess CPU milliseconds × $0.02 = $0.60; (10 − 5) excess GB × $0.75 = $3.75.
+Example: 20 × 638 × 30 = 382,800 HTTP requests. At the assumed 0.3 seconds, that is 114,840 vCPU-seconds. For 1,000 households, Firestore read overage is (1,700,000 − 50,000) × 30 × $0.03 / 100,000 = $14.85; storage adds approximately $0.14. Reproduce the arithmetic with `artifact-source/firebase-cost-scenario.py`.
 
-A small pilot could fit published free quotas, but this is conditional on actual per-request CPU, daily peaks, database limits, and other account usage. The table intentionally budgets a paid baseline. The 5,000-household projection is not a load-test result or proof that one database can support the workload; capacity, storage layout, and query contention require separate validation.
+**This is a serving subtotal, not a $0 hosting promise.** At 20 households the transfer assumption is already close to the conservatively modelled 10 GB allowance. Doubling visible session time, adding heavy attachments, reconnecting frequently, or leaving polling active in background tabs can change the result materially. The 1,000-household column is a cost sensitivity; it is not evidence that the two-instance configuration, database layout, or helper experience can support that traffic.
 
-The estimate excludes development, managed Site-hosting fees if any, external identity-provider costs, observability beyond included usage, backups beyond platform defaults, domain registration, email/SMS, payments, tax, customer acquisition, and human support. It is not a gross-margin calculation. A ten-minute support conversation may cost more than months of a household's runtime.
+#### Deployment costs, exclusions, and a pilot budget
+
+Deployment has its own resources. As an illustration, keeping 1 GiB of function container images for 720 hours costs roughly **$0.05/month** when the shared 0.5 GiB Artifact Registry allowance is available, or roughly $0.10 when it is already used. Twenty two-minute builds would be 40 build-minutes. On `e2-standard-2` in the default pool they could fit the current 2,500-minute billing-account allowance; with no allowance, those minutes cost $0.24. The real build machine and retained image size must be checked; these examples are not added to the serving table as if measured. [Artifact Registry pricing](https://cloud.google.com/artifact-registry/pricing), [Cloud Build pricing](https://cloud.google.com/build/pricing)
+
+The subtotal excludes build-source buckets, direct function internet egress, logging beyond included usage, extended log retention, backup/PITR, automatic TTL deletion, security scanning, transactional email providers, payments, tax, customer acquisition, and human support. It is not a gross-margin calculation. A ten-minute support conversation may cost more than months of one household's serving cost.
+
+**Pilot operating allowance:** reserve $10/month for the initial five households, review actual cost and resource usage weekly, and set billing alerts at $5 and $10 before recruiting. This is a proposed management budget, not a cap or a predicted invoice. Alerts do not stop charges. Audit the existing account's shared allowance usage, delete old deployment artifacts, and instrument function billable time, read counts, response size, and poll frequency. [Firebase budget-alert guidance](https://firebase.google.com/docs/hosting/usage-quotas-pricing)
+
+#### Pricing-documentation friction actually observed
+
+The Hosting usage guide currently describes 10 GB/month of included transfer, while the general Firebase pricing table shows 360 MB/day. These figures are not identical, particularly under uneven traffic. This scenario uses the lower **10 GB/month** figure and even traffic; the pilot columns also remain below 360 MB/day. Before budgeting growth, reconcile the live billing SKU and quota page. Suggested improvement: publish the same unit and reset cadence in both pages. This is documentation research friction, not an application failure or a claimed support response. [Hosting usage guide](https://firebase.google.com/docs/hosting/usage-quotas-pricing), [Firebase pricing table](https://firebase.google.com/pricing)
 
 **AI and AWS accounting:** The current language simulator is deterministic. There is no claim of live Alexa inference, a cloud LLM integration, Bedrock, AgentCore, or any other AWS runtime use. If model interpretation is added, calculate input/output token cost from recorded usage and the selected provider's then-current rates before updating this scenario.
 

@@ -1,0 +1,8 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // The browser has no direct database access. Authorized server routes use
+    // the Admin SDK and enforce exact household/member permissions.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

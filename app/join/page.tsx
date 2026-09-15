@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { Sprout, ArrowRight, ShieldCheck } from 'lucide-react';
 import { api, type InvitationPreview } from '@/lib/api-client';
 export default function Join() {
@@ -88,9 +87,9 @@ export default function Join() {
             </button>
           </>
         )}
-        <Link href="/" className="text-link">
+        <a href="/" className="text-link">
           Back to KindHandoff
-        </Link>
+        </a>
       </div>
     </main>
   );

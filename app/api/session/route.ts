@@ -1,11 +1,15 @@
 import {
-  principal,
+  sessionContext,
   issueSession,
   cookie,
-  COOKIE,
-  hashToken,
+  revokeBrowserSession,
 } from '@/lib/server/auth';
-import { database, getCircle, createCircle, saveCircle } from '@/lib/server/db';
+import {
+  getCircle,
+  createCircle,
+  resetDemoCircle,
+  findOwnedCircle,
+} from '@/lib/server/db';
 import { json, fail, checkOrigin, body } from '@/lib/server/http';
 import { seedCircle } from '@/lib/domain/seed';
 import { publicCircle } from '@/lib/server/tools';
@@ -13,11 +17,11 @@ import { DomainError } from '@/lib/domain/types';
 export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   try {
-    const p = await principal(request);
-    const signedIn = !!request.headers.get('oai-authenticated-user-id');
+    const context = await sessionContext(request);
+    const p = context?.principal;
     return json({
-      signedIn,
-      profileName: request.headers.get('oai-authenticated-user-email') ?? null,
+      signedIn: !!context?.identity,
+      profileName: context?.identity?.profileName ?? null,
       ...(p
         ? {
             circle: publicCircle(await getCircle(p.circleId)),
@@ -26,163 +30,133 @@ export async function GET(request: Request) {
           }
         : { circle: null }),
     });
-  } catch (e) {
-    return fail(e);
+  } catch (error) {
+    return fail(error);
   }
 }
 export async function POST(request: Request) {
   try {
     checkOrigin(request);
     const a = await body(request);
-    if (!['demo', 'create'].includes(a.mode))
+    if (
+      !a ||
+      typeof a !== 'object' ||
+      Array.isArray(a) ||
+      !['demo', 'create'].includes(a.mode)
+    )
       throw new DomainError('INVALID_INPUT', 'Choose demo or create.');
-    const identity = request.headers.get('oai-authenticated-user-id');
-    if (a.mode === 'create' && !identity)
-      throw new DomainError(
-        'UNAUTHORIZED',
-        'Sign in to create a personal circle.',
-        401,
-      );
+    const context = await sessionContext(request);
+    const identity = context?.identity ?? null;
     if (a.mode === 'demo') {
-      const existingDemo = await principal(request);
-      if (existingDemo?.kind === 'demo') {
-        const old = await getCircle(existingDemo.circleId);
+      if (Object.keys(a).some((key) => key !== 'mode'))
+        throw new DomainError(
+          'INVALID_INPUT',
+          'Demo mode does not accept personal profile fields.',
+        );
+      if (context?.principal?.kind === 'demo') {
+        const old = await getCircle(context.principal.circleId);
         const reset = seedCircle(old.id);
         reset.version = old.version + 1;
-        await saveCircle(reset, old.version);
+        reset.contentVersion = (old.contentVersion ?? old.version) + 1;
+        await resetDemoCircle(reset, old.version, context.principal);
         return json({
           circle: publicCircle(reset),
           memberId: 'maya',
           kind: 'demo',
           signedIn: !!identity,
+          profileName: identity?.profileName ?? null,
         });
       }
-      const db = database();
-      const now = new Date().toISOString();
-      const cutoff = new Date(Date.now() - 86400000).toISOString();
-      await db.batch([
-        db
-          .prepare(
-            'DELETE FROM circles WHERE id IN (SELECT id FROM circles WHERE owner_identity IS NULL AND created_at < ? LIMIT 100)',
-          )
-          .bind(cutoff),
-        db.prepare('DELETE FROM sessions WHERE expires_at < ?').bind(now),
-        db.prepare('DELETE FROM invitations WHERE expires_at < ?').bind(now),
-        db.prepare('DELETE FROM rate_limits WHERE expires_at < ?').bind(now),
-      ]);
-      const bucket = 'demo:' + now.slice(0, 13);
-      const quota = await db
-        .prepare(
-          'INSERT INTO rate_limits (bucket, count, expires_at) VALUES (?, 1, ?) ON CONFLICT(bucket) DO UPDATE SET count = count + 1 WHERE count < 120',
-        )
-        .bind(bucket, new Date(Date.now() + 3600000).toISOString())
-        .run();
-      if (quota.meta.changes !== 1)
-        throw new DomainError(
-          'RATE_LIMIT',
-          'The demo is busy. Please return in an hour or sign in to use your personal circle.',
-          429,
-        );
-      const active = await db
-        .prepare(
-          'SELECT COUNT(*) AS count FROM circles WHERE owner_identity IS NULL',
-        )
-        .first<{ count: number }>();
-      if ((active?.count ?? 0) >= 500)
-        throw new DomainError(
-          'CAPACITY',
-          'The demo has reached its capacity. Sign in to create your own circle.',
-          429,
-        );
-    }
-    if (a.mode === 'create') {
-      const existing = await database()
-        .prepare('SELECT id FROM circles WHERE owner_identity = ?')
-        .bind(identity)
-        .first<{ id: string }>();
-      if (existing)
-        return json(
-          {
-            circle: publicCircle(await getCircle(existing.id)),
-            memberId: 'owner',
-            kind: 'owner',
-            signedIn: true,
-          },
-          200,
-          { 'Set-Cookie': cookie(request, '', 0) },
-        );
-      if (
-        typeof a.recipient !== 'string' ||
-        a.recipient.trim().length < 1 ||
-        a.recipient.length > 80 ||
-        typeof a.name !== 'string' ||
-        a.name.length > 80 ||
-        !a.name.trim()
-      )
-        throw new DomainError(
-          'INVALID_INPUT',
-          'Add your name and the person this circle supports.',
-        );
-      try {
-        new Intl.DateTimeFormat('en', { timeZone: a.timeZone }).format();
-      } catch {
-        throw new DomainError('INVALID_INPUT', 'Choose a valid time zone.');
-      }
-    }
-    const circle =
-      a.mode === 'demo'
-        ? seedCircle(crypto.randomUUID())
-        : seedCircle(
-            crypto.randomUUID(),
-            false,
-            a.recipient.trim(),
-            a.name.trim(),
-            a.timeZone,
-          );
-    await createCircle(circle, a.mode === 'create' ? identity : null);
-    if (a.mode === 'demo') {
-      const token = await issueSession(circle.id, 'maya', 'demo');
+      const circle = await createCircle(seedCircle(crypto.randomUUID()));
+      const issued = await issueSession(
+        circle.id,
+        'maya',
+        'demo',
+        24,
+        identity,
+        context?.hash ?? null,
+        !!context,
+      );
       return json(
         {
           circle: publicCircle(circle),
           memberId: 'maya',
           kind: 'demo',
           signedIn: !!identity,
+          profileName: identity?.profileName ?? null,
         },
         201,
-        { 'Set-Cookie': cookie(request, token) },
+        { 'Set-Cookie': cookie(request, issued.token, issued.maxAge) },
       );
     }
+    if (!identity)
+      throw new DomainError(
+        'UNAUTHORIZED',
+        'Sign in with Firebase to create your personal circle.',
+        401,
+      );
+    const existing = await findOwnedCircle(identity.uid);
+    let circle = existing;
+    let created = false;
+    if (!circle) {
+      if (
+        typeof a.recipient !== 'string' ||
+        !a.recipient.trim() ||
+        a.recipient.length > 80 ||
+        typeof a.name !== 'string' ||
+        !a.name.trim() ||
+        a.name.length > 80 ||
+        typeof a.timeZone !== 'string'
+      )
+        throw new DomainError(
+          'INVALID_INPUT',
+          'Add your name, the person this circle supports, and a time zone.',
+        );
+      try {
+        new Intl.DateTimeFormat('en', { timeZone: a.timeZone }).format();
+      } catch {
+        throw new DomainError('INVALID_INPUT', 'Choose a valid time zone.');
+      }
+      const candidate = seedCircle(
+        crypto.randomUUID(),
+        false,
+        a.recipient.trim(),
+        a.name.trim(),
+        a.timeZone,
+      );
+      circle = await createCircle(candidate, identity.uid);
+      created = circle.id === candidate.id;
+    }
+    const issued = await issueSession(
+      circle.id,
+      'owner',
+      'owner',
+      24,
+      identity,
+      context?.hash ?? null,
+      true,
+    );
     return json(
       {
         circle: publicCircle(circle),
         memberId: 'owner',
         kind: 'owner',
         signedIn: true,
+        profileName: identity.profileName,
       },
-      201,
-      { 'Set-Cookie': cookie(request, '', 0) },
+      created ? 201 : 200,
+      { 'Set-Cookie': cookie(request, issued.token, issued.maxAge) },
     );
-  } catch (e) {
-    return fail(e);
+  } catch (error) {
+    return fail(error);
   }
 }
 export async function DELETE(request: Request) {
   try {
     checkOrigin(request);
-    const raw = request.headers
-      .get('cookie')
-      ?.split(';')
-      .map((s) => s.trim())
-      .find((s) => s.startsWith(COOKIE + '='))
-      ?.slice(COOKIE.length + 1);
-    if (raw)
-      await database()
-        .prepare('DELETE FROM sessions WHERE token_hash = ?')
-        .bind(await hashToken(raw))
-        .run();
+    await revokeBrowserSession(request);
     return json({ ok: true }, 200, { 'Set-Cookie': cookie(request, '', 0) });
-  } catch (e) {
-    return fail(e);
+  } catch (error) {
+    return fail(error);
   }
 }

@@ -10,7 +10,7 @@ This is not a claim of native Alexa+ account linking, certification or live devi
 
 Run the app, then run `npm run test:integration`. The script uses SDK `Client` and `StreamableHTTPClientTransport`, negotiates the protocol and invokes the full recovery workflow. `npm run test:e2e` verifies real helper-cookie sessions, single-use invitations, wrong-actor rejection and token restrictions.
 
-The source entry point is `app/mcp/route.ts`. The browser client is `lib/mcp-client.ts`. Schema, description and authorization are in `lib/server/tools.ts`. The endpoint supports POST; GET/DELETE return 405 for this stateless JSON-response transport. Every request has a fresh transport instance, while D1 stores business state.
+The source entry point is `app/mcp/route.ts`. The browser client is `lib/mcp-client.ts`. Schema, description and authorization are in `lib/server/tools.ts`. The endpoint supports POST; GET/DELETE return 405 for this stateless JSON-response transport. Every request has a fresh transport instance, while Firestore stores business state.
 
 ## Connect an external client
 

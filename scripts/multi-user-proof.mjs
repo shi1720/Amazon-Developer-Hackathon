@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
-const base = process.env.BASE_URL ?? 'http://localhost:3001';
+const base = process.env.BASE_URL ?? 'http://127.0.0.1:3001';
 let checks = 0;
 async function api(path, method = 'GET', data, session, expected = 200) {
   const response = await fetch(base + path, {
@@ -159,7 +159,7 @@ for (const path of ['/api/token', '/api/invite', '/api/account']) {
   });
   assert.equal(r.status, 403);
 }
-await api('/api/token', 'POST', undefined, `dayweave_session=${bearer}`, 403);
+await api('/api/token', 'POST', undefined, `__session=${bearer}`, 403);
 checks++;
 const tokens = await Promise.all([
   api('/api/token', 'POST', undefined, owner.cookie),

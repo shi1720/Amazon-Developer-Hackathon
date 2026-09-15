@@ -6,7 +6,6 @@ import {
   useState,
   type SubmitEvent,
 } from 'react';
-import Link from 'next/link';
 import {
   ArrowUpRight,
   AudioLines,
@@ -89,6 +88,15 @@ const caps = {
 };
 const stamp = (date: string, tz: string) =>
   new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: tz,
+  }).format(new Date(date));
+const datedStamp = (date: string, tz: string) =>
+  new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
     timeZone: tz,
@@ -226,6 +234,7 @@ export default function KindHandoff() {
         setVoiceSupported(!!speechConstructor());
         if (
           s.signedIn &&
+          s.circle.demo &&
           new URLSearchParams(window.location.search).get('setup') === '1'
         ) {
           setModal('create');
@@ -242,10 +251,17 @@ export default function KindHandoff() {
   const hasSnapshot = snapshot !== null;
   useEffect(() => {
     if (!hasSnapshot) return;
-    const timer = setInterval(() => {
+    const refreshVisible = () => {
       if (document.visibilityState === 'visible') void load().catch(() => {});
-    }, 12000);
-    return () => clearInterval(timer);
+    };
+    const timer = setInterval(refreshVisible, 12000);
+    window.addEventListener('focus', refreshVisible);
+    document.addEventListener('visibilitychange', refreshVisible);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('focus', refreshVisible);
+      document.removeEventListener('visibilitychange', refreshVisible);
+    };
   }, [hasSnapshot, load]);
   useEffect(() => {
     if (!notice) return;
@@ -585,31 +601,34 @@ export default function KindHandoff() {
   return (
     <div className="dw-app">
       <header className="topbar">
-        <Link className="wordmark" href="/">
+        <a className="wordmark" href="/">
           <span className="brand-icon">
             <Sprout size={25} />
           </span>
           kindhandoff
-        </Link>
+        </a>
         <span className="quiet-label">CARE, CARRIED FORWARD</span>
         <div className="header-actions">
           {snapshot?.signedIn ? (
             <button
               className="account-button"
-              onClick={() => setModal('create')}
+              onClick={() => (c.demo ? setModal('create') : setView('circle'))}
             >
               My circle <ArrowUpRight size={16} />
             </button>
           ) : (
-            <Link
-              className="account-button"
-              href="/signin-with-chatgpt?return_to=%2F%3Fsetup%3D1"
-              target="_top"
-              prefetch={false}
-            >
+            <a className="account-button" href="/signin" target="_top">
               Sign in <ArrowUpRight size={16} />
-            </Link>
+            </a>
           )}
+          <button
+            className="icon-button"
+            aria-label="Refresh circle"
+            disabled={busy}
+            onClick={() => call('get_day')}
+          >
+            <RefreshCw size={18} />
+          </button>
           <button
             className="icon-button"
             aria-label="Settings"
@@ -1121,7 +1140,7 @@ export default function KindHandoff() {
                           ? m.availability
                               .map(
                                 (w) =>
-                                  `${stamp(w.start, c.timeZone)}–${stamp(w.end, c.timeZone)}`,
+                                  `${datedStamp(w.start, c.timeZone)} – ${datedStamp(w.end, c.timeZone)}`,
                               )
                               .join(', ')
                           : 'No availability set'}{' '}
@@ -1263,14 +1282,14 @@ export default function KindHandoff() {
                         Create my own circle <ArrowRight size={17} />
                       </button>
                     ) : (
-                      <Link
+                      <a
                         className="button"
                         target="_top"
-                        prefetch={false}
-                        href="/signin-with-chatgpt?return_to=%2F%3Fsetup%3D1"
+
+                        href="/signin"
                       >
                         Sign in to create a circle <ArrowRight size={17} />
-                      </Link>
+                      </a>
                     ))}
                   <div className="settings-block">
                     <h3>Take your data with you</h3>
@@ -1369,10 +1388,7 @@ export default function KindHandoff() {
                       disabled={busy}
                       onClick={async () => {
                         const r = await actionApi('/api/session', 'DELETE');
-                        if (r)
-                          window.location.assign(
-                            '/signout-with-chatgpt?return_to=%2F',
-                          );
+                        if (r) window.location.assign('/');
                       }}
                     >
                       <LogOut size={16} /> Sign out

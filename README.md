@@ -17,7 +17,7 @@ KindHandoff helps families repair everyday support plans when someone becomes un
 
 ![KindHandoff on mobile](docs/screenshots/mobile.png)
 
-[Hosted app — currently private](https://shivam-amazon-hackathon.sg127977958.chatgpt.site). The host access gate is active; public visitor access and a signed-in production workflow check remain pending.
+[KindHandoff on Firebase](https://kindhandoff.web.app). Public deployment verification is in progress. See the release status for the exact verified state.
 
 ## The afternoon that explains the product
 
@@ -27,15 +27,15 @@ A calendar can show two names. A workable plan also needs agreement, prerequisit
 
 ## Try it in five minutes
 
-Requires Node.js **22.13 or later** and npm. The database is local; no cloud account or API key is needed for the demo.
+The hosted app needs no setup. For local development, install Node.js **22.13 or later**, npm and Java **21** for the isolated Firebase emulators. Local tests need no cloud account or secret API key.
 
 ```sh
 npm ci
-npm run db:local
-npm run dev -- --hostname 127.0.0.1 --port 3001
+npm run build
+npx firebase-tools@15.30.1 emulators:exec --only auth,firestore --project demo-kindhandoff "npm run test:firestore && node scripts/verify-local.mjs"
 ```
 
-Open [the local app](http://localhost:3001). Each browser receives its own synthetic household. Local development may provide a development sign-in identity; it is not proof of production authentication.
+For interactive local development, follow the [Firebase setup guide](docs/firebase-deployment.md). Each browser receives its own synthetic household; the Auth emulator provides separate test accounts. The production app uses verified Firebase Authentication.
 
 1. Select **“I can’t make it this afternoon.”** in Maya's demo role.
 2. Review the helper, interval, and two affected commitments. Confirm the change.
@@ -43,13 +43,13 @@ Open [the local app](http://localhost:3001). Each browser receives its own synth
 4. Switch to Jo and accept the bag. Switch to Dev and accept the ride. The pending count only drops after acceptance.
 5. Dev's ride is waiting for the bag. As Jo, complete the bag; the ride becomes ready.
 6. Open the handoff brief and acknowledge that content version. Add a note to see why a previous acknowledgment becomes out of date.
-7. Open **Settings → MCP** to inspect real tool calls and generate a scoped external-client token.
+7. Open **Activity → Live MCP execution trace** to inspect real tool calls. **Settings → MCP** creates a scoped external-client token.
 
 **Prove separate identities:** use **Your circle → Invite** to create Jo and Dev invitation links, then open each in a separate browser profile. Invitations sign in the intended helper once. Helper sessions have no role switch. The included four-session test runs this exact flow without impersonation.
 
 ## A usable household workflow
 
-- **Coordinator sign-in:** ChatGPT sign-in on Sites; create a blank personal circle.
+- **Coordinator sign-in:** Firebase email/password sign-up and sign-in; create a blank personal circle.
 - **Helpers:** named profiles, capability and availability windows, private single-use invitations, revocation.
 - **Commitments:** title, practical details, explicit dates/times, required capabilities and earlier prerequisites.
 - **Recovery:** constrained replacement search with visible exclusions; coordinator review before offers.
@@ -64,12 +64,12 @@ The microphone uses the browser's speech recognition service when supported. The
 
 | Layer | Implementation | Purpose |
 |---|---|---|
-| Product | React 19, Vinext, shared accessible primitives | One coherent coordinator/helper experience |
+| Product | React 19, Vite, shared accessible primitives | One coherent coordinator/helper experience |
 | MCP | Official TypeScript SDK 1.30; Web Standard Streamable HTTP | Same tools from browser and external MCP clients |
 | Rules | TypeScript + Zod; deterministic bounded planner | Explicit constraints and reviewed state changes |
-| Persistence | Cloudflare D1, SQL migrations, atomic compare-and-swap | Durable, household-scoped state and safe concurrent edits |
-| Login | Sites ChatGPT identity; hashed helper/token credentials | Persistent coordinator identity and scoped helper access |
-| Hosting | Sites Worker deployment | Managed HTTPS and D1 binding |
+| Persistence | Firestore transactions and version checks | Durable, household-scoped state and safe concurrent edits |
+| Login | Firebase Authentication; hashed server sessions and invitations | Persistent coordinator identity and scoped helper access |
+| Hosting | Firebase Hosting + Cloud Functions v2 | Public HTTPS, server API and persistent Firestore |
 
 [Architecture and invariants](docs/architecture.md) · [MCP integration guide](integrations/alexa/README.md) · [Security and operating limits](SECURITY.md)
 
@@ -80,9 +80,11 @@ npm run check             # lint, typecheck, unit tests, production build
 # With the development server running in another terminal:
 npm run test:integration  # actual SDK initialize + tool calls + failure cases
 npm run test:e2e          # four independent sessions, invitations and authorization
+npm run test:auth         # verified Firebase login, persistence, export and deletion
+npm run test:firestore    # isolated concurrency/permission emulator tests
 ```
 
-Set `BASE_URL` to test a reachable deployment. The integration tests create only fresh synthetic demo households. They never reset a personal circle or print invitation/token secrets.
+Set `BASE_URL` to test a reachable deployment. The authentication proof requires a running Auth emulator, or the explicit `ALLOW_LIVE_AUTH_TEST=1` flag for a new temporary synthetic production account. The workflow tests create fresh synthetic demo households; the auth test creates and cleans up its own fictional account. They never reset a personal circle or print invitation/token secrets.
 
 Recorded evidence is in [docs/evidence](docs/evidence). It includes MCP protocol/transport, separate-session authorization, dependency rejection, retry behavior, stale writes, atomic token rotation, and persisted results. Latencies in local reports are observations from a local test, not production benchmarks.
 

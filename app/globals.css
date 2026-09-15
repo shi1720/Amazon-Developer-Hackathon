@@ -29,6 +29,8 @@
   --radius-sm: 7px;
 }
 :root {
+  --font-geist-sans: 'Geist Variable', sans-serif;
+  --font-geist-mono: ui-monospace, monospace;
   --background: #f6f8fb;
   --foreground: #182d45;
   --card: #fff;

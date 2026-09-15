@@ -5,7 +5,7 @@
 **Mini challenge:** Open Source — separate public MIT library verified.  
 **Draft prepared:** 15 September 2026
 
-> Release editor: This copy is written around the agreed implementation. Before submission, match every implementation statement to the final build and evidence, replace the bracketed URL fields, and add actual validation results. Do not submit a claimed result that has not been observed. The public video and separate open-source repository remain release deliverables until their links are verified.
+> Submission copy for the implemented Firebase release. Add the public video URL after recording and review the personal eligibility/terms fields in Devpost.
 
 ## Project name
 
@@ -41,12 +41,12 @@ The updated brief explains the current plan. Acknowledgment records the particul
 
 The product combines a web application, a deterministic recovery planner, and a real Model Context Protocol server.
 
-- **MCP integration:** `@modelcontextprotocol/sdk` version 1.30.0, the 2025-11-25 protocol specification, and Web Standard Streamable HTTP transport deployed on a Worker. Tools execute the same household workflow used by the product.
+- **MCP integration:** `@modelcontextprotocol/sdk` version 1.30.0, the 2025-11-25 protocol specification, and Web Standard Streamable HTTP transport deployed on Firebase Cloud Functions. Tools execute the same household workflow used by the product.
 - **Planner:** Explicit time windows, helper capabilities, home access, and bag-to-ride dependencies determine feasible assignments. A proposed arrangement is explained before offers are created.
 - **Commitment handling:** The named helper accepts or declines their own offer. Prerequisites govern readiness, and brief acknowledgments are associated with a plan version.
-- **Identity and storage:** ChatGPT sign-in for household creators, secure one-time helper invitations, and household-scoped records in Cloudflare D1, with membership enforced by the application.
+- **Identity and storage:** Firebase email/password sign-in for household creators, secure one-time helper invitations, and household-scoped records in Firestore, with membership enforced by the application.
 - **Simulation:** An explicitly labelled local, deterministic language simulator exercises the workflow. It supports defined requests and does not represent a live Alexa connection or an unrestricted cloud language model.
-- **Open-source contribution:** The separate @kindhandoff/guard library makes state transitions, coverage accounting, and candidate ranking reusable outside the app. Its final public repository, license, and evidence must be verified before entering the Open Source mini challenge.
+- **Open-source contribution:** The separate @kindhandoff/guard library makes state transitions, coverage accounting, and candidate ranking reusable outside the app. The additional public MIT repository includes 106 passing tests and CI on Node 20, 22, and 24.
 
 Amazon documents Alexa+ support for MCP specification 2025-11-25 and Streamable HTTP. KindHandoff demonstrates that server through the permitted simulated-experience path; the submission does not claim certification or a live deployment on Alexa+. [Alexa+ MCP overview](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html), [technical requirements](https://www.developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html)
 
@@ -76,7 +76,7 @@ The initial customer is a working adult coordinating regular support for a paren
 
 We plan to test a $12-per-household monthly subscription with every helper included. Our first validation step is a ten-interview discovery study followed by a five-household pilot. We will measure time to an accepted replacement, coordinator follow-up effort, repeated helper participation, and voluntary paid continuation. These are planned experiments, not completed results.
 
-The planner's core rules do not require a paid model call. A separate cost brief shows an explicit Workers/D1 usage scenario and its exclusions. We have not claimed a measured production cost or gross margin.
+The planner's core rules do not require a paid model call. A separate cost brief shows an explicit Firebase/GCP usage scenario and its exclusions. We have not claimed a measured production cost or gross margin.
 
 ## What we learned
 
@@ -96,7 +96,7 @@ We also learned from competitor research that voice notes and handoff summaries 
 
 Executed checks are linked below. The public video remains a human recording/upload step.
 
-- Test command and result: `npm run check`: lint, typecheck, 19 unit tests and production build passed. Additional guard library: 106 tests passed.
+- Test command and result: `npm run check`: lint, typecheck, 29 unit tests and production build passed. Additional guard library: 106 tests passed.
 - Browser end-to-end evidence: [Executed test evidence](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence)
 - MCP initialize/list/call evidence: [Executed test evidence](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence)
 - Required flow: both Maya commitments affected; Jo bag; Dev ride; helper-specific acceptance; ride blocked until bag completion; versioned brief acknowledgment.
@@ -126,7 +126,7 @@ Shivam set the challenge brief, commercial priorities, and quality requirements,
 
 ## Built with — field-ready keywords
 
-TypeScript; React 19; Vinext; Model Context Protocol; MCP SDK 1.30.0; Streamable HTTP; Cloudflare Workers; Cloudflare D1; ChatGPT sign-in; deterministic planning.
+TypeScript; React 19; Vite 8; Model Context Protocol; MCP SDK 1.30.0; Streamable HTTP; Firebase Hosting; Firebase Authentication; Cloud Functions for Firebase; Firestore; deterministic planning.
 
 **Release editor:** Add the actual frontend framework and final package versions from the lockfile. Do not list Bedrock, AgentCore, a live Alexa integration, or an unused model provider.
 
@@ -135,7 +135,7 @@ TypeScript; React 19; Vinext; Model Context Protocol; MCP SDK 1.30.0; Streamable
 | Submission field | Value |
 | --- | --- |
 | Main public code repository | [shi1720/Amazon-Developer-Hackathon](https://github.com/shi1720/Amazon-Developer-Hackathon) |
-| Live application | [Hosted app](https://shivam-amazon-hackathon.sg127977958.chatgpt.site) — currently private; public access and authenticated hosted flow check pending |
+| Live application | [Hosted app](https://kindhandoff.web.app) — public Firebase deployment; hosted verification in progress |
 | Public demo video, under three minutes | **[INSERT VERIFIED PUBLIC YOUTUBE OR VIMEO URL]** |
 | MCP setup and run instructions | [MCP setup](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/integrations/alexa) |
 | License | MIT; verified in the public repository and GitHub About |
@@ -165,6 +165,6 @@ Use the complete [observed product feedback and friction log](product-feedback.m
 
 - **Important:** A reference example for a multi-user MCP workflow where the proposer and the person who accepts responsibility have different identities.
 - **Important:** Examples for representing a stale proposal or a versioned acknowledgment consistently across voice and visual clients.
-- **Nice-to-have:** A conformance fixture that exercises initialization, tool calls, and error handling against a Worker-hosted Streamable HTTP endpoint.
+- **Nice-to-have:** A conformance fixture that exercises initialization, tool calls, and error handling against a serverless Streamable HTTP endpoint.
 
 These are proposed requests based on the product's needs. Confirm whether current documentation or tooling already addresses them before submitting.

@@ -21,7 +21,7 @@ Watch the ride. Even after Dev accepts, it is still waiting for the bag. Jo reco
 
 The updated handoff brief shows what changed and what remains. Dev acknowledges this specific version. If the plan changes again, the record still tells us which version he read. People can see what was agreed, by whom, and when.
 
-Behind this is a real MCP server using the November twenty-fifth, twenty twenty-five specification and Streamable HTTP. The web language simulator is explicitly deterministic. This demonstration uses persistent household data, real sign-in, and separate helper invitations; it does not claim a live Alexa connection.
+Behind this is a real MCP server using the November twenty-fifth, twenty twenty-five specification and Streamable HTTP. The web language simulator is explicitly deterministic. This demonstration uses persistent household data, Firebase sign-in, and separate helper invitations; it does not claim a live Alexa connection.
 
 KindHandoff starts with practical support: bags, rides, meals, and visits. We plan to test a household subscription, with every helper included. The promise is simple: make the next step clear, and make responsibility something people actually accept.
 

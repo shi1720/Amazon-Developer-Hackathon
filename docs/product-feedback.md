@@ -26,37 +26,53 @@ Sources: [overview](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-tool
 
 **Used for:** the deployed server's Web Standard Streamable HTTP transport and the actual browser/Node clients. All domain tool calls go through it.
 
-**What worked:** typed tool registration, JSON schemas, structured output and protocol negotiation made the integration inspectable. The Worker-compatible transport avoids pretending an in-memory function call is MCP. Independent helper clients can exercise the same rules.
+**What worked:** typed tool registration, JSON schemas, structured output and protocol negotiation made the integration inspectable. The Web Standard transport provides real HTTP negotiation and tool calls. Independent helper clients can exercise the same rules.
 
-**Needs work:** runtime/export compatibility of transitive dependencies could be clearer for Workers. We had to map `pkce-challenge` to its official Web Crypto browser build because its exports offered browser/node variants without a matching Worker condition.
+**Needs work:** runtime/export compatibility could be clearer across serverless environments. The earlier Worker prototype required an explicit browser-build alias for `pkce-challenge`; the final Node 22 deployment does not require that alias.
 
-**Onboarding:** straightforward after the import/runtime mismatch was diagnosed. Stateless transport initialization per request fits this small app, while durable business state lives in D1.
+**Onboarding:** straightforward after the import/runtime mismatch was diagnosed. Stateless transport initialization per request fits this small app, while durable business state lives in Firestore.
 
 **Would build again:** yes. Keep auth and business invariants explicit rather than expecting the protocol to supply them.
 
-## Cloudflare D1 and Worker runtime
+## Firebase Authentication
 
-**Used for:** persistent circle state, sessions, invitations and admission limits; atomic SQL compare-and-swap; invocation of Web Crypto and the MCP fetch handler.
+**Used for:** email/password registration, sign-in, and an explicitly requested password-reset flow. The backend verifies a recent Firebase ID token, then creates an opaque, HTTP-only application session. Helpers use one-time invitation sessions.
 
-**What worked:** one conditional update can atomically save a household transition, activity event and retry receipt. Transactional batches support one-time invitation redemption and token rotation. Local migrations made repeatable integration tests practical.
+**What worked:** the Auth emulator supports repeatable account creation, token exchange, sign-out, and restored-circle tests without real email delivery. The browser uses in-memory Firebase persistence and clears its client identity after the exchange.
 
-**Needs work:** examples for JSON-document compare-and-swap plus result-change checking would shorten onboarding. Global anonymous-demo capacity needs atomic enforcement, not a read-then-insert counter.
+**Needs work:** documentation should prominently connect Firebase Hosting's `__session` cookie forwarding behavior to custom backend sessions. A missing emulator `appId` initially produced a generic client initialization failure; adding a complete public SDK configuration fixed it.
 
-**Onboarding:** a local D1 binding plus checked-in migrations is reproducible. Production binding/provisioning is managed by Sites, separate from the local placeholder database ID.
+**Onboarding:** initialized email/password through the project configuration, added the canonical hosting domain, and exercised both emulator and deployed authentication. Google sign-in remains disabled because it was not configured.
 
-**Would build again:** yes for a bounded MVP. Measure row growth, query counts, contention and backups before scaling.
+**Would build again:** yes. Account recovery, session management, and abuse controls need further pilot validation.
 
-## Sites, Vinext and React
+## Firestore and Cloud Functions for Firebase
 
-**Used for:** scaffold, React UI, D1 binding, hosted Worker packaging, and ChatGPT coordinator sign-in.
+**Used for:** persistent circles, hashed session/invitation records, unique coordinator ownership, bounded demo admission, and transactionally checked workflow changes. A Node 22 second-generation HTTP function serves both the JSON API and MCP.
 
-**What worked:** a single TypeScript codebase covers interface and server routes. Shared accessible Tabs, Dialog, Sheet, Select and Checkbox primitives give coherent interaction behavior. Local iteration exercises the real Worker runtime.
+**What worked:** transactions can reread a credential and membership epoch immediately before committing a change. Seventeen emulator integration tests exercise ownership, compare-and-swap, concurrent invitations, token rotation, expiry, and revoked in-flight principals. Browser Firestore rules deny direct access; the runtime uses its own limited service account.
 
-**Needs work:** the initial scaffold's dependency combination required updates before the security audit was clean. Local development identity must be visually and operationally distinct from a production sign-in. Hosting access and application-level helper invitations are separate controls; both must permit an invited helper to reach the app.
+**Needs work:** delayed TTL cleanup must be distinguished from authorization expiry. KindHandoff checks expiry during requests and treats TTL as eventual storage cleanup. Pricing spans several services, so the cost brief states its request/read assumptions and shared free allowances.
 
-**Onboarding:** required checking current package versions, applying D1 migrations explicitly, and validating the production archive. No additional user-supplied API keys were needed for this implementation.
+**Onboarding:** provisioned a Standard database in `us-central1`, transaction/index settings, Auth configuration, and a runtime service account. Linked the existing billing account for the server runtime. Minimum instances is zero; maximum instances is two. These settings do not constitute a spending cap.
 
-**Would build again:** yes for this pilot, with explicit gateway identity tests and a documented deployment trust boundary.
+**Would build again:** yes for the bounded pilot. Measure traffic and contention, validate backup/restore, and refine operational controls before broader use.
+
+## Firebase Hosting, Vite, and React
+
+**Used for:** the public `kindhandoff.web.app` site, static React frontend, API/MCP rewrites, Firebase web configuration, responsive layout, and accessible interface primitives.
+
+**What worked:** a clean project URL and same-origin backend keep invitations and login on one site. Separate sign-in/join bundles avoid loading their full UI until needed. The compiled local server lets CI exercise the production build against emulators.
+
+**Needs work:** the first deployment created the function but stopped before releasing Hosting because Artifact Registry had no cleanup policy. We explicitly configured seven-day cleanup and reran deployment. This is useful cost guidance, but the partial-deployment state needs to be obvious.
+
+**Onboarding:** enabled the relevant GCP APIs and tested actual rewrites and session forwarding. No new user-supplied API keys were required.
+
+**Would build again:** yes, with scripted release verification and a documented rollback procedure.
+
+## Earlier prototype tools
+
+The initial prototype used Sites, Vinext, Cloudflare Workers/D1, and ChatGPT gateway identity. These are preserved in the `sites-prototype` Git tag, but are not part of the submitted Firebase runtime. The scaffold accelerated layout work; dependency compatibility, Worker exports, and the distinction between hosting audience and app-level membership required explicit verification. We would consider these tools again for appropriate projects. The final provider choice and sign-in implementation follow the requested Firebase deployment.
 
 ## Browser speech recognition and synthesis
 
@@ -74,13 +90,15 @@ These are actual development findings. Severity describes their effect on this b
 
 | Task and steps | Expected → observed | Severity | Workaround / resolution | Actionable suggestion |
 |---|---|---|---|---|
-| Import MCP SDK into the Worker build and run the local app | Compatible Web Crypto dependency → `pkce-challenge` package export resolution failed for this environment | High: blocked MCP startup | Vite aliases to the package's official `dist/index.browser.js`; verified real SDK calls afterwards | Add/document a Worker export condition and a Worker integration test |
+| Import MCP SDK into the Worker build and run the local app | Compatible Web Crypto dependency → `pkce-challenge` package export resolution failed for this environment | High: blocked MCP startup | Earlier prototype: official browser-build alias; final Node deployment needs no alias | Add/document a Worker export condition and a Worker integration test |
 | Install scaffold and run `npm audit` | A clean starting dependency graph → reported vulnerable transitive/framework versions | High: release blocker | Update compatible framework/tool versions and lock dependencies; audit then reported zero vulnerabilities | Refresh scaffold regularly and test lockfile security/compatibility together |
 | Have Jo and Dev acknowledge the same brief | Both receipts reference unchanged content → a generic storage-version increment made the next helper's brief appear changed | High: product correctness | Separate content revision from storage CAS revision; regression and independent-session tests | Reference multi-actor MCP examples should distinguish content version from write version |
 | Propose a replacement for several flexible jobs plus one driving-only job | Keep the only driver available → simple chronological/greedy choices could consume that capability | High: product correctness | Most-constrained-first bounded search with explicit unresolved/search-limit reporting; scarce-driver regression | Include feasible-plan examples that require considering tasks jointly |
-| Redeem invitation / rotate token concurrently | One invitation redemption and one surviving token → needed transactional conditional writes to prevent races | High: authorization | Atomic D1 batches and concurrent integration tests | Document affected-row checks and transaction ordering in examples |
+| Redeem invitation / rotate token concurrently | One invitation redemption and one surviving token → needed transactional conditional writes to prevent races | High: authorization | Firestore transactions, credential epochs, and concurrent integration tests | Document final credential rereads and transaction ordering in examples |
+| Pin two Hosting routes to the same function | Both rewrites deployed → concurrent tag updates returned Cloud Run HTTP 409 | High: public release blocked | Combine API/MCP paths in one regex rewrite | Deduplicate service updates in Firebase CLI `runTags` before concurrent writes |
+| Deploy Functions and Hosting | Function created → deployment stopped at missing artifact cleanup policy before Hosting release | Medium: release incomplete | Set an explicit seven-day cleanup policy and redeploy | Show partial release status and the exact recovery command |
 | Preview at mobile width and complete forms | Clear controls and no horizontal overflow → validated at 390 px; keyboard and labels inspected | None in final layout | Shared primitives, responsive stacking and explicit time-zone hint | Preserve device-zone vs displayed-circle-zone explanation |
 
 ## Mini challenge declaration
 
-**AWS services used: none.** Cloudflare Workers/D1 and Sites are not represented as AWS usage. We enter the additional Open Source challenge through the public `@kindhandoff/guard` repository. This declaration should remain consistent with the final Devpost form.
+**AWS services used: none.** Firebase/GCP and the earlier prototype tools are not represented as AWS usage. We enter the additional Open Source challenge through the public `@kindhandoff/guard` repository. This declaration should remain consistent with the final Devpost form.

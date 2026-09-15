@@ -29,3 +29,11 @@ A second independent agent probed ambiguous name parsing, future-day requests, i
 ## Remaining route to a stronger submission
 
 A convincing recorded walkthrough, five-household pilot, observed native Alexa onboarding feedback and measured production behavior would add evidence that code alone cannot provide. The current materials do not invent these results. The video should lead with the broken afternoon and show the precise change from offered to accepted to ready.
+
+## Firebase release review
+
+A later independent source/documentation review provisionally scored technical implementation **8.0/10**, design **8.5/10**, potential impact **7.0/10**, and quality of idea **7.5/10**. These are internal critiques, not official judging or a winning forecast. At review time the public Firebase release was still being verified.
+
+The review identified three concrete changes: refresh on focus/visibility return with a visible refresh control, display dates alongside helper availability, and align the submission documents with the actual Firebase runtime and Activity trace location. Those interface/documentation changes were implemented. A separate security review reproduced a logout/session-reissuance race; its fix transactionally consumes the still-live parent session and has dedicated regression coverage.
+
+The remaining evidence gap is human adoption: no household pilot, paid demand, measured savings, or live Alexa connection is claimed. The recording should show the cancellation in its first ten seconds, then distinguish proposed, accepted, and ready.

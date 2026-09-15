@@ -41,3 +41,11 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 !/.env.example
+
+/firebase-debug.log
+/firestore-debug.log
+/ui-debug.log
+/.firebase/
+/functions/lib/
+/functions/.env*
+/firebase-export-*/

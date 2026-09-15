@@ -445,6 +445,6 @@ export async function runTool(
   const version = c.version;
   c.version++;
   if (name !== 'acknowledge_brief') c.contentVersion++;
-  await saveCircle(c, version);
+  await saveCircle(c, version, p);
   return { message, circle: publicCircle(c) };
 }
