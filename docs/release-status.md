@@ -24,7 +24,7 @@ The MCP smoke run observed a **1,184 ms median** and **1,325 ms p95** using the 
 
 The final clean pipeline includes the stale-form and overnight day-view fixes. Its compiled local MCP run observed median 30 ms and p95 49 ms at revision 7. The earlier grammar-only Hosting publication is retained in the evidence as a separate preceding release. No new production latency or repeated live-suite run is claimed for the final frontend release.
 
-See the [release pipeline record](evidence/firebase-release-pipeline.json) and [production reports](evidence/README.md). These checks apply to the deployed working tree based on `d668158`. The final packaging commit is recorded separately. The [earlier Firebase migration CI run](https://github.com/shi1720/Amazon-Developer-Hackathon/actions/runs/34996577422) passed at `e3e8c5f`; it is not evidence for later uncommitted changes. Published runs remain available in [current CI](https://github.com/shi1720/Amazon-Developer-Hackathon/actions/workflows/ci.yml).
+See the [release pipeline record](evidence/firebase-release-pipeline.json) and [production reports](evidence/README.md). The tested application source and deliverables are committed at [`e5e0170`](https://github.com/shi1720/Amazon-Developer-Hackathon/commit/e5e0170034d4dddab184d2bb3468356f8ae0dee9). Later packaging changes update documentation only. Pushed-source verification is available in [current CI](https://github.com/shi1720/Amazon-Developer-Hackathon/actions/workflows/ci.yml).
 
 ## Product and supporting materials
 
@@ -42,6 +42,8 @@ Detailed references: [evidence](evidence/README.md), [security and operating sco
 ## Submission work still in progress
 
 The local film is complete at 169 seconds, 1920 x 1080, and 24 fps. It still needs public YouTube or Vimeo publication and a signed-out playback check of that public URL. No public video URL is invented in the submission fields.
+
+Publication is paused at two browser gates: Devpost presents an image CAPTCHA when creating the draft, and YouTube states that submitting the video acknowledges its Terms of Service and Community Guidelines. The browser tool requires confirmation at each of those actions; requests are pending in the task. All field copy and upload files are prepared.
 
 The Devpost entry still needs its final review, eligibility and terms confirmation, and submission before **October 24, 2026 at 00:30 IST**. No public video upload or Devpost submission is claimed here.
 

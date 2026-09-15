@@ -7,8 +7,9 @@
     "reportedBy": "Implementation lead from the final clean deployment pipeline, exit 0",
     "applicationUrl": "https://kindhandoff.web.app",
     "sourceBaseline": "d668158",
-    "sourceScope": "Verified deployed working tree based on this commit. The final packaging commit and final source SHA are recorded separately after packaging.",
-    "releaseScope": "Final clean pipeline after stale-form and overnight day-view fixes. The production suite files retain the earlier live run against the unchanged backend; no fresh production latency is claimed."
+    "sourceScope": "The tested application source is committed at e5e0170034d4dddab184d2bb3468356f8ae0dee9. Later packaging changes update documentation only.",
+    "releaseScope": "Final clean pipeline after stale-form and overnight day-view fixes. The production suite files retain the earlier live run against the unchanged backend; no fresh production latency is claimed.",
+    "packagedSourceCommit": "e5e0170034d4dddab184d2bb3468356f8ae0dee9"
   },
   "pipeline": {
     "rootAndFunctionsCleanLockfileInstall": true,
