@@ -20,6 +20,8 @@ A shared handoff brief shows unresolved work, accepted commitments, prerequisite
 
 The public app includes a private fictional demo, email/password accounts, personal circles, single-use helper invitations, activity history, export, and circle deletion. Our focus is recovery, agreement, and readiness across linked tasks.
 
+**Try it in five minutes:** Open [kindhandoff.web.app](https://kindhandoff.web.app) for a private fictional demo. No account, API key, or device is required. Start as Maya, choose **I can’t make it this afternoon**, review and confirm the change, then inspect the suggested Jo/Dev split. Follow the [judge testing guide](https://github.com/shi1720/Amazon-Developer-Hackathon/blob/main/docs/submission-fields.md#testing-instructions-for-judges) to verify acceptance in separate helper sessions, the bag-to-ride prerequisite, and the versioned handoff brief.
+
 ## How we built it
 
 The React 19 and Vite 8 interface calls a real Model Context Protocol server through the official TypeScript SDK 1.30.0. It negotiates protocol 2025-11-25 and uses Streamable HTTP. The browser simulator and external MCP clients invoke the same validated workflow.

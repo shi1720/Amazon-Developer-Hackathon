@@ -7,7 +7,7 @@
 
 Created by **Shivam Gupta** for the Amazon Developer Hackathon 2026.
 
-[MIT License](LICENSE) · [2:49 demo video](docs/deliverables/KindHandoff-Demo.mp4) · [Architecture](docs/architecture.md) · [Product feedback](docs/product-feedback.md) · [Business case](docs/market-and-business.md)
+[MIT License](LICENSE) · [Watch the 2:49 demo](https://youtu.be/t7e00FzIk2M) · [Architecture](docs/architecture.md) · [Product feedback](docs/product-feedback.md) · [Business case](docs/market-and-business.md)
 
 </div>
 
@@ -15,7 +15,7 @@ KindHandoff helps families repair everyday support plans when someone becomes un
 
 **Alexa+ primary track:** a working, explicitly labelled browser simulation calling a real **MCP 2025-11-25 server over Streamable HTTP**. No API key or paid model is required. Native Alexa+ deployment is a separate, documented integration step; this submission does not claim it.
 
-![KindHandoff recovery plan](docs/screenshots/recovery.png)
+![KindHandoff recovery plan](docs/screenshots/recovery.jpg)
 
 [Phone screenshot](docs/screenshots/mobile-390.jpg) · [Tablet screenshot](docs/screenshots/tablet-768.jpg) · [Desktop screenshot](docs/screenshots/desktop.png)
 
@@ -100,7 +100,7 @@ Our first audience is a working adult coordinating routine support for a parent 
 
 ## Submission kit
 
-- [Completed 2:49 demo video](docs/deliverables/KindHandoff-Demo.mp4) · [English SRT captions](docs/deliverables/KindHandoff-Captions.srt) · [Thumbnail](docs/deliverables/KindHandoff-Thumbnail.png)
+- [Public YouTube demo](https://youtu.be/t7e00FzIk2M) · [Download MP4](docs/deliverables/KindHandoff-Demo.mp4) · [English SRT captions](docs/deliverables/KindHandoff-Captions.srt) · [Thumbnail](docs/deliverables/KindHandoff-Thumbnail.png)
 - [Project story](docs/devpost-submission.md) · [All submission fields and testing instructions](docs/submission-fields.md)
 - [Copy-ready HTML submission kit](docs/deliverables/KindHandoff-Submission-Kit.html), downloadable for local use
 - [Word-for-word English narration and timed recording plan](docs/demo-script.md)
@@ -109,7 +109,7 @@ Our first audience is a working adult coordinating routine support for a parent 
 - [Product feedback and observed friction log](docs/product-feedback.md)
 - [Rubric review and changes](docs/rubric-review.md)
 
-The demo uses actual app captures, a fictional household, and clearly disclosed AI-generated narration. The [video source and export checks](docs/video-source/README.md) document its production. YouTube publication and Devpost status are tracked in the [release status](docs/release-status.md).
+The demo uses actual app captures, a fictional household, and clearly disclosed AI-generated narration. The [video source and export checks](docs/video-source/README.md) document its production. The [YouTube video](https://youtu.be/t7e00FzIk2M) is public with uploaded English captions and verified signed-out playback. The [Devpost project](https://devpost.com/software/kindhandoff) exists as a draft and has not been submitted. Current status is tracked in [release status](docs/release-status.md).
 
 All product code and submission materials were created during September 2026 for this entry. Shared framework dependencies and their licenses remain their authors' work. KindHandoff is MIT licensed; attribution to Shivam Gupta appears in the product, repository, and submission materials.
 

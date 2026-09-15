@@ -2,7 +2,7 @@
 
 ## Public release
 
-**[Open KindHandoff](https://kindhandoff.web.app)**
+**[Open KindHandoff](https://kindhandoff.web.app)** · **[Watch the public demo](https://youtu.be/t7e00FzIk2M)**
 
 The app is public on Firebase Hosting with Cloud Functions v2, Firestore, and Firebase Authentication. Signed-out visitors receive an isolated fictional demo. Personal circles require coordinator sign-in or a private helper invitation. The earlier Sites prototype is archived in the `sites-prototype` Git tag.
 
@@ -39,15 +39,13 @@ See the [release pipeline record](evidence/firebase-release-pipeline.json) and [
 
 Detailed references: [evidence](evidence/README.md), [security and operating scope](../SECURITY.md), [Firebase setup](firebase-deployment.md), [submission fields](submission-fields.md).
 
-## Submission work still in progress
+## Public video and Devpost draft
 
-The local film is complete at 169 seconds, 1920 x 1080, and 24 fps. It still needs public YouTube or Vimeo publication and a signed-out playback check of that public URL. No public video URL is invented in the submission fields.
+The [YouTube demo](https://youtu.be/t7e00FzIk2M) is published publicly with the prepared title and description, original thumbnail, English SRT captions, and AI-narration disclosure. The implementation lead verified signed-out in-app-browser playback, a **169.021-second** duration, and a visible public transcript. The local master remains a 169-second, 1920 x 1080, 24 fps export.
 
-Publication is paused at two browser gates: Devpost presents an image CAPTCHA when creating the draft, and YouTube states that submitting the video acknowledges its Terms of Service and Community Guidelines. The browser tool requires confirmation at each of those actions; requests are pending in the task. All field copy and upload files are prepared.
+The [Devpost project](https://devpost.com/software/kindhandoff) exists as **draft 1184871**. The implementation lead verified that all 23 non-eligibility additional fields persisted after reload, with no empty answers. Gallery images, captions, creator credit, and the working video embed were also verified. **The hackathon entry has not been submitted.** Shivam must personally complete the three eligibility declarations (age of majority, eligible jurisdiction, and no disqualifying employment or agency relationship), review the final Official Rules/Devpost Terms agreement, and submit. The [finalization page](https://devpost.com/submit-to/30992-build-ship-shape-amazon-developer-hackathon/manage/submissions/1184871-kindhandoff/finalization) is the remaining submission workflow. The earlier CAPTCHA and video-publication gates are no longer the current status.
 
-The Devpost entry still needs its final review, eligibility and terms confirmation, and submission before **October 24, 2026 at 00:30 IST**. No public video upload or Devpost submission is claimed here.
-
-The creator and product owner is **Shivam Gupta**. AI assistance supported development and submission preparation. No real household pilot, native Alexa deployment, or AWS integration is represented as completed.
+The creator and product owner is **Shivam Gupta**. AI assistance supported development and submission preparation. No real household pilot, native Alexa deployment, or AWS integration is represented as completed. The deadline is **October 24, 2026 at 00:30 IST**.
 
 ## Operating scope
 

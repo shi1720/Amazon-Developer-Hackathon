@@ -2,20 +2,20 @@
   "release": "Firebase public release",
   "application_url": "https://kindhandoff.web.app",
   "author": "Shivam Gupta",
-  "visual_review": "All eight rendered pitch pages and both brief pages inspected individually. No clipping, overlaps, reversed arrows, or unreadable links observed.",
-  "changes": "Updated submission copy, public verification label, and six-read refresh cost scenario totaling 2,016 document reads per household/day. All eight pitch slides and both brief pages were rendered and inspected after the changes.",
+  "visual_review": "Pitch page 8 and brief page 2 visually inspected after publication-link updates. No clipping, overlaps, reversed arrows, or unreadable links observed. The other eight rendered pages remain byte-identical to the prior complete ten-page visual review.",
+  "changes": "Added the verified public YouTube demo link to pitch slide 8 and brief page 2. Re-rendered both PDFs and the finalized PPTX. Inspected both changed pages; all eight other rendered pages are byte-identical to the previously reviewed images.",
   "files": {
     "KindHandoff-Pitch.pptx": {
-      "sha256": "2b4d9f279dcb1070f4c241d68e240daf4a6c857b462004279f1488eb63b6fe2b",
-      "bytes": 41134
+      "sha256": "baab0c8af2991382b6e9939f61154d7f4e70417fcfc067e81ccb28a6b9f3cf75",
+      "bytes": 41249
     },
     "KindHandoff-Pitch.pdf": {
-      "sha256": "76b816b0a41b446fb9dcef071d8ce4766d0c0c34f7dfe9f0417ab8ace6c79b58",
-      "bytes": 211773
+      "sha256": "205efd560fa04d3120bac151e76215bfe5ae82f57c1fced03b5532e8916de280",
+      "bytes": 213260
     },
     "KindHandoff-Judge-Brief.pdf": {
-      "sha256": "535fa7f77fe7e4f40804e6d3a63c39a6aef5aacb484ef04deb01c494a7bb72cf",
-      "bytes": 35359
+      "sha256": "ce650d661917ac2576da50ccf2a1deb3691462b9959371e86929190bfad433a3",
+      "bytes": 35598
     }
   },
   "reviewed_images": [
@@ -31,5 +31,5 @@
     "brief-2.png"
   ],
   "product_validation_boundary": "Product production results supplied by implementation lead and recorded separately in artifact-source/release-status.json. Artifact QA is not a product or native PowerPoint test.",
-  "videoBoundary": "This record covers only the PPTX and two listed PDFs. No completed video export, captions aligned to a final film, upload, or public video playback is claimed here."
+  "videoBoundary": "This record covers only the PPTX and two listed PDFs. Public video playback, captions, and duration were verified separately by the implementation lead and recorded in release-status.json."
 }

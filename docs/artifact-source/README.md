@@ -52,3 +52,9 @@ The PDF skill's operation-start marker ran once before authoring the two PDF out
 Final deliverables live in `../deliverables/`. Intermediate candidates, JSON validation receipts, and rendered PNGs live in `../.build/` and `../.finalized/`. Review every final PNG after regeneration. The structural finalizer and PDF checks cannot detect all visual issues; the initial visual pass, for example, identified connector directions that structural checks accepted.
 
 The creator credit identifies Shivam Gupta as project creator and product owner. The source materials and implementation used AI assistance, as disclosed in the submission draft.
+
+## Publication assets
+
+The English captioned demo is public at [YouTube](https://youtu.be/t7e00FzIk2M), with signed-out playback and the uploaded English subtitle track verified. The [Devpost project](https://devpost.com/software/kindhandoff) remains draft 1184871, not submitted. Personal eligibility declarations, the final rules/terms agreement, and submission remain for Shivam.
+
+`build-thumbnail.py` produces the 1280 × 720 YouTube thumbnail. `build-thumbnail.py --devpost` produces the 1200 × 800 Devpost variant. Both keep the title and diagram inside a central crop-safe area, and both PNGs were visually inspected.

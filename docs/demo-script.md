@@ -1,6 +1,6 @@
 # KindHandoff demo film
 
-**Completed film:** [KindHandoff-Demo.mp4](deliverables/KindHandoff-Demo.mp4), 169 seconds, with [final timed captions](deliverables/KindHandoff-Captions.srt). Export and sampled visual review passed; public upload remains pending. The timing windows and production steps below are the original reproduction plan, not unfinished recording work.
+**Completed film:** [KindHandoff-Demo.mp4](deliverables/KindHandoff-Demo.mp4), 169 seconds, with [final timed captions](deliverables/KindHandoff-Captions.srt). Export and sampled visual review passed. The [public YouTube video](https://youtu.be/t7e00FzIk2M) has verified signed-out playback and uploaded English captions. The timing windows and production steps below are the original reproduction plan, not unfinished recording work.
 
 ## One cancellation. Two commitments. A workable afternoon.
 

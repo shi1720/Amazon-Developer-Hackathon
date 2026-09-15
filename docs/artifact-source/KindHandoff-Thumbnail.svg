@@ -2,22 +2,22 @@
 <title>KindHandoff: One cancellation. Two commitments.</title>
 <desc>Original concept diagram of a library bag followed by a ride. Created by Shivam Gupta.</desc>
 <rect width="1280" height="720" fill="#13263e"/>
-<circle cx="1198" cy="4" r="398" fill="#1a3353"/>
-<circle cx="1198" cy="4" r="261" fill="#203e62"/>
-<rect x="64" y="62" width="8" height="38" rx="4" fill="#4c78ed"/>
-<text x="89" y="86" font-family="Noto Sans, Arial, sans-serif" font-size="34" font-weight="700" fill="#ffffff">kindhandoff</text>
-<text x="64" y="182" font-family="Noto Sans, Arial, sans-serif" font-size="19" font-weight="700" fill="#a8c2ff">CARE, CARRIED FORWARD</text>
-<text x="60" y="300" font-family="Noto Sans, Arial, sans-serif" font-size="80" font-weight="700" fill="#ffffff">One cancellation.</text>
-<text x="60" y="407" font-family="Noto Sans, Arial, sans-serif" font-size="80" font-weight="700" fill="#ffffff">Two commitments.</text>
-<text x="64" y="520" font-family="Noto Sans, Arial, sans-serif" font-size="34" font-weight="400" fill="#c5d3e6">A workable afternoon.</text>
-<text x="64" y="645" font-family="Noto Sans, Arial, sans-serif" font-size="24" font-weight="400" fill="#c5d3e6">Created by Shivam Gupta</text>
-<rect x="895" y="231" width="321" height="139" rx="22" fill="#f5f7fc"/>
-<text x="923" y="270" font-family="Noto Sans, Arial, sans-serif" font-size="21" font-weight="700" fill="#64758c">01</text>
-<text x="923" y="328" font-family="Noto Sans, Arial, sans-serif" font-size="35" font-weight="700" fill="#182c43">Library bag</text>
-<path d="M1055 374L1055 424" fill="none" stroke="#a8c2ff" stroke-width="4"/>
-<path d="M1045 414L1055 424" fill="none" stroke="#a8c2ff" stroke-width="4"/>
-<path d="M1065 414L1055 424" fill="none" stroke="#a8c2ff" stroke-width="4"/>
-<rect x="895" y="435" width="321" height="139" rx="22" fill="#f5f7fc"/>
-<text x="923" y="474" font-family="Noto Sans, Arial, sans-serif" font-size="21" font-weight="700" fill="#64758c">02</text>
-<text x="923" y="532" font-family="Noto Sans, Arial, sans-serif" font-size="35" font-weight="700" fill="#182c43">Library ride</text>
+<circle cx="1258" cy="4" r="398" fill="#1a3353"/>
+<circle cx="1258" cy="4" r="261" fill="#203e62"/>
+<rect x="200" y="58" width="8" height="36" rx="4" fill="#4c78ed"/>
+<text x="225" y="81" font-family="Noto Sans, Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">kindhandoff</text>
+<text x="200" y="149" font-family="Noto Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#a8c2ff">CARE, CARRIED FORWARD</text>
+<text x="197" y="239" font-family="Noto Sans, Arial, sans-serif" font-size="68" font-weight="700" fill="#ffffff">One cancellation.</text>
+<text x="197" y="332" font-family="Noto Sans, Arial, sans-serif" font-size="68" font-weight="700" fill="#ffffff">Two commitments.</text>
+<text x="200" y="398" font-family="Noto Sans, Arial, sans-serif" font-size="28" font-weight="400" fill="#c5d3e6">A workable afternoon.</text>
+<rect x="200" y="450" width="384" height="125" rx="20" fill="#f5f7fc"/>
+<text x="226" y="486" font-family="Noto Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#64758c">01</text>
+<text x="226" y="538" font-family="Noto Sans, Arial, sans-serif" font-size="31" font-weight="700" fill="#182c43">Library bag</text>
+<path d="M607 512L673 512" fill="none" stroke="#a8c2ff" stroke-width="4"/>
+<path d="M663 502L673 512" fill="none" stroke="#a8c2ff" stroke-width="4"/>
+<path d="M663 522L673 512" fill="none" stroke="#a8c2ff" stroke-width="4"/>
+<rect x="696" y="450" width="384" height="125" rx="20" fill="#f5f7fc"/>
+<text x="722" y="486" font-family="Noto Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#64758c">02</text>
+<text x="722" y="538" font-family="Noto Sans, Arial, sans-serif" font-size="31" font-weight="700" fill="#182c43">Library ride</text>
+<text x="200" y="653" font-family="Noto Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#c5d3e6">Created by Shivam Gupta</text>
 </svg>

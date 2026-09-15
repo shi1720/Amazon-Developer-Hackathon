@@ -125,7 +125,7 @@ y=para('<b>Primary measure:</b> time from a cancellation to an accepted feasible
 y=heading('Cost discipline',y)
 y=para('Proposed pilot budget: $10/month for five households. The scenario budgets 2,016 database reads per household/day. Selected serving cost is $0 with unused allowances, or $0.39 if shared compute allowances are consumed. Billing is enabled. Deployment, support, and usage changes add cost.',M,y,CW,size=10.1)-17
 y=heading('Demo and next steps',y)
-y=para('Publish the captioned video, run the household pilot, and pursue live Alexa+ onboarding. The additional Open Source contribution is '+link('@kindhandoff/guard',GUARD_REPO)+' under MIT.',M,y,CW,size=10.2)-9
+y=para('Watch the '+link('public 2:49 demo','https://youtu.be/t7e00FzIk2M')+'. Next: the household pilot and live Alexa+ onboarding. The additional Open Source contribution is '+link('@kindhandoff/guard',GUARD_REPO)+' under MIT.',M,y,CW,size=10.2)-9
 y=para('Public MIT repository: '+link('shi1720/Amazon-Developer-Hackathon',REPO),M,y,CW,size=9.6)-5
 y=para(APP_ACCESS_LABEL+': '+link('kindhandoff.web.app',APP_URL),M,y,CW,size=9.2)-11
 y=para('Sources (15 Sep 2026): '+link('Alexa+ MCP','https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html')+'; '+link('Caring Village','https://caringvillage.com/app/')+'; '+link('Family CareRelay','https://www.familycarerelay.com/')+'; '+link('Cloud Run','https://cloud.google.com/run/pricing')+'; '+link('Firestore','https://cloud.google.com/firestore/pricing')+'; '+link('Hosting','https://firebase.google.com/docs/hosting/usage-quotas-pricing')+'.',M,y,CW,size=8.5,leading=12,color='muted')

@@ -4,10 +4,12 @@ The product film has already been created. **Shivam Gupta is the creator.** Its 
 
 ## Finished files
 
-- [Play the 169-second demo](KindHandoff-Demo.mp4)
+- [Watch the public YouTube demo](https://youtu.be/t7e00FzIk2M)
+- [Download the 169-second master](KindHandoff-Demo.mp4)
 - [English captions, SRT](KindHandoff-Captions.srt)
 - [English captions, WebVTT](KindHandoff-Captions.vtt)
 - [1280 x 720 YouTube thumbnail](KindHandoff-Thumbnail.png)
+- [1200 x 800 Devpost thumbnail](KindHandoff-Devpost-Thumbnail.png)
 - [Field-copy submission kit](KindHandoff-Submission-Kit.html)
 - [YouTube title, description, and testing guide](../submission-fields.md)
 
@@ -17,9 +19,11 @@ The export is **1920 x 1080 at 24 fps**, with **39 timed captions**. Full decodi
 
 This was automated export validation and sampled agent visual review, not a continuous human audiovisual screening. The fictional household and AI narration remain clearly labelled.
 
-## Publication still pending
+## Published video and remaining submission
 
-Upload the existing MP4 publicly to YouTube or Vimeo, using the supplied thumbnail, title, description, and captions. Verify that the public URL plays while signed out, then insert that actual URL into the Devpost fields. Public video upload and Devpost submission are not yet represented as complete.
+The [YouTube video](https://youtu.be/t7e00FzIk2M) is public. Its thumbnail, English SRT captions, and AI-narration disclosure are in place. The implementation lead verified signed-out playback at 169.021 seconds and a visible public transcript.
+
+The [Devpost draft](https://devpost.com/software/kindhandoff), project 1184871, is **not submitted**. Finish the existing [finalization workflow](https://devpost.com/submit-to/30992-build-ship-shape-amazon-developer-hackathon/manage/submissions/1184871-kindhandoff/finalization) after Shivam completes the three personal eligibility declarations and reviews the final Official Rules/Devpost Terms agreement. The implementation lead verified all 23 non-eligibility additional fields after reload. No additional recording or video upload is required for this draft.
 
 ## Reproduction sources
 

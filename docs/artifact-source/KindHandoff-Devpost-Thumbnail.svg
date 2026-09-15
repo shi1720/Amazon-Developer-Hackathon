@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+<title>KindHandoff: One cancellation. Two commitments.</title>
+<desc>Original concept diagram of a library bag followed by a ride. Created by Shivam Gupta.</desc>
+<rect width="1200" height="800" fill="#13263e"/>
+<circle cx="1178" cy="4" r="398" fill="#1a3353"/>
+<circle cx="1178" cy="4" r="261" fill="#203e62"/>
+<rect x="160" y="98" width="8" height="36" rx="4" fill="#4c78ed"/>
+<text x="185" y="121" font-family="Noto Sans, Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">kindhandoff</text>
+<text x="160" y="189" font-family="Noto Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#a8c2ff">CARE, CARRIED FORWARD</text>
+<text x="157" y="279" font-family="Noto Sans, Arial, sans-serif" font-size="68" font-weight="700" fill="#ffffff">One cancellation.</text>
+<text x="157" y="372" font-family="Noto Sans, Arial, sans-serif" font-size="68" font-weight="700" fill="#ffffff">Two commitments.</text>
+<text x="160" y="438" font-family="Noto Sans, Arial, sans-serif" font-size="28" font-weight="400" fill="#c5d3e6">A workable afternoon.</text>
+<rect x="160" y="490" width="384" height="125" rx="20" fill="#f5f7fc"/>
+<text x="186" y="526" font-family="Noto Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#64758c">01</text>
+<text x="186" y="578" font-family="Noto Sans, Arial, sans-serif" font-size="31" font-weight="700" fill="#182c43">Library bag</text>
+<path d="M567 552L633 552" fill="none" stroke="#a8c2ff" stroke-width="4"/>
+<path d="M623 542L633 552" fill="none" stroke="#a8c2ff" stroke-width="4"/>
+<path d="M623 562L633 552" fill="none" stroke="#a8c2ff" stroke-width="4"/>
+<rect x="656" y="490" width="384" height="125" rx="20" fill="#f5f7fc"/>
+<text x="682" y="526" font-family="Noto Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#64758c">02</text>
+<text x="682" y="578" font-family="Noto Sans, Arial, sans-serif" font-size="31" font-weight="700" fill="#182c43">Library ride</text>
+<text x="160" y="693" font-family="Noto Sans, Arial, sans-serif" font-size="23" font-weight="400" fill="#c5d3e6">Created by Shivam Gupta</text>
+</svg>

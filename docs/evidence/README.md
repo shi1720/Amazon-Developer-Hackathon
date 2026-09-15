@@ -17,7 +17,7 @@ The production records preserve the scripts' result structure and add explicit p
 - The separate Firestore integration suite checks races, ownership, expiry, revocation, and transaction authorization. Run `npm run test:firestore` with an isolated loopback emulator.
 - [Browser verification](browser-verification.md) records actual UI and viewport observations. It distinguishes functional checks from usability, microphone, and accessibility work that was not performed.
 - [Artifact visual QA](artifact-visual-qa.json) identifies the rendered and inspected PPTX and PDFs. It does not establish video completion, application behavior, or native PowerPoint testing.
-- [Video QA](../video-source/final-qa.json) records the completed 169-second, 1080p, 24 fps film, 39 captions, successful full decode, all shot previews, and 28 inspected decoded frames. Browser playback also passed. Public upload remains pending; the review was not a continuous human audiovisual screening.
+- [Video QA](../video-source/final-qa.json) records the completed 169-second, 1080p, 24 fps film, 39 captions, successful full decode, all shot previews, and 28 inspected decoded frames. Browser playback also passed. The [public YouTube video](https://youtu.be/t7e00FzIk2M) has verified signed-out playback and an uploaded English transcript; the review was not a continuous human audiovisual screening.
 - `legacy-sites-prototype/` contains checks from the archived prototype, not the current Firebase runtime.
 
 A smoke-test latency is an observation from a small run, not a load test, uptime commitment, or statistically established production benchmark. Synthetic accounts contain fictional data. Raw account credentials, sessions, and invitation links are never included in these reports.

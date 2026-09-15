@@ -184,8 +184,8 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
 // 8. Demo access and next work, with production verification status explicit.
 {
  const s=addSlide(8,'The bag-to-ride demo','One cancellation, a feasible split, and responsibility each helper accepts.',true);
- text(s,'next-label','Next steps',64,316,610,52,33,C.white,true);
- text(s,'next-one','Publish the captioned demo video',64,396,780,42,29,C.pale);
+ text(s,'next-label','Demo and next steps',64,316,610,52,33,C.white,true);
+ linkedText(s,'next-one','Watch the public 2:49 demo','https://youtu.be/t7e00FzIk2M',64,396,780,42,29,C.pale);
  text(s,'next-two','Run the household pilot',64,458,780,42,29,C.pale);
  text(s,'next-three','Complete live Alexa+ onboarding',64,520,780,42,29,C.pale);
  text(s,'contribution-label','Open Source',935,324,281,37,24,C.pale,true);
@@ -194,7 +194,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  text(s,'contribution-role','State transitions\nCoverage + ranking\nMIT license',935,477,281,110,23,C.pale);
  linkedText(s,'repo-link','github.com/shi1720/Amazon-Developer-Hackathon',REPO,64,606,1152,27,18,C.white);
  linkedText(s,'hosted-url',APP_ACCESS_LABEL+': kindhandoff.web.app',APP_URL,64,645,1152,28,17,C.pale);
- notes(s,'Creator: Shivam Gupta. Public MIT main repository: '+REPO+'. Firebase application: '+APP_URL+'. '+'Public workflow verification is documented in the repository evidence.'+' No public video URL has been claimed. The additional Open Source contribution is @kindhandoff/guard, public and MIT licensed: '+GUARD_REPO+'. Contribution: '+GUARD_CONTRIBUTION+'. The library covers state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and content-version acknowledgments. Next steps include publishing the English captioned video under three minutes, household research, and live Alexa+ onboarding where access permits.');
+ notes(s,'Creator: Shivam Gupta. Public MIT main repository: '+REPO+'. Firebase application: '+APP_URL+'. '+'Public workflow verification is documented in the repository evidence.'+' Public English captioned demo: https://youtu.be/t7e00FzIk2M . Signed-out playback and the public transcript were verified by the implementation lead. The additional Open Source contribution is @kindhandoff/guard, public and MIT licensed: '+GUARD_REPO+'. Contribution: '+GUARD_CONTRIBUTION+'. The library covers state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and content-version acknowledgments. Next steps include household research and live Alexa+ onboarding where access permits. The Devpost project remains a draft, not submitted.');
 }
 
 const candidatePath=path.join(buildDir,'KindHandoff-Pitch-candidate.pptx');
