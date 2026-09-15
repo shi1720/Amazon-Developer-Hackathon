@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "independentSessions": 4,
+  "checks": 13,
+  "protocol": "2025-11-25",
+  "transport": "Streamable HTTP",
+  "evidence": [
+    "one-time real invitation redemption",
+    "helper cannot impersonate demo roles",
+    "individual acceptance",
+    "dependency blocking and completion",
+    "two helpers acknowledge same content revision",
+    "substantive changes stale the brief",
+    "tenant isolation",
+    "helper admin denial",
+    "MCP administrative scope restriction",
+    "atomic token rotation",
+    "helper session revocation",
+    "persistent completed plan"
+  ]
+}

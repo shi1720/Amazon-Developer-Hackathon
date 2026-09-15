@@ -17,12 +17,15 @@ jobs:
       - run: npm run db:local
       - name: Exercise live MCP and separate helper sessions
         run: |
-          npm run dev -- --host 127.0.0.1 --port 3001 > /tmp/kindhandoff-dev.log 2>&1 &
+          npm start -- --ip 127.0.0.1 --port 3001 > /tmp/kindhandoff-dev.log 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          READY=0
           for attempt in $(seq 1 60); do
-            if curl -fsS http://127.0.0.1:3001/ > /dev/null; then break; fi
+            if curl -fsS http://127.0.0.1:3001/ > /dev/null 2>&1; then READY=1; break; fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then cat /tmp/kindhandoff-dev.log; exit 1; fi
             sleep 1
           done
+          if [ "$READY" != 1 ]; then cat /tmp/kindhandoff-dev.log; exit 1; fi
           BASE_URL=http://127.0.0.1:3001 npm run test:integration
           BASE_URL=http://127.0.0.1:3001 npm run test:e2e

@@ -1,0 +1,15 @@
+I'm Shivam Gupta, and this is KindHandoff. When several people help someone they love, a change of plans creates a new job: finding out who can take over, and whether they actually agreed. KindHandoff makes that work visible.
+
+Meet our fictional household. Maya was going to pack a library bag at two thirty, then provide a ride at three. I tell the simulator: “Maya is unavailable this afternoon.” Both commitments now need replacements. The ride also depends on the bag being packed.
+
+Here is why the suggested plan matters. Jo can enter the house between two and three, but cannot drive. Dev can drive, but is only available from two forty-five. The planner checks those constraints and proposes Jo for the bag, Dev for the ride.
+
+I review the proposal before creating offers. They remain pending until each named helper accepts. Jo accepts her bag task in her own helper view. Dev accepts his ride separately. Every acceptance belongs to the person taking responsibility.
+
+Watch the ride. Even after Dev accepts, it is still waiting for the bag. Jo records the bag as packed, and the ride becomes ready. That small dependency is the difference between having two names on a calendar and having a workable afternoon.
+
+The updated handoff brief shows what changed and what remains. Dev acknowledges this specific version. If the plan changes again, the record still tells us which version he read. People can see what was agreed, by whom, and when.
+
+Behind this is a real MCP server using the November twenty-fifth, twenty twenty-five specification and Streamable HTTP. The web language simulator is explicitly deterministic. This demonstration uses persistent household data, real sign-in, and separate helper invitations; it does not claim a live Alexa connection.
+
+KindHandoff starts with practical support: bags, rides, meals, and visits. We plan to test a household subscription, with every helper included. The promise is simple: make the next step clear, and make responsibility something people actually accept.

@@ -21,7 +21,7 @@ export function fail(error: unknown) {
       error.status,
     );
   console.error(
-    'Dayweave request failed',
+    'KindHandoff request failed',
     error instanceof Error ? error.message : 'Unknown error',
   );
   return json(
@@ -40,7 +40,7 @@ export function checkOrigin(request: Request, bearerAllowed = false) {
   if (origin && origin !== new URL(request.url).origin)
     throw new DomainError(
       'ORIGIN',
-      'This request must come from Dayweave.',
+      'This request must come from KindHandoff.',
       403,
     );
   if (

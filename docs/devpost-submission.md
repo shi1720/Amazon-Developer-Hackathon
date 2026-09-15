@@ -135,10 +135,10 @@ TypeScript; React 19; Vinext; Model Context Protocol; MCP SDK 1.30.0; Streamable
 | Submission field | Value |
 | --- | --- |
 | Main public code repository | [shi1720/Amazon-Developer-Hackathon](https://github.com/shi1720/Amazon-Developer-Hackathon) |
-| Live application | **[INSERT VERIFIED PUBLIC APPLICATION URL]** |
+| Live application | [Hosted app](https://shivam-amazon-hackathon.sg127977958.chatgpt.site) — currently private; public access and authenticated hosted flow check pending |
 | Public demo video, under three minutes | **[INSERT VERIFIED PUBLIC YOUTUBE OR VIMEO URL]** |
 | MCP setup and run instructions | [MCP setup](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/integrations/alexa) |
-| License | MIT; **[VERIFY ROOT LICENSE AND GITHUB ABOUT DISPLAY]** |
+| License | MIT; verified in the public repository and GitHub About |
 
 ## Open Source mini challenge — additional contribution
 

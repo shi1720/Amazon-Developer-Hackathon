@@ -38,7 +38,7 @@ KindHandoff starts with practical support: bags, rides, meals, and visits. We pl
 | 2:12–2:37 | Open the real MCP inspection/evidence view. Show protocol version, tool invocation, response, and persistent state. Include a compact sign-in/invitation inset if needed. | 7 | Real MCP request/response; SDK details may appear visually. Persistent database state and honest simulator label. |
 | 2:37–2:55 | Return to the calm, ready afternoon plan. End on “KindHandoff · Clear plans. Accepted responsibility.” and the verified demo/repository URL. | 8 | A coherent result and a restrained commercial hypothesis. |
 
-The narration is 325 words (counted as whitespace-separated words). Read at a natural pace near 125–130 words per minute and allow short pauses for the state changes. Rehearse once with the actual recording; trim pauses before cutting evidence. The final export must remain under 3:00.
+The narration is 327 words (counted as whitespace-separated words). Read at a natural pace near 125–130 words per minute and allow short pauses for the state changes. Rehearse once with the actual recording; trim pauses before cutting evidence. The final export must remain under 3:00.
 
 ## Recording procedure
 

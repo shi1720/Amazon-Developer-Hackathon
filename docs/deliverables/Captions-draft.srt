@@ -1,0 +1,159 @@
+1
+00:00:00,000 --> 00:00:03,800
+I'm Shivam Gupta, and this is KindHandoff. When several
+
+2
+00:00:03,800 --> 00:00:07,600
+people help someone they love, a change of plans
+
+3
+00:00:07,600 --> 00:00:11,400
+creates a new job: finding out who can take
+
+4
+00:00:11,400 --> 00:00:15,200
+over, and whether they actually agreed. KindHandoff makes that
+
+5
+00:00:15,200 --> 00:00:19,000
+work visible.
+
+6
+00:00:19,000 --> 00:00:23,800
+Meet our fictional household. Maya was going to pack
+
+7
+00:00:23,800 --> 00:00:28,600
+a library bag at two thirty, then provide a
+
+8
+00:00:28,600 --> 00:00:33,400
+ride at three. I tell the simulator: “Maya is
+
+9
+00:00:33,400 --> 00:00:38,200
+unavailable this afternoon.” Both commitments now need replacements. The
+
+10
+00:00:38,200 --> 00:00:43,000
+ride also depends on the bag being packed.
+
+11
+00:00:43,000 --> 00:00:47,600
+Here is why the suggested plan matters. Jo can
+
+12
+00:00:47,600 --> 00:00:52,200
+enter the house between two and three, but cannot
+
+13
+00:00:52,200 --> 00:00:56,800
+drive. Dev can drive, but is only available from
+
+14
+00:00:56,800 --> 00:01:01,400
+two forty-five. The planner checks those constraints and proposes
+
+15
+00:01:01,400 --> 00:01:06,000
+Jo for the bag, Dev for the ride.
+
+16
+00:01:06,000 --> 00:01:10,600
+I review the proposal before creating offers. They remain
+
+17
+00:01:10,600 --> 00:01:15,200
+pending until each named helper accepts. Jo accepts her
+
+18
+00:01:15,200 --> 00:01:19,800
+bag task in her own helper view. Dev accepts
+
+19
+00:01:19,800 --> 00:01:24,400
+his ride separately. Every acceptance belongs to the person
+
+20
+00:01:24,400 --> 00:01:29,000
+taking responsibility.
+
+21
+00:01:29,000 --> 00:01:33,400
+Watch the ride. Even after Dev accepts, it is
+
+22
+00:01:33,400 --> 00:01:37,800
+still waiting for the bag. Jo records the bag
+
+23
+00:01:37,800 --> 00:01:42,200
+as packed, and the ride becomes ready. That small
+
+24
+00:01:42,200 --> 00:01:46,600
+dependency is the difference between having two names on
+
+25
+00:01:46,600 --> 00:01:51,000
+a calendar and having a workable afternoon.
+
+26
+00:01:51,000 --> 00:01:55,200
+The updated handoff brief shows what changed and what
+
+27
+00:01:55,200 --> 00:01:59,400
+remains. Dev acknowledges this specific version. If the plan
+
+28
+00:01:59,400 --> 00:02:03,600
+changes again, the record still tells us which version
+
+29
+00:02:03,600 --> 00:02:07,800
+he read. People can see what was agreed, by
+
+30
+00:02:07,800 --> 00:02:12,000
+whom, and when.
+
+31
+00:02:12,000 --> 00:02:17,000
+Behind this is a real MCP server using the
+
+32
+00:02:17,000 --> 00:02:22,000
+November twenty-fifth, twenty twenty-five specification and Streamable HTTP. The
+
+33
+00:02:22,000 --> 00:02:27,000
+web language simulator is explicitly deterministic. This demonstration uses
+
+34
+00:02:27,000 --> 00:02:32,000
+persistent household data, real sign-in, and separate helper invitations;
+
+35
+00:02:32,000 --> 00:02:37,000
+it does not claim a live Alexa connection.
+
+36
+00:02:37,000 --> 00:02:40,600
+KindHandoff starts with practical support: bags, rides, meals, and
+
+37
+00:02:40,600 --> 00:02:44,200
+visits. We plan to test a household subscription, with
+
+38
+00:02:44,200 --> 00:02:47,800
+every helper included. The promise is simple: make the
+
+39
+00:02:47,800 --> 00:02:51,400
+next step clear, and make responsibility something people actually
+
+40
+00:02:51,400 --> 00:02:55,000
+accept.

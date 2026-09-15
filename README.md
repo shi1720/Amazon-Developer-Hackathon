@@ -17,6 +17,8 @@ KindHandoff helps families repair everyday support plans when someone becomes un
 
 ![KindHandoff on mobile](docs/screenshots/mobile.png)
 
+[Hosted app — currently private](https://shivam-amazon-hackathon.sg127977958.chatgpt.site). The host access gate is active; public visitor access and a signed-in production workflow check remain pending.
+
 ## The afternoon that explains the product
 
 Maya cannot make it. Her 14:30 library-bag task and 15:00 ride both need a new handoff. Jo can access the home but cannot drive; Dev can drive but is available only from 14:45. KindHandoff proposes **Jo for the bag, Dev for the ride**. Each person accepts their own offer. The ride stays waiting until the bag is recorded complete.
@@ -30,7 +32,7 @@ Requires Node.js **22.13 or later** and npm. The database is local; no cloud acc
 ```sh
 npm ci
 npm run db:local
-npm run dev -- --host 127.0.0.1 --port 3001
+npm run dev -- --hostname 127.0.0.1 --port 3001
 ```
 
 Open [the local app](http://localhost:3001). Each browser receives its own synthetic household. Local development may provide a development sign-in identity; it is not proof of production authentication.
