@@ -1,0 +1,31 @@
+{
+  "recordedAt": "2026-09-15T18:30:31.872Z",
+  "project": "kindhandoff",
+  "status": "complete",
+  "scope": "Only the disposable fictional UI QA account, its exact owner-UID personal circle, and associated access records.",
+  "deleted": {
+    "firebaseAuthUsers": 1,
+    "personalCircles": 1,
+    "ownerMappings": 1,
+    "sessions": 1,
+    "invitations": 0,
+    "embeddedEvents": 3,
+    "embeddedNotes": 0,
+    "activeCommitments": 1,
+    "cancelledRecords": 0
+  },
+  "verification": {
+    "firebaseAuthUserAbsent": true,
+    "ownedCirclesAbsent": true,
+    "ownerMappingAbsent": true,
+    "associatedSessionsAndInvitationsAbsent": true,
+    "credentialFixtureRemoved": true
+  },
+  "note": "Events, notes and commitment records were embedded in the deleted personal circle. No other accounts or circles were selected.",
+  "emulatorCleanup": {
+    "recordedAt": "2026-09-15T18:31:27.765Z",
+    "status": "complete",
+    "verifiedOwnedProcessesStopped": 3,
+    "otherProcessesTargeted": 0
+  }
+}

@@ -14,5 +14,13 @@
     "logout revocation",
     "sign-in restores persisted circle",
     "confirmed deletion"
-  ]
+  ],
+  "provenance": {
+    "recordedDate": "2026-09-15",
+    "reportedBy": "Implementation lead from final clean release pipeline, exit 0",
+    "runtime": "Compiled local production bundle against Firebase Auth and Firestore emulators",
+    "sourceBaseline": "d668158",
+    "sourceScope": "Updated working tree, final packaging SHA pending."
+  },
+  "claimBoundary": "Local emulator verification only. These results are not production timings or a new cloud-authentication test."
 }

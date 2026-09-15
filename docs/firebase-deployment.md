@@ -50,16 +50,26 @@ The Firestore suite requires a loopback emulator and selects a separate `demo-ki
 
 ## Deploy this project
 
-Use an authenticated Firebase CLI account with project permissions:
+Use Node 22.13+, Java 21+, and an authenticated Firebase CLI account with project permissions. Preview the release stages without installing, building or publishing:
 
 ```sh
-npm ci
-npm ci --prefix functions
-npm run check
-npx firebase-tools@15.30.1 deploy --only firestore,functions,hosting --project kindhandoff
+npm run deploy:firebase -- --project kindhandoff --plan
 ```
 
-`firebase.json` runs the build before uploading functions and pins Hosting rewrites to the deployed function revision. A new fork needs its own Firebase project, web app, enabled Auth provider, Firestore database, billing setup, runtime identity and updated configuration. Do not accidentally deploy a fork to Shivam's project.
+Run the full release verification without publishing, or complete the deployment:
+
+```sh
+npm run deploy:firebase -- --project kindhandoff --check-only
+npm run deploy:firebase -- --project kindhandoff
+```
+
+The runner installs both lockfiles with `npm ci`, runs lint/type/unit/build checks, then starts temporary Auth/Firestore emulators on unused loopback ports. It executes the Firestore regressions and actual compiled Auth/MCP/multi-user proofs against isolated `demo-*` namespaces. It stops on any failure. The compiled test server also uses an unused port, so a running development server does not receive release-test requests.
+
+The final step deploys Firestore rules, the API function and Hosting together, then checks the public page, anonymous session, MCP routing and Firebase app configuration using read-only requests. It does not create public test accounts or household data. Production dotenv overrides and inherited emulator/build overrides are rejected before the pipeline starts. Dotenv file contents are not inspected. Subprocesses receive a narrow environment allowlist so unrelated shell credentials cannot enter Firebase emulator debug logs. Authenticate through the CLI's local login; the script does not forward token environment variables.
+
+`firebase.json` runs the build before uploading functions and preserves exactly one `^/(api/.*|mcp)$` rewrite with `pinTag: true`, followed by the static application fallback. The runner verifies that structure rather than rewriting it. Function resource limits and the attached runtime service account remain controlled by `functions/index.ts`. With no Functions dotenv file, the pinned Firebase CLI preserves existing deployed environment variables, including `PUBLIC_ORIGIN`. The code also defaults to the canonical `https://kindhandoff.web.app` origin. [Firebase pinned function rewrites](https://firebase.google.com/docs/hosting/functions)
+
+A new fork needs its own Firebase project, web app, enabled Auth provider, Firestore database, billing setup, runtime identity and reviewed deployment-script/configuration changes. The explicit `--project kindhandoff` requirement prevents an accidental default-project selection; do not deploy a fork to Shivam's project.
 
 No LLM API key, paid voice service, service-account JSON key, or AWS credential is required. Firebase's browser configuration is public project identification; it is not a server secret. Database permissions and server authentication enforce access.
 

@@ -47,6 +47,7 @@ export type Circle = {
   demo: boolean;
   members: Member[];
   tasks: Task[];
+  archivedTasks?: { task: Task; cancelledAt: string; cancelledBy: string }[];
   events: Event[];
   notes: Note[];
   plan: Plan | null;

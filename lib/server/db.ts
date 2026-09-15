@@ -210,7 +210,14 @@ export function assertCoordinator(c: Circle, p: Principal) {
       403,
     );
 }
-export async function getCircle(id: string): Promise<Circle> {
+export async function getCircle(id: string, p?: Principal): Promise<Circle> {
+  if (p) {
+    if (p.circleId !== id)
+      throw new DomainError('FORBIDDEN', 'Circle scope mismatch.', 403);
+    return database().runTransaction(
+      async (tx) => (await authorizedCircle(tx, p)).circle,
+    );
+  }
   return decodeCircle(requireCircleRecord(await circleRef(id).get()));
 }
 export async function findOwnedCircle(uid: string): Promise<Circle | null> {

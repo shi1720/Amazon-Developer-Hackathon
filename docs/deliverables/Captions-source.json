@@ -1,0 +1,380 @@
+{
+  "timing_status": "Editorial target windows. Retime to actual generated audio and actual screen capture before final video/captions.",
+  "word_count": 293,
+  "segments": [
+    {
+      "id": "01-change",
+      "cues": [
+        {
+          "text": "Maya can't make it this afternoon.",
+          "lines": [
+            "Maya can't make it this afternoon."
+          ],
+          "target_start_seconds": 0.0,
+          "target_end_seconds": 3.214
+        },
+        {
+          "text": "The coordinator reviews the change and confirms it.",
+          "lines": [
+            "The coordinator reviews",
+            "the change and confirms it."
+          ],
+          "target_start_seconds": 3.214,
+          "target_end_seconds": 7.5
+        },
+        {
+          "text": "One cancellation has now disrupted two commitments.",
+          "lines": [
+            "One cancellation has now",
+            "disrupted two commitments."
+          ],
+          "target_start_seconds": 7.5,
+          "target_end_seconds": 11.25
+        },
+        {
+          "text": "This is KindHandoff, created by Shivam Gupta.",
+          "lines": [
+            "This is KindHandoff,",
+            "created by Shivam Gupta."
+          ],
+          "target_start_seconds": 11.25,
+          "target_end_seconds": 15.0
+        }
+      ]
+    },
+    {
+      "id": "02-chain",
+      "cues": [
+        {
+          "text": "In this fictional household,",
+          "lines": [
+            "In this fictional household,"
+          ],
+          "target_start_seconds": 15.0,
+          "target_end_seconds": 17.065
+        },
+        {
+          "text": "Maya was going to pack Arun's library bag at two thirty,",
+          "lines": [
+            "Maya was going to pack Arun's",
+            "library bag at two thirty,"
+          ],
+          "target_start_seconds": 17.065,
+          "target_end_seconds": 22.742
+        },
+        {
+          "text": "then drive him to book club at three.",
+          "lines": [
+            "then drive him to book club at three."
+          ],
+          "target_start_seconds": 22.742,
+          "target_end_seconds": 26.871
+        },
+        {
+          "text": "The ride depends on the bag being ready.",
+          "lines": [
+            "The ride depends on the bag being ready."
+          ],
+          "target_start_seconds": 26.871,
+          "target_end_seconds": 31.0
+        }
+      ]
+    },
+    {
+      "id": "03-plan",
+      "cues": [
+        {
+          "text": "Jo can enter the house between two and three, but cannot drive.",
+          "lines": [
+            "Jo can enter the house between",
+            "two and three, but cannot drive."
+          ],
+          "target_start_seconds": 31.0,
+          "target_end_seconds": 37.732
+        },
+        {
+          "text": "Dev can drive, but is only free from two forty-five.",
+          "lines": [
+            "Dev can drive, but is only",
+            "free from two forty-five."
+          ],
+          "target_start_seconds": 37.732,
+          "target_end_seconds": 43.341
+        },
+        {
+          "text": "The planner checks availability, capabilities, and conflicting commitments.",
+          "lines": [
+            "The planner checks availability,",
+            "capabilities, and conflicting commitments."
+          ],
+          "target_start_seconds": 43.341,
+          "target_end_seconds": 47.829
+        },
+        {
+          "text": "It proposes Jo for the bag and Dev for the ride.",
+          "lines": [
+            "It proposes Jo for the",
+            "bag and Dev for the ride."
+          ],
+          "target_start_seconds": 47.829,
+          "target_end_seconds": 54.0
+        }
+      ]
+    },
+    {
+      "id": "04-accept",
+      "cues": [
+        {
+          "text": "A proposed plan is still only a proposal.",
+          "lines": [
+            "A proposed plan is still only a proposal."
+          ],
+          "target_start_seconds": 54.0,
+          "target_end_seconds": 58.8
+        },
+        {
+          "text": "The coordinator creates two handoff offers.",
+          "lines": [
+            "The coordinator creates",
+            "two handoff offers."
+          ],
+          "target_start_seconds": 58.8,
+          "target_end_seconds": 62.4
+        },
+        {
+          "text": "Jo opens her private invitation and accepts the bag.",
+          "lines": [
+            "Jo opens her private",
+            "invitation and accepts the bag."
+          ],
+          "target_start_seconds": 62.4,
+          "target_end_seconds": 67.8
+        },
+        {
+          "text": "Dev accepts the ride in his own session.",
+          "lines": [
+            "Dev accepts the ride in his own session."
+          ],
+          "target_start_seconds": 67.8,
+          "target_end_seconds": 72.6
+        },
+        {
+          "text": "Until each named helper accepts, the task stays uncovered.",
+          "lines": [
+            "Until each named helper accepts,",
+            "the task stays uncovered."
+          ],
+          "target_start_seconds": 72.6,
+          "target_end_seconds": 78.0
+        }
+      ]
+    },
+    {
+      "id": "05-ready",
+      "cues": [
+        {
+          "text": "Watch Dev's ride.",
+          "lines": [
+            "Watch Dev's ride."
+          ],
+          "target_start_seconds": 78.0,
+          "target_end_seconds": 79.714
+        },
+        {
+          "text": "It is accepted, but still waiting for the bag.",
+          "lines": [
+            "It is accepted, but still",
+            "waiting for the bag."
+          ],
+          "target_start_seconds": 79.714,
+          "target_end_seconds": 84.857
+        },
+        {
+          "text": "Jo records the bag as packed.",
+          "lines": [
+            "Jo records the bag as packed."
+          ],
+          "target_start_seconds": 84.857,
+          "target_end_seconds": 88.286
+        },
+        {
+          "text": "Only then does the ride become ready.",
+          "lines": [
+            "Only then does the ride become ready."
+          ],
+          "target_start_seconds": 88.286,
+          "target_end_seconds": 92.286
+        },
+        {
+          "text": "Agreement and readiness stay separate,",
+          "lines": [
+            "Agreement and readiness stay separate,"
+          ],
+          "target_start_seconds": 92.286,
+          "target_end_seconds": 95.143
+        },
+        {
+          "text": "so an unfinished prerequisite cannot hide behind a name on the calendar.",
+          "lines": [
+            "so an unfinished prerequisite cannot",
+            "hide behind a name on the calendar."
+          ],
+          "target_start_seconds": 95.143,
+          "target_end_seconds": 102.0
+        }
+      ]
+    },
+    {
+      "id": "06-brief",
+      "cues": [
+        {
+          "text": "The handoff brief shows what changed and what remains.",
+          "lines": [
+            "The handoff brief shows what",
+            "changed and what remains."
+          ],
+          "target_start_seconds": 102.0,
+          "target_end_seconds": 107.108
+        },
+        {
+          "text": "Dev acknowledges this specific revision.",
+          "lines": [
+            "Dev acknowledges this specific revision."
+          ],
+          "target_start_seconds": 107.108,
+          "target_end_seconds": 109.946
+        },
+        {
+          "text": "A later update does not rewrite that receipt.",
+          "lines": [
+            "A later update does not",
+            "rewrite that receipt."
+          ],
+          "target_start_seconds": 109.946,
+          "target_end_seconds": 114.486
+        },
+        {
+          "text": "The circle can see who agreed, what is ready,",
+          "lines": [
+            "The circle can see who",
+            "agreed, what is ready,"
+          ],
+          "target_start_seconds": 114.486,
+          "target_end_seconds": 119.595
+        },
+        {
+          "text": "and which version each person read.",
+          "lines": [
+            "and which version each person read."
+          ],
+          "target_start_seconds": 119.595,
+          "target_end_seconds": 123.0
+        }
+      ]
+    },
+    {
+      "id": "07-tech",
+      "cues": [
+        {
+          "text": "The browser's bounded language simulator makes real MCP calls",
+          "lines": [
+            "The browser's bounded language",
+            "simulator makes real MCP calls"
+          ],
+          "target_start_seconds": 123.0,
+          "target_end_seconds": 128.707
+        },
+        {
+          "text": "using the November twenty-fifth, twenty twenty-five protocol",
+          "lines": [
+            "using the November twenty-fifth,",
+            "twenty twenty-five protocol"
+          ],
+          "target_start_seconds": 128.707,
+          "target_end_seconds": 133.146
+        },
+        {
+          "text": "and Streamable HTTP.",
+          "lines": [
+            "and Streamable HTTP."
+          ],
+          "target_start_seconds": 133.146,
+          "target_end_seconds": 135.049
+        },
+        {
+          "text": "Activity shows the execution trace.",
+          "lines": [
+            "Activity shows the execution trace."
+          ],
+          "target_start_seconds": 135.049,
+          "target_end_seconds": 138.22
+        },
+        {
+          "text": "Firebase provides sign-in and persistent household records.",
+          "lines": [
+            "Firebase provides sign-in and",
+            "persistent household records."
+          ],
+          "target_start_seconds": 138.22,
+          "target_end_seconds": 142.659
+        },
+        {
+          "text": "The simulator is deterministic; no live Alexa connection is claimed.",
+          "lines": [
+            "The simulator is deterministic; no",
+            "live Alexa connection is claimed."
+          ],
+          "target_start_seconds": 142.659,
+          "target_end_seconds": 149.0
+        }
+      ]
+    },
+    {
+      "id": "08-close",
+      "cues": [
+        {
+          "text": "KindHandoff starts with everyday support: bags, rides, meals, and visits.",
+          "lines": [
+            "KindHandoff starts with everyday",
+            "support: bags, rides, meals, and visits."
+          ],
+          "target_start_seconds": 149.0,
+          "target_end_seconds": 155.061
+        },
+        {
+          "text": "The pricing hypothesis is twelve dollars per household per month,",
+          "lines": [
+            "The pricing hypothesis is twelve",
+            "dollars per household per month,"
+          ],
+          "target_start_seconds": 155.061,
+          "target_end_seconds": 161.121
+        },
+        {
+          "text": "with every helper included.",
+          "lines": [
+            "with every helper included."
+          ],
+          "target_start_seconds": 161.121,
+          "target_end_seconds": 163.545
+        },
+        {
+          "text": "Household validation comes next.",
+          "lines": [
+            "Household validation comes next."
+          ],
+          "target_start_seconds": 163.545,
+          "target_end_seconds": 165.97
+        },
+        {
+          "text": "Clear plans and accepted responsibility.",
+          "lines": [
+            "Clear plans and accepted responsibility."
+          ],
+          "target_start_seconds": 165.97,
+          "target_end_seconds": 169.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,15 +1,15 @@
-I'm Shivam Gupta. Maya just cancelled this afternoon. For this family, one change breaks two commitments. KindHandoff turns that disruption into a plan people actually accept.
+Maya can't make it this afternoon. The coordinator reviews the change and confirms it. One cancellation has now disrupted two commitments. This is KindHandoff, created by Shivam Gupta.
 
-This fictional household has two linked tasks. Maya was going to pack a library bag at two thirty, then give a ride at three. Her cancellation affects both. The ride depends on the bag being packed.
+In this fictional household, Maya was going to pack Arun's library bag at two thirty, then drive him to book club at three. The ride depends on the bag being ready.
 
-Here is why the suggested plan matters. Jo can enter the house between two and three, but cannot drive. Dev can drive, but is only available from two forty-five. The planner checks those constraints and proposes Jo for the bag, Dev for the ride.
+Jo can enter the house between two and three, but cannot drive. Dev can drive, but is only free from two forty-five. The planner checks availability, capabilities, and conflicting commitments. It proposes Jo for the bag and Dev for the ride.
 
-I review the proposal before creating offers. They remain pending until each named helper accepts. Jo accepts her bag task in her own helper view. Dev accepts his ride separately. Every acceptance belongs to the person taking responsibility.
+A proposed plan is still only a proposal. The coordinator creates two handoff offers. Jo opens her private invitation and accepts the bag. Dev accepts the ride in his own session. Until each named helper accepts, the task stays uncovered.
 
-Watch the ride. Even after Dev accepts, it is still waiting for the bag. Jo records the bag as packed, and the ride becomes ready. That small dependency is the difference between having two names on a calendar and having a workable afternoon.
+Watch Dev's ride. It is accepted, but still waiting for the bag. Jo records the bag as packed. Only then does the ride become ready. Agreement and readiness stay separate, so an unfinished prerequisite cannot hide behind a name on the calendar.
 
-The updated handoff brief shows what changed and what remains. Dev acknowledges this specific version. If the plan changes again, the record still tells us which version he read. People can see what was agreed, by whom, and when.
+The handoff brief shows what changed and what remains. Dev acknowledges this specific revision. A later update does not rewrite that receipt. The circle can see who agreed, what is ready, and which version each person read.
 
-Behind this is a real MCP server using the November twenty-fifth, twenty twenty-five specification and Streamable HTTP. The web language simulator is explicitly deterministic. Firebase provides email-and-password sign-in, persistent household records, and the public web app. Helper invitations keep responsibilities separate. This is a simulated experience, with no live Alexa connection claimed.
+The browser's bounded language simulator makes real MCP calls using the November twenty-fifth, twenty twenty-five protocol and Streamable HTTP. Activity shows the execution trace. Firebase provides sign-in and persistent household records. The simulator is deterministic; no live Alexa connection is claimed.
 
-KindHandoff starts with practical support: bags, rides, meals, and visits. The business hypothesis is a household subscription, with every helper included. The promise is simple: make the next step clear, and make responsibility something people actually accept.
+KindHandoff starts with everyday support: bags, rides, meals, and visits. The pricing hypothesis is twelve dollars per household per month, with every helper included. Household validation comes next. Clear plans and accepted responsibility.

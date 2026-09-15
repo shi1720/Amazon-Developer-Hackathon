@@ -1,0 +1,40 @@
+{
+  "status": "Passed automated export checks and agent visual review of previews plus 28 decoded frames",
+  "duration_seconds": 169.0,
+  "video": {
+    "codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "fps": 24
+  },
+  "audio": {
+    "codec": "aac",
+    "sample_rate": 96000,
+    "channels": 1,
+    "integrated_lufs": -16.37,
+    "true_peak_dbtp": -1.35,
+    "loudness_range_lu": 5.1
+  },
+  "decode_exit_code": 0,
+  "caption_count": 39,
+  "caption_timings_valid": true,
+  "caption_ranges_nonoverlapping": true,
+  "visual_review": [
+    "No caption/footer overlap",
+    "Fictional household and AI narration disclosure remains on closing card",
+    "Captured helper invitations and sessions are labelled",
+    "Ready state and retained revision receipt are visibly shown",
+    "Separate Firebase account session is labelled",
+    "Incomplete navigation capture04-jo-join excluded"
+  ],
+  "inspection_limit": "Visual review sampled the encoded video and all shot previews; it was not a continuous human audiovisual screening.",
+  "sha256": {
+    "docs/video-source/render-demo.py": "8672f20a9fd6ab3e7cddbdcc1829fa1a45e93a6da28ec041be870ffdb1415c75",
+    "docs/video-source/edit.json": "ba9f4f6067158bc9ecd2daa3dcd5e27318633fb6e2fb20eea0f6102284be7dda",
+    "docs/deliverables/KindHandoff-Demo.mp4": "10bacbf844c4cbfd6e02f5f397a35af63fc4802b2688db73d6c970e53e3bccd5",
+    "docs/deliverables/KindHandoff-Captions.srt": "cc069df73d897a2161a0e1e23e4cd3fb71e4727826c493781adfe51ebb9f059c",
+    "docs/deliverables/KindHandoff-Captions.vtt": "7df33f18937c18fd551d126d3bce787ffc1ba13777d1304d7e58a0cb08bff39c",
+    "docs/deliverables/KindHandoff-Video-Contact-Sheet.jpg": "20aa7f1afee85a026ff3df51dbdb49c8573fc9ccd0500336b8f7208fcab0d385",
+    "work/video/audio/manifest.json": "be0a4cf7078816830113c6cf557e54a0160179f3f57e9d8245c7618e30b3a2e9"
+  }
+}

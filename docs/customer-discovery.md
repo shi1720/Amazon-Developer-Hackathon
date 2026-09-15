@@ -7,7 +7,7 @@
 
 ### The decision this research must support
 
-Does a household with several helpers encounter enough changes—and enough uncertainty about who accepted—to use and pay for a dedicated practical-support workflow?
+Does a household with several helpers encounter enough changes and enough uncertainty about who accepted to use and pay for a dedicated practical-support workflow?
 
 We need evidence of a recurring problem, helper participation, successful recovery, and willingness to pay. Positive reactions to an attractive demo are insufficient.
 
@@ -17,20 +17,20 @@ Recruit adult participants through authorized invitations and trusted communitie
 
 | Interview | Target participant | Variation sought | Scheduled | Completed | Notes reference |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Primary family coordinator | Full-time employment; parent lives elsewhere | — | — | — |
-| 02 | Primary family coordinator | Shift work; frequent schedule changes | — | — | — |
-| 03 | Primary family coordinator | Three or more recurring helpers | — | — | — |
-| 04 | Primary family coordinator | Shares a home with the supported adult | — | — | — |
-| 05 | Primary family coordinator | Two-helper household; current system works reasonably well | — | — | — |
-| 06 | Primary family coordinator | Tried and abandoned a coordination app | — | — | — |
-| 07 | Occasional family/friend helper | Limited weekly availability | — | — | — |
-| 08 | Recurring helper | Specific capability or access constraint | — | — | — |
-| 09 | Adult receiving practical support | Wants visibility and a say in arrangements | — | — | — |
-| 10 | Adult receiving practical support | Prefers voice or needs a simpler interface | — | — | — |
+| 01 | Primary family coordinator | Full-time employment; parent lives elsewhere | Pending | Pending | Pending |
+| 02 | Primary family coordinator | Shift work; frequent schedule changes | Pending | Pending | Pending |
+| 03 | Primary family coordinator | Three or more recurring helpers | Pending | Pending | Pending |
+| 04 | Primary family coordinator | Shares a home with the supported adult | Pending | Pending | Pending |
+| 05 | Primary family coordinator | Two-helper household; current system works reasonably well | Pending | Pending | Pending |
+| 06 | Primary family coordinator | Tried and abandoned a coordination app | Pending | Pending | Pending |
+| 07 | Occasional family/friend helper | Limited weekly availability | Pending | Pending | Pending |
+| 08 | Recurring helper | Specific capability or access constraint | Pending | Pending | Pending |
+| 09 | Adult receiving practical support | Wants visibility and a say in arrangements | Pending | Pending | Pending |
+| 10 | Adult receiving practical support | Prefers voice or needs a simpler interface | Pending | Pending | Pending |
 
 This sample is for learning, not population estimates. Do not publish percentages as if ten participants were a representative survey.
 
-### Invitation draft — use only after outreach is authorized
+### Invitation draft: use only after outreach is authorized
 
 > I’m Shivam, building a tool for families who share practical support such as rides, meals, and visits. I’m researching what happens when someone’s plans change. I’d like to hear about your current process in a 30-minute conversation; there is no sales pitch and you do not need to share medical details. Participation is optional, and I will ask separately before recording or quoting anything. If this sounds relevant, I can send the study information and available times.
 
@@ -71,7 +71,7 @@ Ask: “Who in your household would need to use this for it to work? What might 
 
 Only after discussing actual experience and alternatives, introduce a possible $12-per-household monthly subscription. Ask: “How would you decide whether to keep it at that price?” Record objections and comparisons. Do not treat “sounds reasonable” as a purchase commitment.
 
-### Notes template — one copy per interview
+### Notes template: one copy per interview
 
 - Interview ID / date:
 - Participant role / household ID alias:
@@ -145,7 +145,7 @@ These are targets chosen in advance, not results or validated benchmarks:
 
 Do not average away a serious state or authorization defect. Small-sample results support the next experiment, not a sweeping effectiveness claim.
 
-### Pilot results — intentionally unfilled
+### Pilot results: intentionally unfilled
 
 | Field | Result |
 | --- | --- |

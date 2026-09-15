@@ -7,7 +7,7 @@
 
 Created by **Shivam Gupta** for the Amazon Developer Hackathon 2026.
 
-[MIT License](LICENSE) · [Demo script](docs/demo-script.md) · [Architecture](docs/architecture.md) · [Product feedback](docs/product-feedback.md) · [Business case](docs/market-and-business.md)
+[MIT License](LICENSE) · [2:49 demo video](docs/deliverables/KindHandoff-Demo.mp4) · [Architecture](docs/architecture.md) · [Product feedback](docs/product-feedback.md) · [Business case](docs/market-and-business.md)
 
 </div>
 
@@ -17,7 +17,7 @@ KindHandoff helps families repair everyday support plans when someone becomes un
 
 ![KindHandoff recovery plan](docs/screenshots/recovery.png)
 
-[Mobile screenshot](docs/screenshots/mobile.png) · [Desktop screenshot](docs/screenshots/desktop.png)
+[Phone screenshot](docs/screenshots/mobile-390.jpg) · [Tablet screenshot](docs/screenshots/tablet-768.jpg) · [Desktop screenshot](docs/screenshots/desktop.png)
 
 **[Open KindHandoff](https://kindhandoff.web.app)** · Public Firebase app. Try a private fictional demo immediately, or sign in to create your own circle.
 
@@ -52,12 +52,12 @@ For interactive local development, follow the [Firebase setup guide](docs/fireba
 ## A usable household workflow
 
 - **Coordinator sign-in:** Firebase email/password sign-up and sign-in; create a blank personal circle.
-- **Helpers:** named profiles, capability and availability windows, private single-use invitations, revocation.
-- **Commitments:** title, practical details, explicit dates/times, required capabilities and earlier prerequisites.
+- **Helpers:** named profiles, capabilities, separate availability windows that preserve gaps, private single-use invitations, and revocation.
+- **Commitments:** dated day views, title, practical details, required capabilities, and earlier prerequisites. Edit or cancel open commitments; cancellation retains the original record in the export and activity history. Overnight tasks appear on every day they span.
 - **Recovery:** constrained replacement search with visible exclusions; coordinator review before offers.
 - **Acceptance:** the proposed helper accepts or declines; every write is authorized and version checked.
 - **Handoff brief:** attributed notes, unresolved offers, dependency readiness, acknowledgments of an exact content version.
-- **Control:** refresh, activity history, JSON export and confirmed circle deletion.
+- **Control:** refresh, activity history, JSON export and confirmed circle deletion. An open form retains its reviewed revision and blocks stale changes after another person edits the circle.
 - **Accessibility:** keyboard-operable forms, semantic tabs/dialogs, responsive layouts, reduced motion, typed alternative to microphone input.
 
 The microphone uses the browser's speech recognition service when supported. The transcript is reviewed before sending. The language interpreter supports a defined set of requests; it is not a general-purpose LLM. No audio is stored by the application.
@@ -100,12 +100,16 @@ Our first audience is a working adult coordinating routine support for a parent 
 
 ## Submission kit
 
-- [Devpost copy and release checklist](docs/devpost-submission.md)
+- [Completed 2:49 demo video](docs/deliverables/KindHandoff-Demo.mp4) · [English SRT captions](docs/deliverables/KindHandoff-Captions.srt) · [Thumbnail](docs/deliverables/KindHandoff-Thumbnail.png)
+- [Project story](docs/devpost-submission.md) · [All submission fields and testing instructions](docs/submission-fields.md)
+- [Copy-ready HTML submission kit](docs/deliverables/KindHandoff-Submission-Kit.html), downloadable for local use
 - [Word-for-word English narration and timed recording plan](docs/demo-script.md)
 - [Editable pitch deck](docs/deliverables/KindHandoff-Pitch.pptx) · [Pitch PDF](docs/deliverables/KindHandoff-Pitch.pdf)
 - [Two-page judge brief](docs/deliverables/KindHandoff-Judge-Brief.pdf)
 - [Product feedback and observed friction log](docs/product-feedback.md)
 - [Rubric review and changes](docs/rubric-review.md)
+
+The demo uses actual app captures, a fictional household, and clearly disclosed AI-generated narration. The [video source and export checks](docs/video-source/README.md) document its production. YouTube publication and Devpost status are tracked in the [release status](docs/release-status.md).
 
 All product code and submission materials were created during September 2026 for this entry. Shared framework dependencies and their licenses remain their authors' work. KindHandoff is MIT licensed; attribution to Shivam Gupta appears in the product, repository, and submission materials.
 

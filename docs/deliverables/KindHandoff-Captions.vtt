@@ -1,0 +1,118 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:02.359
+Maya can't make it this afternoon.
+
+00:00:03.128 --> 00:00:05.781
+The coordinator reviews the change and confirms it.
+
+00:00:06.439 --> 00:00:09.048
+One cancellation has now disrupted two commitments.
+
+00:00:10.283 --> 00:00:13.270
+This is KindHandoff, created by Shivam Gupta.
+
+00:00:16.350 --> 00:00:17.803
+In this fictional household,
+
+00:00:18.217 --> 00:00:21.696
+Maya was going to pack Arun's library bag at two thirty,
+
+00:00:21.706 --> 00:00:23.807
+then drive him to book club at three.
+
+00:00:23.817 --> 00:00:26.048
+The ride depends on the bag being ready.
+
+00:00:30.350 --> 00:00:34.514
+Jo can enter the house between two and three, but cannot drive.
+
+00:00:35.239 --> 00:00:38.851
+Dev can drive, but is only free from two forty-five.
+
+00:00:38.861 --> 00:00:42.937
+The planner checks availability, capabilities, and conflicting commitments.
+
+00:00:43.550 --> 00:00:46.759
+It proposes Jo for the bag and Dev for the ride.
+
+00:00:50.350 --> 00:00:53.270
+A proposed plan is still only a proposal.
+
+00:00:53.861 --> 00:00:56.337
+The coordinator creates two handoff offers.
+
+00:00:57.128 --> 00:00:59.870
+Jo opens her private invitation and accepts the bag.
+
+00:01:00.439 --> 00:01:02.759
+Dev accepts the ride in his own session.
+
+00:01:03.506 --> 00:01:07.092
+Until each named helper accepts, the task stays uncovered.
+
+00:01:13.350 --> 00:01:14.981
+Watch Dev's ride.
+
+00:01:15.528 --> 00:01:18.203
+It is accepted, but still waiting for the bag.
+
+00:01:19.217 --> 00:01:20.848
+Jo records the bag as packed.
+
+00:01:21.461 --> 00:01:23.692
+Only then does the ride become ready.
+
+00:01:24.817 --> 00:01:26.314
+Agreement and readiness stay separate,
+
+00:01:26.439 --> 00:01:30.714
+so an unfinished prerequisite cannot hide behind a name on the calendar.
+
+00:01:36.350 --> 00:01:41.070
+The handoff brief shows what changed and what remains.
+
+00:01:42.106 --> 00:01:44.470
+Dev acknowledges this specific revision.
+
+00:01:45.328 --> 00:01:48.026
+A later update does not rewrite that receipt.
+
+00:01:48.994 --> 00:01:51.737
+The circle can see who agreed, what is ready,
+
+00:01:52.106 --> 00:01:54.203
+and which version each person read.
+
+00:01:58.350 --> 00:02:02.962
+The browser's bounded language simulator makes real MCP calls
+
+00:02:02.972 --> 00:02:06.429
+using the November twenty-fifth, twenty twenty-five protocol
+
+00:02:06.439 --> 00:02:08.692
+and Streamable HTTP.
+
+00:02:09.772 --> 00:02:11.648
+Activity shows the execution trace.
+
+00:02:12.461 --> 00:02:15.514
+Firebase provides sign-in and persistent household records.
+
+00:02:16.306 --> 00:02:20.292
+The simulator is deterministic; no live Alexa connection is claimed.
+
+00:02:24.350 --> 00:02:30.692
+KindHandoff starts with everyday support: bags, rides, meals, and visits.
+
+00:02:31.417 --> 00:02:35.203
+The pricing hypothesis is twelve dollars per household per month,
+
+00:02:35.639 --> 00:02:37.003
+with every helper included.
+
+00:02:37.906 --> 00:02:39.626
+Household validation comes next.
+
+00:02:40.506 --> 00:02:42.617
+Clear plans and accepted responsibility.

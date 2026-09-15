@@ -34,6 +34,11 @@ import {
   Users,
   Activity,
   Settings2,
+  CalendarDays,
+  ChevronLeft,
+  Pencil,
+  Trash2,
+  LoaderCircle,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
@@ -74,6 +79,19 @@ import {
 } from '@/lib/browser-api';
 import { brief, readiness, assess } from '@/lib/domain/engine';
 import { interpret, type Intent } from '@/lib/domain/language';
+import {
+  calendarDay,
+  captureCircleReview,
+  commitmentsForDay,
+  dayLabel,
+  defaultCommitmentWindow,
+  reconcileSnapshot,
+  isReviewCurrent,
+  reviewedMutationVersion,
+  staleReviewMessage,
+  shiftCalendarDay,
+  type CircleReview,
+} from '@/lib/ui-model';
 const statuses = {
   open: 'Needs a helper',
   blocked: 'Needs a new handoff',
@@ -119,6 +137,7 @@ function Choice({
   options,
   onChange,
   label,
+  disabled,
 }: {
   id?: string;
   name?: string;
@@ -127,12 +146,14 @@ function Choice({
   options: { value: string; label: string }[];
   onChange?: (value: string) => void;
   label: string;
+  disabled?: boolean;
 }) {
   return (
     <Select
       name={name}
       value={value}
       defaultValue={defaultValue}
+      disabled={disabled}
       onValueChange={(v) => v && onChange?.(v)}
     >
       <SelectTrigger id={id} aria-label={label} className="choice">
@@ -150,10 +171,18 @@ function Choice({
     </Select>
   );
 }
-function CapabilityFields({ defaults = [] }: { defaults?: readonly string[] }) {
+function CapabilityFields({
+  defaults = [],
+  legend = 'What this commitment needs',
+  disabled = false,
+}: {
+  defaults?: readonly string[];
+  legend?: string;
+  disabled?: boolean;
+}) {
   return (
     <fieldset>
-      <legend>What’s needed</legend>
+      <legend>{legend}</legend>
       <div className="check-options">
         {Object.entries(caps).map(([value, label]) => (
           <label className="check-label" key={value}>
@@ -161,6 +190,7 @@ function CapabilityFields({ defaults = [] }: { defaults?: readonly string[] }) {
               name="capabilities"
               value={value}
               defaultChecked={defaults.includes(value)}
+              disabled={disabled}
             />
             {label}
           </label>
@@ -185,6 +215,17 @@ export default function KindHandoff() {
   const [view, setView] = useState('today');
   const [modal, setModal] = useState<string | null>(null);
   const [modalMember, setModalMember] = useState<string>('');
+  const [modalTaskId, setModalTaskId] = useState<string | null>(null);
+  const [modalReview, setModalReview] = useState<CircleReview | null>(null);
+  const [modalWindow, setModalWindow] = useState<{
+    start: string;
+    end: string;
+  } | null>(null);
+  const [availabilityWindows, setAvailabilityWindows] = useState<
+    { id: string; start: string; end: string }[]
+  >([]);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [refreshError, setRefreshError] = useState('');
   const [detailId, setDetailId] = useState<string | null>(null);
   const [input, setInput] = useState('');
   const [utterance, setUtterance] = useState('');
@@ -202,24 +243,48 @@ export default function KindHandoff() {
   const [voiceSupported, setVoiceSupported] = useState(false);
   const recognition = useRef<SpeechRecognitionInput | null>(null);
   const booted = useRef(false);
-  const [initialTime] = useState(() => Date.now());
+  const operationInFlight = useRef(false);
+  const refreshInFlight = useRef(false);
+  const sessionEpoch = useRef(0);
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
   const c = snapshot?.circle;
   const actor = c?.members.find((m) => m.id === snapshot?.memberId);
   const isOwner = actor?.role === 'owner';
   const detail = c?.tasks.find((t) => t.id === detailId);
   const demoRole = snapshot?.kind === 'demo' ? snapshot.memberId : undefined;
+  const today = calendarDay(currentTime, c?.timeZone ?? 'UTC');
+  const selectedDay = selectedDate || today;
+  const modalNeedsReview = [
+    'task',
+    'edit',
+    'cancel',
+    'helper',
+    'availability',
+    'change',
+  ].includes(modal ?? '');
+  const staleModal =
+    modalNeedsReview && !!snapshot && !isReviewCurrent(snapshot, modalReview);
   const addTrace = useCallback(
     (t: Trace) => setTraces((x) => [t, ...x].slice(0, 30)),
     [],
   );
   const load = useCallback(async () => {
+    const epoch = sessionEpoch.current;
     const s = await api('/api/session');
-    if (s.circle)
-      setSnapshot((old) => ({
-        ...s,
-        memberId:
-          old?.kind === 'demo' && s.kind === 'demo' ? old.memberId : s.memberId,
-      }));
+    if (epoch !== sessionEpoch.current) return s;
+    setSnapshot((old) => reconcileSnapshot(old, s));
+    setRefreshError('');
+    if (!s.circle) {
+      sessionEpoch.current++;
+      setModal(null);
+      setDetailId(null);
+      setInvite(null);
+      setToken(null);
+      setPlan(null);
+      setError(
+        'Your session has ended. Sign in again, or ask your coordinator for a fresh invitation.',
+      );
+    }
     return s;
   }, []);
   useEffect(() => {
@@ -252,7 +317,22 @@ export default function KindHandoff() {
   useEffect(() => {
     if (!hasSnapshot) return;
     const refreshVisible = () => {
-      if (document.visibilityState === 'visible') void load().catch(() => {});
+      if (
+        document.visibilityState !== 'visible' ||
+        refreshInFlight.current ||
+        operationInFlight.current
+      )
+        return;
+      refreshInFlight.current = true;
+      void load()
+        .catch(() =>
+          setRefreshError(
+            'Updates are paused. Check your connection and refresh before making another change.',
+          ),
+        )
+        .finally(() => {
+          refreshInFlight.current = false;
+        });
     };
     const timer = setInterval(refreshVisible, 12000);
     window.addEventListener('focus', refreshVisible);
@@ -268,12 +348,18 @@ export default function KindHandoff() {
     const timer = setTimeout(() => setNotice(''), 6500);
     return () => clearTimeout(timer);
   }, [notice]);
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(Date.now()), 60000);
+    return () => clearInterval(timer);
+  }, []);
   async function call<N extends ToolName>(
     name: N,
     args: Record<string, unknown> = {},
     write = false,
+    review?: CircleReview | null,
   ) {
-    if (!snapshot) return null;
+    if (!snapshot || operationInFlight.current) return null;
+    operationInFlight.current = true;
     setBusy(true);
     setError('');
     try {
@@ -282,7 +368,10 @@ export default function KindHandoff() {
         write
           ? {
               ...args,
-              expectedVersion: snapshot.circle.version,
+              expectedVersion:
+                review === undefined
+                  ? snapshot.circle.version
+                  : reviewedMutationVersion(snapshot, review),
               requestId: crypto.randomUUID(),
             }
           : args,
@@ -290,7 +379,10 @@ export default function KindHandoff() {
         addTrace,
       );
       if ('circle' in result)
-        setSnapshot((s) => (s ? { ...s, circle: result.circle } : s));
+        setSnapshot((s) =>
+          s ? reconcileSnapshot(s, { ...s, circle: result.circle }) : s,
+        );
+      setRefreshError('');
       if ('message' in result) setNotice(result.message);
       return result;
     } catch (e) {
@@ -298,6 +390,7 @@ export default function KindHandoff() {
       await load().catch(() => {});
       return null;
     } finally {
+      operationInFlight.current = false;
       setBusy(false);
     }
   }
@@ -317,7 +410,7 @@ export default function KindHandoff() {
     return result?.plan ?? null;
   }
   async function send(text = input) {
-    if (!c || !actor || !text.trim()) return;
+    if (!c || !actor || !text.trim() || busy) return;
     setInput('');
     setUtterance(text);
     setPending(null);
@@ -404,6 +497,8 @@ export default function KindHandoff() {
     P extends keyof ApiResponses,
     M extends keyof ApiResponses[P],
   >(path: P, method: M, data?: unknown) {
+    if (operationInFlight.current) return null;
+    operationInFlight.current = true;
     setBusy(true);
     setError('');
     try {
@@ -412,8 +507,34 @@ export default function KindHandoff() {
       setError((e as Error).message);
       return null;
     } finally {
+      operationInFlight.current = false;
       setBusy(false);
     }
+  }
+  function openModal(
+    next: string,
+    options: {
+      memberId?: string;
+      taskId?: string;
+      window?: { start: string; end: string };
+    } = {},
+  ) {
+    if (busy || !c || !snapshot) return;
+    setError('');
+    setModalReview(captureCircleReview(snapshot));
+    setModalMember(options.memberId ?? '');
+    setModalTaskId(options.taskId ?? null);
+    setModalWindow(options.window ?? defaultCommitmentWindow(c, selectedDay));
+    if (next === 'availability') {
+      const person = c.members.find((member) => member.id === options.memberId);
+      setAvailabilityWindows(
+        (person?.availability ?? []).map((window) => ({
+          ...window,
+          id: crypto.randomUUID(),
+        })),
+      );
+    }
+    setModal(next);
   }
   async function formSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -421,18 +542,21 @@ export default function KindHandoff() {
     const get = (key: string) => textField(f.get(key));
     let result: unknown;
     try {
-      if (modal === 'task')
+      if (modalNeedsReview) reviewedMutationVersion(snapshot!, modalReview);
+      if (modal === 'task' || modal === 'edit')
         result = await call(
-          'add_commitment',
+          modal === 'edit' ? 'edit_commitment' : 'add_commitment',
           {
+            ...(modal === 'edit' ? { taskId: modalTaskId } : {}),
             title: get('title'),
             details: get('details'),
             start: iso(f.get('start')),
             end: iso(f.get('end')),
             requiredCapabilities: f.getAll('capabilities'),
-            dependsOn: get('dependsOn') ? [get('dependsOn')] : [],
+            dependsOn: f.getAll('dependsOn').map(textField),
           },
           true,
+          modalReview,
         );
       if (modal === 'helper')
         result = await call(
@@ -445,18 +569,22 @@ export default function KindHandoff() {
             end: iso(f.get('end')),
           },
           true,
+          modalReview,
         );
       if (modal === 'availability')
         result = await call(
           'set_availability',
           {
             memberId: modalMember,
-            canAccept: true,
-            start: iso(f.get('start')),
-            end: iso(f.get('end')),
+            canAccept: f.has('canAccept'),
+            availability: f.getAll('availabilityStart').map((start, index) => ({
+              start: iso(start),
+              end: iso(f.getAll('availabilityEnd')[index] ?? null),
+            })),
             capabilities: f.getAll('capabilities'),
           },
           true,
+          modalReview,
         );
       if (modal === 'change')
         result = await call(
@@ -468,6 +596,7 @@ export default function KindHandoff() {
             reason: get('reason'),
           },
           true,
+          modalReview,
         );
       if (modal === 'create') {
         const created = await actionApi('/api/session', 'POST', {
@@ -478,7 +607,9 @@ export default function KindHandoff() {
         });
         result = created;
         if (created) {
+          sessionEpoch.current++;
           setSnapshot(created);
+          setSelectedDate('');
           setPlan(null);
           setReply('');
         }
@@ -488,12 +619,20 @@ export default function KindHandoff() {
           confirmation: get('confirmation'),
         });
         if (result) {
+          sessionEpoch.current++;
           setSnapshot(null);
           window.location.reload();
         }
       }
       if (result) {
         setModal(null);
+        if (modal === 'task' || modal === 'edit') {
+          setSelectedDate(calendarDay(iso(f.get('start')), c!.timeZone));
+          setView('today');
+          setDetailId(null);
+          setPlan(null);
+        }
+        if (modal === 'helper' || modal === 'availability') setView('circle');
         if (modal === 'change') {
           const r = await callMcp('preview_recovery', {}, demoRole, addTrace);
           setPlan(r.plan);
@@ -568,7 +707,7 @@ export default function KindHandoff() {
       <main className="join-page">
         <div className="join-card">
           <span className="brand-icon">
-            <Sprout />
+            {loading ? <LoaderCircle className="loading-spin" /> : <Sprout />}
           </span>
           <h1>{loading ? 'Getting the day together…' : 'Let’s reconnect.'}</h1>
           <p>
@@ -577,29 +716,57 @@ export default function KindHandoff() {
               : error}
           </p>
           {!loading && (
-            <button className="button" onClick={() => window.location.reload()}>
-              Try again
-            </button>
+            <div className="reconnect-actions">
+              <a className="button" href="/signin">
+                Sign in to your circle <ArrowRight size={17} />
+              </a>
+              <button
+                className="button secondary"
+                disabled={busy}
+                onClick={async () => {
+                  const result = await actionApi('/api/session', 'POST', {
+                    mode: 'demo',
+                  });
+                  if (result) {
+                    sessionEpoch.current++;
+                    setSnapshot(result);
+                    setSelectedDate('');
+                    setError('');
+                  }
+                }}
+              >
+                Open a fresh demo
+              </button>
+              <button
+                className="text-button"
+                onClick={() => window.location.reload()}
+              >
+                Retry connection
+              </button>
+            </div>
           )}
         </div>
       </main>
     );
-  const ordered = [...c.tasks].sort((a, b) => a.start.localeCompare(b.start));
-  const uncovered = c.tasks.filter((t) =>
+  const ordered = commitmentsForDay(c.tasks, selectedDay, c.timeZone);
+  const scheduledDays = [
+    ...new Set(c.tasks.map((task) => calendarDay(task.start, c.timeZone))),
+  ].sort((left, right) => left.localeCompare(right));
+  const nextScheduledDay =
+    scheduledDays.find((day) => day > selectedDay) ??
+    scheduledDays.find((day) => day !== selectedDay);
+  const uncovered = ordered.filter((t) =>
     ['open', 'blocked', 'offered'].includes(t.status),
   ).length;
-  const accepted = c.tasks.filter((t) => t.status === 'accepted').length;
-  const completed = c.tasks.filter((t) => t.status === 'done').length;
+  const accepted = ordered.filter((t) => t.status === 'accepted').length;
+  const completed = ordered.filter((t) => t.status === 'done').length;
   const b = brief(c);
   const selectedMember = c.members.find((m) => m.id === modalMember);
+  const editingTask = c.tasks.find((task) => task.id === modalTaskId);
   const formStart =
-    selectedMember?.availability[0]?.start ??
-    ordered.find((t) => t.status !== 'done')?.start ??
-    new Date(initialTime).toISOString();
+    modalWindow?.start ?? defaultCommitmentWindow(c, selectedDay).start;
   const formEnd =
-    selectedMember?.availability.at(-1)?.end ??
-    ordered.at(-1)?.end ??
-    new Date(initialTime + 3600000).toISOString();
+    modalWindow?.end ?? defaultCommitmentWindow(c, selectedDay).end;
   return (
     <div className="dw-app">
       <header className="topbar">
@@ -614,7 +781,7 @@ export default function KindHandoff() {
           {snapshot?.signedIn ? (
             <button
               className="account-button"
-              onClick={() => (c.demo ? setModal('create') : setView('circle'))}
+              onClick={() => (c.demo ? openModal('create') : setView('circle'))}
             >
               My circle <ArrowUpRight size={16} />
             </button>
@@ -629,7 +796,10 @@ export default function KindHandoff() {
             disabled={busy}
             onClick={() => call('get_day')}
           >
-            <RefreshCw size={18} />
+            <RefreshCw
+              size={18}
+              className={busy ? 'loading-spin' : undefined}
+            />
           </button>
           <button
             className="icon-button"
@@ -643,20 +813,32 @@ export default function KindHandoff() {
       <div className="demo-ribbon">
         <span className="live-dot" />
         {c.demo ? 'Illustrative family demo' : 'Private family circle'}
-        <span className="ribbon-detail">
-          {c.demo
+        <span
+          className={`ribbon-detail ${snapshot?.kind === 'demo' ? '' : 'identity-detail'}`}
+        >
+          {snapshot?.kind === 'demo'
             ? 'Your changes stay in your own workspace'
-            : `Signed in as ${actor.name} · ${c.name}`}
+            : `Viewing as ${actor.name} · ${isOwner ? 'Coordinator' : 'Helper'}`}
         </span>
         {snapshot?.kind === 'demo' && (
           <div className="role-switch">
             <span>Demo role:</span>
             <Choice
               label="Demo role"
+              disabled={busy}
               value={actor.id}
               options={c.members.map((m) => ({ value: m.id, label: m.name }))}
               onChange={(value) => {
                 setSnapshot((s) => (s ? { ...s, memberId: value } : s));
+                setPending(null);
+                setPendingNote('');
+                setPlan(null);
+                setReply('');
+                setUtterance('');
+                setInput('');
+                setDetailId(null);
+                recognition.current?.abort();
+                setListening(false);
                 setNotice(
                   `Now viewing the isolated demo as ${c.members.find((m) => m.id === value)?.name}.`,
                 );
@@ -668,18 +850,7 @@ export default function KindHandoff() {
       <main className="workspace">
         <div className="page-heading">
           <div>
-            <p className="eyebrow">
-              {ordered[0]
-                ? new Intl.DateTimeFormat('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    timeZone: c.timeZone,
-                  })
-                    .format(new Date(ordered[0].start))
-                    .toUpperCase()
-                : 'YOUR FAMILY’S PLAN B'}
-            </p>
+            <p className="eyebrow">{dayLabel(selectedDay).toUpperCase()}</p>
             <h1>
               {c.recipient}’s day<span className="heading-dot">.</span>
             </h1>
@@ -704,7 +875,20 @@ export default function KindHandoff() {
             </div>
           </div>
         </div>
-        {error && (
+        {refreshError && (
+          <div className="sync-banner" role="alert">
+            <AlertCircle size={18} />
+            <span>{refreshError}</span>
+            <button
+              className="text-button"
+              disabled={busy}
+              onClick={() => call('get_day')}
+            >
+              Refresh now
+            </button>
+          </div>
+        )}
+        {error && !modal && !detail && (
           <div className="error-banner" role="alert">
             <AlertCircle size={19} />
             <span>{error}</span>
@@ -733,7 +917,8 @@ export default function KindHandoff() {
             {isOwner && (
               <button
                 className="button small secondary"
-                onClick={() => setModal('task')}
+                disabled={busy}
+                onClick={() => openModal('task')}
               >
                 <Plus size={16} /> Add a commitment
               </button>
@@ -762,7 +947,12 @@ export default function KindHandoff() {
                       )
                       .map((t) => (
                         <article key={t.id}>
-                          <h3>{t.title}</h3>
+                          <button
+                            className="task-title"
+                            onClick={() => setDetailId(t.id)}
+                          >
+                            <h3>{t.title}</h3>
+                          </button>
                           <p>
                             {new Intl.DateTimeFormat('en-US', {
                               dateStyle: 'full',
@@ -818,6 +1008,57 @@ export default function KindHandoff() {
                   </section>
                 )}
 
+                <div className="day-toolbar" aria-label="Choose a day">
+                  <div className="date-control">
+                    <label htmlFor="plan-date">
+                      <CalendarDays size={16} />
+                      Viewing date
+                    </label>
+                    <input
+                      id="plan-date"
+                      type="date"
+                      value={selectedDay}
+                      onChange={(event) => {
+                        if (event.target.value)
+                          setSelectedDate(event.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="day-navigation">
+                    <button
+                      className="icon-button"
+                      aria-label="Previous day"
+                      onClick={() =>
+                        setSelectedDate(shiftCalendarDay(selectedDay, -1))
+                      }
+                    >
+                      <ChevronLeft size={19} />
+                    </button>
+                    <button
+                      className="button small secondary"
+                      disabled={selectedDay === today}
+                      onClick={() => setSelectedDate(today)}
+                    >
+                      Today
+                    </button>
+                    <button
+                      className="icon-button"
+                      aria-label="Next day"
+                      onClick={() =>
+                        setSelectedDate(shiftCalendarDay(selectedDay, 1))
+                      }
+                    >
+                      <ChevronRight size={19} />
+                    </button>
+                  </div>
+                  <a
+                    className="text-button mobile-voice-jump"
+                    href="#voice-desk"
+                  >
+                    <AudioLines size={16} />
+                    Voice desk
+                  </a>
+                </div>
                 <div
                   className={`status-strip ${uncovered ? 'needs-attention' : ''}`}
                 >
@@ -833,7 +1074,9 @@ export default function KindHandoff() {
                     >
                       {String(uncovered).padStart(2, '0')}
                     </span>
-                    <span>still need acceptance</span>
+                    <span>
+                      still {uncovered === 1 ? 'needs' : 'need'} acceptance
+                    </span>
                   </div>
                   <ShieldCheck size={26} />
                 </div>
@@ -846,15 +1089,49 @@ export default function KindHandoff() {
                 {ordered.length === 0 ? (
                   <div className="empty-state">
                     <Sprout size={30} />
-                    <h2>A fresh start for your circle.</h2>
+                    <h2>
+                      {c.tasks.length
+                        ? 'A little room in the day.'
+                        : 'A fresh start for your circle.'}
+                    </h2>
                     <p>
-                      Add a ride, a visit, or a little company. Then invite
-                      someone to carry it with you.
+                      {c.tasks.length
+                        ? 'There are no commitments on this date. Choose another day or add a plan here.'
+                        : isOwner
+                          ? 'Start with one commitment, then add the people who can help and invite them to your circle.'
+                          : 'Your coordinator has not added any commitments yet. Your invitations and offers will appear here.'}
                     </p>
-                    <button className="button" onClick={() => setModal('task')}>
-                      <Plus size={17} />
-                      Add the first commitment
-                    </button>
+                    {isOwner && (
+                      <button
+                        className="button"
+                        disabled={busy}
+                        onClick={() => openModal('task')}
+                      >
+                        <Plus size={17} />
+                        {c.tasks.length
+                          ? 'Add a commitment on this day'
+                          : 'Add the first commitment'}
+                      </button>
+                    )}
+                    {nextScheduledDay && (
+                      <button
+                        className="text-button"
+                        onClick={() => setSelectedDate(nextScheduledDay)}
+                      >
+                        View {dayLabel(nextScheduledDay)}{' '}
+                        <ArrowRight size={16} />
+                      </button>
+                    )}
+                    {isOwner && c.members.length === 1 && (
+                      <button
+                        className="text-button"
+                        disabled={busy}
+                        onClick={() => openModal('helper')}
+                      >
+                        <Users size={16} />
+                        Add someone who can help
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="timeline">
@@ -867,13 +1144,12 @@ export default function KindHandoff() {
                         <div className="timeline-row" key={t.id}>
                           <div className="time-label">
                             {stamp(t.start, c.timeZone)}
-                            <span>
-                              {new Intl.DateTimeFormat('en-GB', {
-                                day: '2-digit',
-                                month: 'short',
-                                timeZone: c.timeZone,
-                              }).format(new Date(t.start))}
-                            </span>
+                            <span>to {stamp(t.end, c.timeZone)}</span>
+                            {calendarDay(t.start, c.timeZone) < selectedDay ? (
+                              <span>From previous day</span>
+                            ) : calendarDay(t.end, c.timeZone) > selectedDay ? (
+                              <span>Ends next day</span>
+                            ) : null}
                           </div>
                           <div
                             className={`timeline-node ${t.status === 'blocked' ? 'node-alert' : ''}`}
@@ -938,6 +1214,32 @@ export default function KindHandoff() {
                                 </span>
                               )}
                             </div>
+                            {isOwner &&
+                              ['open', 'blocked'].includes(t.status) && (
+                                <div className="task-actions">
+                                  <button
+                                    className="text-button"
+                                    disabled={busy}
+                                    onClick={() => setDetailId(t.id)}
+                                  >
+                                    <Users size={16} />
+                                    Choose a helper
+                                  </button>
+                                  <button
+                                    className="text-button muted"
+                                    disabled={busy}
+                                    onClick={() =>
+                                      openModal('edit', {
+                                        taskId: t.id,
+                                        window: t,
+                                      })
+                                    }
+                                  >
+                                    <Pencil size={15} />
+                                    Edit
+                                  </button>
+                                </div>
+                              )}
                             {t.status === 'accepted' &&
                               (isOwner || t.assigneeId === actor.id) && (
                                 <div className="task-actions">
@@ -957,10 +1259,14 @@ export default function KindHandoff() {
                                   </button>
                                   <button
                                     className="text-button muted"
-                                    onClick={() => {
-                                      setModalMember(t.assigneeId!);
-                                      setModal('change');
-                                    }}
+                                    disabled={busy}
+                                    onClick={() =>
+                                      openModal('change', {
+                                        memberId: t.assigneeId!,
+                                        taskId: t.id,
+                                        window: t,
+                                      })
+                                    }
                                   >
                                     Report a change
                                   </button>
@@ -999,8 +1305,8 @@ export default function KindHandoff() {
                           <span className="status-dot amber-bg" />
                           {t.title}{' '}
                           {t.proposedTo
-                            ? `— waiting for ${t.proposedTo}`
-                            : '— no helper yet'}
+                            ? `· waiting for ${t.proposedTo}`
+                            : '· no helper yet'}
                         </p>
                       ))}
                     </div>
@@ -1010,7 +1316,7 @@ export default function KindHandoff() {
                     {b.accepted.length ? (
                       b.accepted.map((t) => (
                         <div className="brief-assignment" key={t.id}>
-                          <span>{stamp(t.start, c.timeZone)}</span>
+                          <span>{datedStamp(t.start, c.timeZone)}</span>
                           <p>
                             <strong>{t.person}</strong> · {t.title}
                             {t.waiting.length > 0 && (
@@ -1028,7 +1334,7 @@ export default function KindHandoff() {
                         </div>
                       ))
                     ) : (
-                      <p>No upcoming accepted commitments.</p>
+                      <p>No accepted commitments to hand over.</p>
                     )}
                   </div>
                   <div className="brief-block">
@@ -1113,7 +1419,8 @@ export default function KindHandoff() {
                   {isOwner && (
                     <button
                       className="button small secondary"
-                      onClick={() => setModal('helper')}
+                      disabled={busy}
+                      onClick={() => openModal('helper')}
                     >
                       <Plus size={16} /> Add helper
                     </button>
@@ -1133,6 +1440,16 @@ export default function KindHandoff() {
                         </span>
                       </div>
                       <div className="member-capabilities">
+                        {!m.canAccept && (
+                          <span className="chip amber-chip">
+                            Paused for new offers
+                          </span>
+                        )}
+                        {!m.capabilities.length && (
+                          <span className="source-label">
+                            No capabilities selected
+                          </span>
+                        )}
                         {m.capabilities.map((cap) => (
                           <span className="chip blue-chip" key={cap}>
                             {caps[cap as keyof typeof caps] ?? cap}
@@ -1155,10 +1472,10 @@ export default function KindHandoff() {
                         {(isOwner || actor.id === m.id) && (
                           <button
                             className="text-button"
-                            onClick={() => {
-                              setModalMember(m.id);
-                              setModal('availability');
-                            }}
+                            disabled={busy}
+                            onClick={() =>
+                              openModal('availability', { memberId: m.id })
+                            }
                           >
                             Edit availability
                           </button>
@@ -1185,10 +1502,9 @@ export default function KindHandoff() {
                             <button
                               className="text-button muted"
                               disabled={busy}
-                              onClick={() => {
-                                setModalMember(m.id);
-                                setModal('revoke');
-                              }}
+                              onClick={() =>
+                                openModal('revoke', { memberId: m.id })
+                              }
                             >
                               Revoke access
                             </button>
@@ -1249,7 +1565,10 @@ export default function KindHandoff() {
                 <details className="trace-panel">
                   <summary>
                     Live MCP execution trace{' '}
-                    <span>{traces.length} calls this session</span>
+                    <span>
+                      {traces.length} {traces.length === 1 ? 'call' : 'calls'}{' '}
+                      this session
+                    </span>
                   </summary>
                   <p>
                     These entries come from actual server requests. Language
@@ -1282,7 +1601,8 @@ export default function KindHandoff() {
                     (snapshot?.signedIn ? (
                       <button
                         className="button"
-                        onClick={() => setModal('create')}
+                        disabled={busy}
+                        onClick={() => openModal('create')}
                       >
                         Create my own circle <ArrowRight size={17} />
                       </button>
@@ -1376,7 +1696,9 @@ export default function KindHandoff() {
                             mode: 'demo',
                           });
                           if (r) {
+                            sessionEpoch.current++;
                             setSnapshot(r);
+                            setSelectedDate('');
                             setPlan(null);
                             setReply('');
                             setTraces([]);
@@ -1401,7 +1723,8 @@ export default function KindHandoff() {
                     {isOwner && (
                       <button
                         className="text-button danger"
-                        onClick={() => setModal('delete')}
+                        disabled={busy}
+                        onClick={() => openModal('delete')}
                       >
                         Delete this circle
                       </button>
@@ -1410,7 +1733,11 @@ export default function KindHandoff() {
                 </div>
               </TabsContent>
             </section>
-            <aside className="voice-panel">
+            <aside
+              id="voice-desk"
+              className="voice-panel"
+              aria-label="Voice desk and language simulator"
+            >
               <div className="voice-top">
                 <span className="eyebrow">THE VOICE DESK</span>
                 <span className="chip voice-chip">Alexa+ simulation</span>
@@ -1531,111 +1858,119 @@ export default function KindHandoff() {
                   </button>
                 </div>
               )}
-              {plan && (
-                <div className="plan-card">
-                  <div className="plan-label">
-                    <span className="eyebrow">A POSSIBLE PLAN B</span>
-                    <span>v{plan.basedOnVersion}</span>
-                  </div>
-                  {plan.assignments.map((a) => (
-                    <div className="plan-assignment" key={a.taskId}>
-                      <div>
-                        <span className="plan-time">
-                          {stamp(
-                            c.tasks.find((t) => t.id === a.taskId)!.start,
-                            c.timeZone,
-                          )}
-                        </span>
-                        <strong>
-                          {c.members.find((m) => m.id === a.candidateId)?.name}
-                        </strong>
-                      </div>
-                      <p>{c.tasks.find((t) => t.id === a.taskId)?.title}</p>
-                      <small>{a.reason}</small>
+              {plan &&
+                plan.assignments.every((assignment) =>
+                  c.tasks.some((task) => task.id === assignment.taskId),
+                ) && (
+                  <div className="plan-card">
+                    <div className="plan-label">
+                      <span className="eyebrow">A POSSIBLE PLAN B</span>
+                      <span>v{plan.basedOnVersion}</span>
                     </div>
-                  ))}
-                  {plan.searchLimited && (
-                    <p className="unresolved-note">
-                      Search limit reached. This is a feasible partial plan;
-                      other arrangements may exist.
-                    </p>
-                  )}
-                  {plan.unresolved.length > 0 && (
-                    <p className="unresolved-note">
-                      Still unresolved:{' '}
-                      {plan.unresolved
-                        .map((id) => c.tasks.find((t) => t.id === id)?.title)
-                        .join(', ')}
-                      . Arrange help directly or update availability.
-                    </p>
-                  )}
-                  <details className="reasoning">
-                    <summary>Why this plan?</summary>
-                    {plan.assessments.map((a) => (
-                      <div key={a.taskId}>
-                        <strong>
-                          {c.tasks.find((t) => t.id === a.taskId)?.title}
-                        </strong>
-                        {a.candidates.map((m) => (
-                          <p key={m.candidateId}>
-                            <b>
-                              {
-                                c.members.find((x) => x.id === m.candidateId)
-                                  ?.name
-                              }
-                              :
-                            </b>{' '}
-                            {m.eligible
-                              ? 'Available, capable, no conflict.'
-                              : m.reasons
-                                  .filter(
-                                    (r) =>
-                                      ![
-                                        'AVAILABLE',
-                                        'CAPABLE',
-                                        'NO_CONFLICTS',
-                                      ].includes(r.code),
-                                  )
-                                  .map((r) => r.message)
-                                  .join(' ')}
-                          </p>
-                        ))}
+                    {plan.assignments.map((a) => (
+                      <div className="plan-assignment" key={a.taskId}>
+                        <div>
+                          <span className="plan-time">
+                            {datedStamp(
+                              c.tasks.find((t) => t.id === a.taskId)!.start,
+                              c.timeZone,
+                            )}
+                          </span>
+                          <strong>
+                            {
+                              c.members.find((m) => m.id === a.candidateId)
+                                ?.name
+                            }
+                          </strong>
+                        </div>
+                        <p>{c.tasks.find((t) => t.id === a.taskId)?.title}</p>
+                        <small>{a.reason}</small>
                       </div>
                     ))}
-                  </details>
-                  {isOwner &&
-                    plan.assignments.length > 0 &&
-                    (plan.basedOnVersion === c.version ? (
-                      <button
-                        disabled={busy}
-                        className="button light"
-                        onClick={async () => {
-                          const r = await call('propose_recovery', {}, true);
-                          if (r) {
-                            setPlan(null);
-                            setReply(
-                              'The offers are ready. The commitments still need each helper’s acceptance. Open their private invitation, or switch roles in this isolated demo, to see their side.',
-                            );
-                          }
-                        }}
-                      >
-                        Create {plan.assignments.length} handoff offers{' '}
-                        <ArrowRight size={17} />
-                      </button>
-                    ) : (
-                      <button
-                        className="button light"
-                        disabled={busy}
-                        onClick={recover}
-                      >
-                        Plan changed · check again
-                      </button>
-                    ))}
-                  <p className="plan-disclaimer">
-                    Suggestions only. No messages are sent.
-                  </p>
-                </div>
-              )}
+                    {plan.searchLimited && (
+                      <p className="unresolved-note">
+                        Search limit reached. This is a feasible partial plan;
+                        other arrangements may exist.
+                      </p>
+                    )}
+                    {plan.unresolved.length > 0 && (
+                      <p className="unresolved-note">
+                        Still unresolved:{' '}
+                        {plan.unresolved
+                          .map((id) => c.tasks.find((t) => t.id === id)?.title)
+                          .join(', ')}
+                        . Arrange help directly or update availability.
+                      </p>
+                    )}
+                    <details className="reasoning">
+                      <summary>Why this plan?</summary>
+                      {plan.assessments.map((a) => (
+                        <div key={a.taskId}>
+                          <strong>
+                            {c.tasks.find((t) => t.id === a.taskId)?.title}
+                          </strong>
+                          {a.candidates.map((m) => (
+                            <p key={m.candidateId}>
+                              <b>
+                                {
+                                  c.members.find((x) => x.id === m.candidateId)
+                                    ?.name
+                                }
+                                :
+                              </b>{' '}
+                              {m.eligible
+                                ? 'Available, capable, no conflict.'
+                                : m.reasons
+                                    .filter(
+                                      (r) =>
+                                        ![
+                                          'AVAILABLE',
+                                          'CAPABLE',
+                                          'NO_CONFLICTS',
+                                        ].includes(r.code),
+                                    )
+                                    .map((r) => r.message)
+                                    .join(' ')}
+                            </p>
+                          ))}
+                        </div>
+                      ))}
+                    </details>
+                    {isOwner &&
+                      plan.assignments.length > 0 &&
+                      (plan.basedOnVersion === c.version ? (
+                        <button
+                          disabled={busy}
+                          className="button light"
+                          onClick={async () => {
+                            const r = await call('propose_recovery', {}, true);
+                            if (r) {
+                              setPlan(null);
+                              setReply(
+                                'The offers are ready. The commitments still need each helper’s acceptance. Open their private invitation, or switch roles in this isolated demo, to see their side.',
+                              );
+                            }
+                          }}
+                        >
+                          Create {plan.assignments.length} handoff{' '}
+                          {plan.assignments.length === 1 ? 'offer' : 'offers'}{' '}
+                          <ArrowRight size={17} />
+                        </button>
+                      ) : (
+                        <button
+                          className="button light"
+                          disabled={busy}
+                          onClick={recover}
+                        >
+                          Plan changed · check again
+                        </button>
+                      ))}
+                    <p className="plan-disclaimer">
+                      Suggestions cover your circle’s unassigned commitments. No
+                      messages are sent.
+                    </p>
+                  </div>
+                )}
               <form
                 className="voice-input"
                 onSubmit={(e) => {
@@ -1645,6 +1980,7 @@ export default function KindHandoff() {
               >
                 <input
                   value={input}
+                  disabled={busy}
                   maxLength={1200}
                   onChange={(e) => setInput(e.target.value)}
                   aria-label="Tell KindHandoff what changed"
@@ -1677,6 +2013,23 @@ export default function KindHandoff() {
                     : 'Free language simulator · live MCP tools'}
                 </span>
               </div>
+              <details className="supported-requests">
+                <summary>What can I ask?</summary>
+                <p>
+                  This simulator understands these requests. You review every
+                  change before it is saved.
+                </p>
+                <ul>
+                  <li>“Maya is unavailable this afternoon.”</li>
+                  <li>“Who can help?”</li>
+                  <li>“What should the next helper know?”</li>
+                  <li>“Note: the blue bag is by the door.”</li>
+                </ul>
+                <p>
+                  For a different date, a new commitment, or a helper’s
+                  availability, use the day and circle controls.
+                </p>
+              </details>
               <button
                 className="text-button on-dark recovery-link"
                 disabled={busy}
@@ -1702,15 +2055,22 @@ export default function KindHandoff() {
             <>
               <p className="eyebrow">A COMMITMENT, CLEARLY</p>
               <SheetTitle>{detail.title}</SheetTitle>
-              <SheetDescription>{detail.details}</SheetDescription>
+              <SheetDescription>
+                {detail.details || 'No extra details have been added.'}
+              </SheetDescription>
+              {error && !modal && (
+                <p className="error-banner" role="alert">
+                  {error}
+                </p>
+              )}
               <span
                 className={`chip ${detail.status === 'accepted' ? 'blue-chip' : 'subtle'}`}
               >
                 {statuses[detail.status]}
               </span>
               <p>
-                {stamp(detail.start, c.timeZone)}–
-                {stamp(detail.end, c.timeZone)} · {c.timeZone}
+                {datedStamp(detail.start, c.timeZone)} to{' '}
+                {datedStamp(detail.end, c.timeZone)} · {c.timeZone}
               </p>
               <div className="brief-block">
                 <h3>What’s needed</h3>
@@ -1729,15 +2089,39 @@ export default function KindHandoff() {
                 <div className="brief-block">
                   <h3>Before this can finish</h3>
                   {detail.dependsOn.map((id) => (
-                    <p key={id}>
+                    <button
+                      className="text-button"
+                      key={id}
+                      onClick={() => setDetailId(id)}
+                    >
                       {c.tasks.find((t) => t.id === id)?.title} ·{' '}
-                      {c.tasks.find((t) => t.id === id)?.status}
-                    </p>
+                      {statuses[c.tasks.find((t) => t.id === id)!.status]}
+                    </button>
                   ))}
                 </div>
               )}
               {['open', 'blocked'].includes(detail.status) && isOwner && (
                 <div className="offer-options">
+                  <div className="task-actions detail-edit-actions">
+                    <button
+                      className="button small secondary"
+                      disabled={busy}
+                      onClick={() =>
+                        openModal('edit', { taskId: detail.id, window: detail })
+                      }
+                    >
+                      <Pencil size={16} />
+                      Edit commitment
+                    </button>
+                    <button
+                      className="text-button danger"
+                      disabled={busy}
+                      onClick={() => openModal('cancel', { taskId: detail.id })}
+                    >
+                      <Trash2 size={16} />
+                      Cancel commitment
+                    </button>
+                  </div>
                   <h3>Ask a helper</h3>
                   {assess(c, detail).candidates.map((m) => (
                     <div className="candidate-option" key={m.candidateId}>
@@ -1776,6 +2160,92 @@ export default function KindHandoff() {
                   ))}
                 </div>
               )}
+              {detail.status === 'offered' &&
+                detail.proposedAssigneeId === actor.id && (
+                  <div className="task-actions">
+                    <button
+                      className="button"
+                      disabled={busy}
+                      onClick={() =>
+                        call(
+                          'respond_to_handoff',
+                          { taskId: detail.id, response: 'accept' },
+                          true,
+                        )
+                      }
+                    >
+                      <Check size={16} />I can do this
+                    </button>
+                    <button
+                      className="button secondary"
+                      disabled={busy}
+                      onClick={() =>
+                        call(
+                          'respond_to_handoff',
+                          { taskId: detail.id, response: 'decline' },
+                          true,
+                        )
+                      }
+                    >
+                      I can’t
+                    </button>
+                  </div>
+                )}
+              {detail.status === 'accepted' &&
+                (isOwner || detail.assigneeId === actor.id) && (
+                  <div className="task-actions">
+                    <button
+                      className="button"
+                      disabled={busy || readiness(c, detail).waiting.length > 0}
+                      onClick={() =>
+                        call('complete_commitment', { taskId: detail.id }, true)
+                      }
+                    >
+                      <CircleCheck size={16} />
+                      Mark complete
+                    </button>
+                    <button
+                      className="text-button"
+                      disabled={busy}
+                      onClick={() =>
+                        openModal('change', {
+                          memberId: detail.assigneeId!,
+                          taskId: detail.id,
+                          window: detail,
+                        })
+                      }
+                    >
+                      Report a change
+                    </button>
+                  </div>
+                )}
+              {detail.status === 'offered' && isOwner && (
+                <div className="brief-block">
+                  <p>
+                    Waiting for{' '}
+                    {
+                      c.members.find(
+                        (member) => member.id === detail.proposedAssigneeId,
+                      )?.name
+                    }{' '}
+                    to respond. If they are unavailable, report that change
+                    before editing this commitment.
+                  </p>
+                  <button
+                    className="text-button"
+                    disabled={busy}
+                    onClick={() =>
+                      openModal('change', {
+                        memberId: detail.proposedAssigneeId!,
+                        taskId: detail.id,
+                        window: detail,
+                      })
+                    }
+                  >
+                    Report a change
+                  </button>
+                </div>
+              )}
               {detail.status === 'done' && isOwner && (
                 <button
                   disabled={busy}
@@ -1807,7 +2277,9 @@ export default function KindHandoff() {
               {
                 {
                   task: 'Add a commitment',
-                  helper: 'Invite a helping hand',
+                  edit: 'Edit commitment',
+                  cancel: 'Cancel this commitment?',
+                  helper: 'Add a helper',
                   availability: `${selectedMember?.name}’s availability`,
                   change: 'Report a change',
                   create: 'A circle of your own',
@@ -1827,24 +2299,29 @@ export default function KindHandoff() {
                     ? 'This permanently removes commitments, notes, invitations, and access. Export your circle first if you need a copy.'
                     : modal === 'revoke'
                       ? 'Existing helper sessions and unused invitations will stop working. Their commitments remain visible.'
-                      : 'Clear details make the next handoff easier.'}
+                      : modal === 'cancel'
+                        ? 'This removes the commitment from your active plan and keeps a cancellation record. Commitments with dependent tasks must be resolved first.'
+                        : modal === 'availability'
+                          ? 'Keep each available window separate. Time between these windows remains unavailable.'
+                          : 'Clear details make the next handoff easier.'}
             </DialogDescription>
           </DialogHeader>
-          {error && (
+          {(staleModal || error) && (
             <p role="alert" className="error-banner">
-              {error}
+              {staleModal ? staleReviewMessage : error}
             </p>
           )}
           {[
             'task',
+            'edit',
             'helper',
             'availability',
             'change',
             'create',
             'delete',
           ].includes(modal ?? '') && (
-            <form className="app-form" onSubmit={formSubmit}>
-              {modal === 'task' && (
+            <form className="app-form" onSubmit={formSubmit} aria-busy={busy}>
+              {(modal === 'task' || modal === 'edit') && (
                 <>
                   <label>
                     Commitment
@@ -1853,6 +2330,8 @@ export default function KindHandoff() {
                       maxLength={120}
                       required
                       placeholder="A ride to book club"
+                      defaultValue={modal === 'edit' ? editingTask?.title : ''}
+                      disabled={busy}
                     />
                   </label>
                   <label>
@@ -1861,6 +2340,10 @@ export default function KindHandoff() {
                       name="details"
                       maxLength={800}
                       placeholder="What should the helper know?"
+                      defaultValue={
+                        modal === 'edit' ? editingTask?.details : ''
+                      }
+                      disabled={busy}
                     />
                   </label>
                 </>
@@ -1874,6 +2357,7 @@ export default function KindHandoff() {
                       maxLength={80}
                       required
                       placeholder="Dev"
+                      disabled={busy}
                     />
                   </label>
                   <label>
@@ -1882,6 +2366,7 @@ export default function KindHandoff() {
                       name="relation"
                       maxLength={100}
                       placeholder="Son, neighbour, friend…"
+                      disabled={busy}
                     />
                   </label>
                 </>
@@ -1895,6 +2380,7 @@ export default function KindHandoff() {
                       name="memberId"
                       label="Unavailable helper"
                       defaultValue={modalMember || actor.id}
+                      disabled={busy}
                       options={c.members
                         .filter((m) => isOwner || m.id === actor.id)
                         .map((m) => ({ value: m.id, label: m.name }))}
@@ -1907,13 +2393,12 @@ export default function KindHandoff() {
                       required
                       maxLength={500}
                       placeholder="A change of shift. Please help cover the afternoon."
+                      disabled={busy}
                     />
                   </label>
                 </>
               )}
-              {['task', 'helper', 'availability', 'change'].includes(
-                modal ?? '',
-              ) && (
+              {['task', 'edit', 'helper', 'change'].includes(modal ?? '') && (
                 <>
                   <div className="form-row">
                     <label>
@@ -1923,6 +2408,7 @@ export default function KindHandoff() {
                         name="start"
                         defaultValue={datetime(formStart)}
                         required
+                        disabled={busy}
                       />
                     </label>
                     <label>
@@ -1932,6 +2418,7 @@ export default function KindHandoff() {
                         name="end"
                         defaultValue={datetime(formEnd)}
                         required
+                        disabled={busy}
                       />
                     </label>
                   </div>
@@ -1942,27 +2429,159 @@ export default function KindHandoff() {
                   </p>
                 </>
               )}
-              {['task', 'helper', 'availability'].includes(modal ?? '') && (
+              {modal === 'availability' && (
+                <fieldset className="availability-editor">
+                  <legend>Available times</legend>
+                  <label
+                    className="check-label"
+                    htmlFor="availability-can-accept"
+                  >
+                    <Checkbox
+                      id="availability-can-accept"
+                      name="canAccept"
+                      defaultChecked={selectedMember?.canAccept ?? true}
+                      disabled={busy}
+                    />
+                    Can accept new handoff offers
+                  </label>
+                  {availabilityWindows.length === 0 && (
+                    <p className="form-hint">
+                      No available times are set. Add a window when you can
+                      help.
+                    </p>
+                  )}
+                  {availabilityWindows.map((window, index) => (
+                    <div className="availability-window" key={window.id}>
+                      <div className="window-heading">
+                        <strong>Window {index + 1}</strong>
+                        <button
+                          className="text-button danger"
+                          type="button"
+                          disabled={busy}
+                          aria-label={`Remove availability window ${index + 1}`}
+                          onClick={() =>
+                            setAvailabilityWindows((windows) =>
+                              windows.filter((item) => item.id !== window.id),
+                            )
+                          }
+                        >
+                          <X size={15} />
+                          Remove
+                        </button>
+                      </div>
+                      <div className="form-row">
+                        <label>
+                          From
+                          <input
+                            name="availabilityStart"
+                            type="datetime-local"
+                            defaultValue={
+                              window.start ? datetime(window.start) : ''
+                            }
+                            required
+                            disabled={busy}
+                          />
+                        </label>
+                        <label>
+                          Until
+                          <input
+                            name="availabilityEnd"
+                            type="datetime-local"
+                            defaultValue={
+                              window.end ? datetime(window.end) : ''
+                            }
+                            required
+                            disabled={busy}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                  <button
+                    className="button secondary small"
+                    type="button"
+                    disabled={busy || availabilityWindows.length >= 8}
+                    onClick={() =>
+                      setAvailabilityWindows((windows) => [
+                        ...windows,
+                        { id: crypto.randomUUID(), start: '', end: '' },
+                      ])
+                    }
+                  >
+                    <Plus size={16} />
+                    Add time window
+                  </button>
+                  <p className="form-hint">
+                    Up to eight separate windows. Enter times in your device
+                    time zone:{' '}
+                    {new Intl.DateTimeFormat().resolvedOptions().timeZone}.
+                  </p>
+                </fieldset>
+              )}
+              {['task', 'edit', 'helper', 'availability'].includes(
+                modal ?? '',
+              ) && (
                 <CapabilityFields
+                  disabled={busy}
+                  legend={
+                    modal === 'task' || modal === 'edit'
+                      ? 'What this commitment needs'
+                      : 'How this person can help'
+                  }
                   defaults={
-                    modal === 'availability' ? selectedMember?.capabilities : []
+                    modal === 'availability'
+                      ? selectedMember?.capabilities
+                      : modal === 'edit'
+                        ? editingTask?.requiredCapabilities
+                        : []
                   }
                 />
               )}
-              {modal === 'task' && (
-                <label htmlFor="commitment-dependency">
-                  Depends on
-                  <Choice
-                    id="commitment-dependency"
-                    name="dependsOn"
-                    label="Earlier commitment"
-                    defaultValue=""
-                    options={[
-                      { value: '', label: 'No earlier commitment' },
-                      ...c.tasks.map((t) => ({ value: t.id, label: t.title })),
-                    ]}
-                  />
-                </label>
+              {(modal === 'task' || modal === 'edit') && (
+                <fieldset className="dependency-editor">
+                  <legend>Earlier commitments</legend>
+                  <p className="form-hint">
+                    Optional. Choose up to eight commitments that must finish
+                    first.
+                  </p>
+                  {c.tasks.filter((task) => task.id !== modalTaskId).length ? (
+                    <div className="dependency-choices">
+                      {[...c.tasks]
+                        .filter((task) => task.id !== modalTaskId)
+                        .sort((left, right) =>
+                          left.start.localeCompare(right.start),
+                        )
+                        .map((task) => (
+                          <label
+                            className="check-label"
+                            key={task.id}
+                            htmlFor={`dependency-${task.id}`}
+                          >
+                            <Checkbox
+                              id={`dependency-${task.id}`}
+                              name="dependsOn"
+                              value={task.id}
+                              defaultChecked={
+                                modal === 'edit' &&
+                                (editingTask?.dependsOn.includes(task.id) ??
+                                  false)
+                              }
+                              disabled={busy}
+                            />
+                            <span>
+                              {task.title}
+                              <small>
+                                {datedStamp(task.start, c.timeZone)} ·{' '}
+                                {statuses[task.status]}
+                              </small>
+                            </span>
+                          </label>
+                        ))}
+                    </div>
+                  ) : (
+                    <p className="form-hint">No earlier commitments yet.</p>
+                  )}
+                </fieldset>
               )}
               {modal === 'create' && (
                 <>
@@ -1973,6 +2592,7 @@ export default function KindHandoff() {
                       maxLength={80}
                       required
                       placeholder="Shivam"
+                      disabled={busy}
                     />
                   </label>
                   <label>
@@ -1982,6 +2602,7 @@ export default function KindHandoff() {
                       maxLength={80}
                       required
                       placeholder="A parent, friend, or family member"
+                      disabled={busy}
                     />
                   </label>
                   <p className="form-hint">
@@ -1998,24 +2619,62 @@ export default function KindHandoff() {
                     required
                     pattern="DELETE"
                     autoComplete="off"
+                    disabled={busy}
                   />
                 </label>
               )}
               <button
-                disabled={busy}
+                disabled={busy || staleModal}
                 type="submit"
                 className={`button ${modal === 'delete' ? 'danger-button' : ''}`}
               >
-                {modal === 'change'
-                  ? 'Confirm change'
-                  : modal === 'create'
-                    ? 'Create my circle'
-                    : modal === 'delete'
-                      ? 'Permanently delete circle'
-                      : 'Save'}
+                {busy
+                  ? 'Saving…'
+                  : modal === 'change'
+                    ? 'Confirm change'
+                    : modal === 'create'
+                      ? 'Create my circle'
+                      : modal === 'delete'
+                        ? 'Permanently delete circle'
+                        : 'Save'}
                 <ArrowRight size={17} />
               </button>
             </form>
+          )}
+          {modal === 'cancel' && editingTask && (
+            <div className="cancel-confirmation">
+              <h3>{editingTask.title}</h3>
+              <p>{datedStamp(editingTask.start, c.timeZone)}</p>
+              <div className="task-actions">
+                <button
+                  className="button danger-button"
+                  disabled={busy || staleModal}
+                  onClick={async () => {
+                    const result = await call(
+                      'cancel_commitment',
+                      { taskId: editingTask.id },
+                      true,
+                      modalReview,
+                    );
+                    if (result) {
+                      setModal(null);
+                      setDetailId(null);
+                      setPlan(null);
+                    }
+                  }}
+                >
+                  <Trash2 size={16} />
+                  {busy ? 'Cancelling…' : 'Confirm cancellation'}
+                </button>
+                <button
+                  className="button secondary"
+                  disabled={busy}
+                  onClick={() => setModal(null)}
+                >
+                  Keep commitment
+                </button>
+              </div>
+            </div>
           )}
           {modal === 'invite' && invite && (
             <div className="share-result">

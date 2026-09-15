@@ -1,135 +1,177 @@
 1
-00:00:00,000 --> 00:00:07,000
-I'm Shivam Gupta. Maya just cancelled this
-afternoon. For this family, one change
+00:00:00,000 --> 00:00:03,214
+Maya can't make it this afternoon.
 
 2
-00:00:07,000 --> 00:00:12,923
-breaks two commitments. KindHandoff turns
-that disruption into a plan people
+00:00:03,214 --> 00:00:07,500
+The coordinator reviews
+the change and confirms it.
 
 3
-00:00:12,923 --> 00:00:14,000
-actually accept.
+00:00:07,500 --> 00:00:11,250
+One cancellation has now
+disrupted two commitments.
 
 4
-00:00:14,000 --> 00:00:22,167
-This fictional household has two linked
-tasks. Maya was going to pack a library
+00:00:11,250 --> 00:00:15,000
+This is KindHandoff,
+created by Shivam Gupta.
 
 5
-00:00:22,167 --> 00:00:30,917
-bag at two thirty, then give a ride at
-three. Her cancellation affects both. The
+00:00:15,000 --> 00:00:17,065
+In this fictional household,
 
 6
-00:00:30,917 --> 00:00:35,000
-ride depends on the bag being packed.
+00:00:17,065 --> 00:00:22,742
+Maya was going to pack Arun's
+library bag at two thirty,
 
 7
-00:00:35,000 --> 00:00:43,364
-Here is why the suggested plan matters. Jo
-can enter the house between two and three,
+00:00:22,742 --> 00:00:26,871
+then drive him to book club at three.
 
 8
-00:00:43,364 --> 00:00:50,682
-but cannot drive. Dev can drive, but is
-only available from two forty-five. The
+00:00:26,871 --> 00:00:31,000
+The ride depends on the bag being ready.
 
 9
-00:00:50,682 --> 00:00:58,000
-planner checks those constraints and
-proposes Jo for the bag, Dev for the ride.
+00:00:31,000 --> 00:00:37,732
+Jo can enter the house between
+two and three, but cannot drive.
 
 10
-00:00:58,000 --> 00:01:05,579
-I review the proposal before creating
-offers. They remain pending until each
+00:00:37,732 --> 00:00:43,341
+Dev can drive, but is only
+free from two forty-five.
 
 11
-00:01:05,579 --> 00:01:15,053
-named helper accepts. Jo accepts her bag
-task in her own helper view. Dev accepts
+00:00:43,341 --> 00:00:47,829
+The planner checks availability,
+capabilities, and conflicting commitments.
 
 12
-00:01:15,053 --> 00:01:21,368
-his ride separately. Every acceptance
-belongs to the person taking
+00:00:47,829 --> 00:00:54,000
+It proposes Jo for the
+bag and Dev for the ride.
 
 13
-00:01:21,368 --> 00:01:22,000
-responsibility.
+00:00:54,000 --> 00:00:58,800
+A proposed plan is still only a proposal.
 
 14
-00:01:22,000 --> 00:01:30,186
-Watch the ride. Even after Dev accepts, it
-is still waiting for the bag. Jo records
+00:00:58,800 --> 00:01:02,400
+The coordinator creates
+two handoff offers.
 
 15
-00:01:30,186 --> 00:01:37,349
-the bag as packed, and the ride becomes
-ready. That small dependency is the
+00:01:02,400 --> 00:01:07,800
+Jo opens her private
+invitation and accepts the bag.
 
 16
-00:01:37,349 --> 00:01:44,000
-difference between having two names on a
-calendar and having a workable afternoon.
+00:01:07,800 --> 00:01:12,600
+Dev accepts the ride in his own session.
 
 17
-00:01:44,000 --> 00:01:50,769
-The updated handoff brief shows what
-changed and what remains. Dev acknowledges
+00:01:12,600 --> 00:01:18,000
+Until each named helper accepts,
+the task stays uncovered.
 
 18
-00:01:50,769 --> 00:01:58,667
-this specific version. If the plan changes
-again, the record still tells us which
+00:01:18,000 --> 00:01:19,714
+Watch Dev's ride.
 
 19
-00:01:58,667 --> 00:02:06,000
-version he read. People can see what was
-agreed, by whom, and when.
+00:01:19,714 --> 00:01:24,857
+It is accepted, but still
+waiting for the bag.
 
 20
-00:02:06,000 --> 00:02:13,250
-Behind this is a real MCP server using the
-November twenty-fifth, twenty twenty-five
+00:01:24,857 --> 00:01:28,286
+Jo records the bag as packed.
 
 21
-00:02:13,250 --> 00:02:18,827
-specification and Streamable HTTP. The web
-language simulator is explicitly
+00:01:28,286 --> 00:01:32,286
+Only then does the ride become ready.
 
 22
-00:02:18,827 --> 00:02:22,173
-deterministic. Firebase provides
-email-and-password sign-in, persistent
+00:01:32,286 --> 00:01:35,143
+Agreement and readiness stay separate,
 
 23
-00:02:22,173 --> 00:02:28,308
-household records, and the public web app.
-Helper invitations keep responsibilities
+00:01:35,143 --> 00:01:42,000
+so an unfinished prerequisite cannot
+hide behind a name on the calendar.
 
 24
-00:02:28,308 --> 00:02:35,000
-separate. This is a simulated experience,
-with no live Alexa connection claimed.
+00:01:42,000 --> 00:01:47,108
+The handoff brief shows what
+changed and what remains.
 
 25
-00:02:35,000 --> 00:02:40,946
-KindHandoff starts with practical support:
-bags, rides, meals, and visits. The
+00:01:47,108 --> 00:01:49,946
+Dev acknowledges this specific revision.
 
 26
-00:02:40,946 --> 00:02:46,351
-business hypothesis is a household
-subscription, with every helper included.
+00:01:49,946 --> 00:01:54,486
+A later update does not
+rewrite that receipt.
 
 27
-00:02:46,351 --> 00:02:53,378
-The promise is simple: make the next step
-clear, and make responsibility something
+00:01:54,486 --> 00:01:59,595
+The circle can see who
+agreed, what is ready,
 
 28
-00:02:53,378 --> 00:02:55,000
-people actually accept.
+00:01:59,595 --> 00:02:03,000
+and which version each person read.
+
+29
+00:02:03,000 --> 00:02:08,707
+The browser's bounded language
+simulator makes real MCP calls
+
+30
+00:02:08,707 --> 00:02:13,146
+using the November twenty-fifth,
+twenty twenty-five protocol
+
+31
+00:02:13,146 --> 00:02:15,049
+and Streamable HTTP.
+
+32
+00:02:15,049 --> 00:02:18,220
+Activity shows the execution trace.
+
+33
+00:02:18,220 --> 00:02:22,659
+Firebase provides sign-in and
+persistent household records.
+
+34
+00:02:22,659 --> 00:02:29,000
+The simulator is deterministic; no
+live Alexa connection is claimed.
+
+35
+00:02:29,000 --> 00:02:35,061
+KindHandoff starts with everyday
+support: bags, rides, meals, and visits.
+
+36
+00:02:35,061 --> 00:02:41,121
+The pricing hypothesis is twelve
+dollars per household per month,
+
+37
+00:02:41,121 --> 00:02:43,545
+with every helper included.
+
+38
+00:02:43,545 --> 00:02:45,970
+Household validation comes next.
+
+39
+00:02:45,970 --> 00:02:49,000
+Clear plans and accepted responsibility.

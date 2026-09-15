@@ -29,6 +29,16 @@ export function responseError(value: unknown): string | undefined {
     : 'Unable to complete this request.';
 }
 
+export class ApiRequestError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+  ) {
+    super(message);
+    this.name = 'ApiRequestError';
+  }
+}
+
 // The overloads mirror the same-origin route contracts; JSON stays unknown
 // until HTTP and the shared error envelope have been checked.
 export function api(path: '/api/session'): Promise<SessionResponse>;
@@ -49,7 +59,10 @@ export async function api(
   const value: unknown = await response.json();
   const error = responseError(value);
   if (!response.ok || error)
-    throw new Error(error ?? 'Unable to complete this request.');
+    throw new ApiRequestError(
+      error ?? 'Unable to complete this request.',
+      response.status,
+    );
   if (!isRecord(value))
     throw new Error('The server returned an invalid response.');
   return value;

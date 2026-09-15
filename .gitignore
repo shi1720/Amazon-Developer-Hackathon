@@ -49,3 +49,14 @@ next-env.d.ts
 /functions/lib/
 /functions/.env*
 /firebase-export-*/
+
+# Reproducible presentation/PDF intermediates; final deliverables stay tracked.
+/docs/.build/
+/docs/.finalized/
+
+# Python build caches, including the video renderer.
+__pycache__/
+*.py[cod]
+
+# Narration audio, transcripts, captures, and temporary video renders use /work/.
+# /work/ is ignored above. Keep docs/video-source and final docs/deliverables.

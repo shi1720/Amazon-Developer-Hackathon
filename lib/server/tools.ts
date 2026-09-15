@@ -27,6 +27,16 @@ const mutation = {
   expectedVersion: z.number().int().nonnegative(),
   requestId: z.uuid(),
 };
+const commitmentFields = {
+  title: short,
+  details: z.string().trim().max(800),
+  start: time,
+  end: time,
+  requiredCapabilities: z
+    .array(z.enum(['driving', 'home_access', 'company']))
+    .max(3),
+  dependsOn: z.array(id).max(8),
+};
 export const toolSchemas = {
   get_day: z.object({}),
   get_handoff_brief: z.object({}),
@@ -49,15 +59,10 @@ export const toolSchemas = {
   reopen_commitment: z.object({ ...mutation, taskId: id }),
   add_commitment: z.object({
     ...mutation,
-    title: short,
-    details: z.string().trim().max(800),
-    start: time,
-    end: time,
-    requiredCapabilities: z
-      .array(z.enum(['driving', 'home_access', 'company']))
-      .max(3),
-    dependsOn: z.array(id).max(8),
+    ...commitmentFields,
   }),
+  edit_commitment: z.object({ ...mutation, taskId: id, ...commitmentFields }),
+  cancel_commitment: z.object({ ...mutation, taskId: id }),
   add_helper: z.object({
     ...mutation,
     name: short,
@@ -70,8 +75,12 @@ export const toolSchemas = {
     ...mutation,
     memberId: id,
     canAccept: z.boolean(),
-    start: time,
-    end: time,
+    start: time.optional(),
+    end: time.optional(),
+    availability: z
+      .array(z.object({ start: time, end: time }))
+      .max(8)
+      .optional(),
     capabilities: z.array(z.enum(['driving', 'home_access', 'company'])).max(3),
   }),
   add_note: z.object({ ...mutation, text: z.string().trim().min(1).max(1200) }),
@@ -118,10 +127,14 @@ export const descriptions: Record<ToolName, string> = {
     'Coordinator reopens a blocked or completed commitment. Reject if a completed downstream commitment depends on it.',
   add_commitment:
     'Create a practical support commitment with explicit UTC times, requirements and earlier dependency IDs. Starts unassigned.',
+  edit_commitment:
+    'Coordinator corrects an open or blocked commitment. Accepted, offered and completed commitments cannot be edited. Revalidates upstream and downstream timing; requires the current circle version.',
+  cancel_commitment:
+    'After explicit confirmation, coordinator cancels an open or blocked commitment with no dependent tasks. Removes it from the active plan and preserves the full cancelled record in the export. Cannot cancel accepted, offered or completed work.',
   add_helper:
     'Coordinator adds a helper profile with explicit capabilities and availability. Invite link created separately; adding a profile does not contact anyone.',
   set_availability:
-    'Update your own stated availability and capabilities, or coordinator updates a helper. Reject changes that conflict with accepted commitments; report unavailability first.',
+    'Update your own stated availability and capabilities, or coordinator updates a helper. Send up to eight explicit availability windows, or legacy start/end, never both. Preserves gaps between windows. Reject changes that conflict with accepted commitments; report unavailability first.',
   add_note:
     'Save a source-attributed practical handoff note. Does not infer medical facts, completion, or consent.',
   acknowledge_brief:
@@ -150,7 +163,8 @@ export async function runTool(
   p: Principal,
 ) {
   const { name, args: a } = parseTool(toolName, input);
-  const c = await getCircle(p.circleId);
+  // Revocation also applies to reads and replay responses, which do not save.
+  const c = await getCircle(p.circleId, p);
   member(c, p.memberId);
   if (name === 'get_day')
     return { circle: publicCircle(c), memberId: p.memberId, kind: p.kind };
@@ -348,6 +362,74 @@ export async function runTool(
       message = 'Commitment added. Choose a helper to request a handoff.';
       break;
     }
+    case 'edit_commitment': {
+      assertOwner(c, p);
+      const t = task(c, a.taskId);
+      if (t.status !== 'open' && t.status !== 'blocked')
+        throw new DomainError(
+          'INVALID_TRANSITION',
+          'Only an open or blocked commitment can be edited. Report a change before updating an active handoff.',
+          409,
+        );
+      checkWindow(a.start, a.end);
+      for (const dependency of a.dependsOn) {
+        if (dependency === t.id || task(c, dependency).end > a.start)
+          throw new DomainError(
+            'DEPENDENCY',
+            'Choose earlier commitments as dependencies. A commitment cannot depend on itself.',
+            409,
+          );
+      }
+      if (c.tasks.some((x) => x.dependsOn.includes(t.id) && a.end > x.start))
+        throw new DomainError(
+          'DEPENDENCY',
+          'This commitment must finish before every commitment that depends on it.',
+          409,
+        );
+      const before = `${t.title} (${t.start} to ${t.end})`;
+      Object.assign(t, {
+        title: a.title,
+        details: a.details,
+        start: a.start,
+        end: a.end,
+        requiredCapabilities: [...new Set(a.requiredCapabilities)],
+        dependsOn: [...new Set(a.dependsOn)],
+        version: t.version + 1,
+      });
+      c.plan = null;
+      message = `Commitment corrected: ${before} is now ${t.title} (${t.start} to ${t.end}). It still needs a helper to accept.`;
+      break;
+    }
+    case 'cancel_commitment': {
+      assertOwner(c, p);
+      const t = task(c, a.taskId);
+      if (t.status !== 'open' && t.status !== 'blocked')
+        throw new DomainError(
+          'INVALID_TRANSITION',
+          'Only an open or blocked commitment can be cancelled. Accepted, offered and completed records must keep their handoff history.',
+          409,
+        );
+      if (c.tasks.some((x) => x.dependsOn.includes(t.id)))
+        throw new DomainError(
+          'DEPENDENCY',
+          'Another commitment depends on this one. Update that dependency before cancelling.',
+          409,
+        );
+      const archive = c.archivedTasks ?? [];
+      if (archive.length >= 100)
+        throw new DomainError(
+          'LIMIT',
+          'This circle has reached its limit of 100 cancelled records. Export the history before starting a new circle.',
+        );
+      c.archivedTasks = [
+        ...archive,
+        { task: { ...t }, cancelledAt: now, cancelledBy: p.memberId },
+      ];
+      c.tasks = c.tasks.filter((x) => x.id !== t.id);
+      c.plan = null;
+      message = `${t.title} was cancelled. Its record remains in the circle export and activity history.`;
+      break;
+    }
     case 'add_helper': {
       assertOwner(c, p);
       if (c.members.length >= 16)
@@ -369,12 +451,35 @@ export async function runTool(
     }
     case 'set_availability': {
       if (p.memberId !== a.memberId) assertOwner(c, p);
-      checkWindow(a.start, a.end);
+      if (
+        (a.availability !== undefined &&
+          (a.start !== undefined || a.end !== undefined)) ||
+        (a.availability === undefined &&
+          (a.start === undefined || a.end === undefined))
+      )
+        throw new DomainError(
+          'INVALID_INPUT',
+          'Send explicit availability windows or one start and end time, never both.',
+        );
+      const availability = (
+        a.availability ?? [{ start: a.start!, end: a.end! }]
+      )
+        .map((w) => ({ ...w }))
+        .sort((x, y) => x.start.localeCompare(y.start));
+      for (let i = 0; i < availability.length; i++) {
+        const w = availability[i]!;
+        checkWindow(w.start, w.end);
+        if (i > 0 && availability[i - 1]!.end > w.start)
+          throw new DomainError(
+            'INVALID_INPUT',
+            'Availability windows must not overlap. Keep unavailable gaps between separate windows.',
+          );
+      }
       const m = member(c, a.memberId);
       const proposed = {
         ...m,
         canAccept: a.canAccept,
-        availability: [{ start: a.start, end: a.end }],
+        availability,
         capabilities: a.capabilities,
       };
       const candidateCircle = {

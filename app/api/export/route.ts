@@ -6,7 +6,7 @@ import { publicCircle } from '@/lib/server/tools';
 export async function GET(request: Request) {
   try {
     const p = await requirePrincipal(request);
-    const c = await getCircle(p.circleId);
+    const c = await getCircle(p.circleId, p);
     assertOwner(c, p);
     return new Response(
       JSON.stringify(

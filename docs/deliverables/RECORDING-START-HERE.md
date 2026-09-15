@@ -1,10 +1,32 @@
-# Record the submission
+# The demo is ready
 
-1. Open https://kindhandoff.web.app. Read `Narration.txt` verbatim: 315 words, designed for a 2:55 film with short pauses.
-2. Use the exact shot sequence in `../demo-script.md`. Show real helper sessions for acceptance; retain the visible simulation label.
-3. Screen-record the functioning product with the fictional household. Create fresh invitation links for Jo and Dev, and prepare separate browser profiles before recording. Never show the token fragments.
-4. Record your voice separately if easier. No music is needed. The presentation is optional supporting material; the working product should occupy most of the film.
-5. Import `Captions-draft.srt` into your editor. Its 28 two-line cues have estimated timings from the shot list, so align them to your actual voice before export.
-6. Export under three minutes, watch the whole file, and publish publicly to YouTube or Vimeo. Paste that verified link into `../devpost-submission.md`.
+The product film has already been created. **Shivam Gupta is the creator.** Its English narration uses a clearly disclosed AI-generated OpenAI voice, not a recording of Shivam.
 
-The deck and PDF are complete, editable/supporting assets. They are not a substitute for the required demo video. No prerecorded human narration or live Alexa connection is represented in this package.
+## Finished files
+
+- [Play the 169-second demo](KindHandoff-Demo.mp4)
+- [English captions, SRT](KindHandoff-Captions.srt)
+- [English captions, WebVTT](KindHandoff-Captions.vtt)
+- [1280 x 720 YouTube thumbnail](KindHandoff-Thumbnail.png)
+- [Field-copy submission kit](KindHandoff-Submission-Kit.html)
+- [YouTube title, description, and testing guide](../submission-fields.md)
+
+## What has been checked
+
+The export is **1920 x 1080 at 24 fps**, with **39 timed captions**. Full decoding passed. Review covered every shot preview and 28 decoded frames, including disclosure text, helper identities, readiness, and the retained revision receipt. Actual Chrome playback advanced with no media error. See [the video QA record](../video-source/final-qa.json) for hashes and technical details.
+
+This was automated export validation and sampled agent visual review, not a continuous human audiovisual screening. The fictional household and AI narration remain clearly labelled.
+
+## Publication still pending
+
+Upload the existing MP4 publicly to YouTube or Vimeo, using the supplied thumbnail, title, description, and captions. Verify that the public URL plays while signed out, then insert that actual URL into the Devpost fields. Public video upload and Devpost submission are not yet represented as complete.
+
+## Reproduction sources
+
+- [Exact 293-word narration](Narration.txt) and [eight narration segments](Narration-segments.json)
+- [Original caption wording](Captions-source.json)
+- [Recorded shot and narration plan](../demo-script.md)
+- [Video render script](../video-source/render-demo.py) and [edit decisions](../video-source/edit.json)
+- [Thumbnail SVG](../artifact-source/KindHandoff-Thumbnail.svg) and [thumbnail renderer](../artifact-source/build-thumbnail.py)
+
+`Captions-draft.srt` contains the earlier editorial timing. Use **KindHandoff-Captions.srt** or **KindHandoff-Captions.vtt** for the completed film.

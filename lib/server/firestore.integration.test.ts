@@ -18,6 +18,7 @@ import {
   inspectOrRedeemInvitation,
   revokeHelper,
   rotateMcpToken,
+  revokeMcpTokens,
 } from './access';
 import { runTool } from './tools';
 import * as firebase from './firebase';
@@ -386,7 +387,8 @@ suite('Firestore persistence and server authorization', () => {
       }),
     );
     expect(created.status).toBe(201);
-    expect(await created.clone().json()).toMatchObject({
+    const createdData = await created.json();
+    expect(createdData).toMatchObject({
       signedIn: true,
       kind: 'owner',
     });
@@ -398,9 +400,7 @@ suite('Firestore persistence and server authorization', () => {
       request('/api/session', cookieToken(created), { mode: 'create' }),
     );
     expect(repeated.status).toBe(200);
-    expect((await repeated.json()).circle.id).toBe(
-      (await created.json()).circle.id,
-    );
+    expect((await repeated.json()).circle.id).toBe(createdData.circle.id);
   });
 
   it('requires recent Firebase authentication and rejects caller identity headers', async () => {
@@ -536,5 +536,283 @@ suite('Firestore persistence and server authorization', () => {
           .get()
       ).size,
     ).toBe(1);
+  });
+
+  it('rejects revoked MCP reads and replay responses using an already-authenticated principal', async () => {
+    const f = await owner();
+    const token = await rotateMcpToken(f.p);
+    const p = await requirePrincipal(
+      request('/mcp', undefined, undefined, {
+        authorization: `Bearer ${token.token}`,
+      }),
+      true,
+    );
+    const original = write();
+    await runTool('add_note', original, p);
+    await revokeMcpTokens(f.p);
+    await runTool('add_note', write(1, 'Private update after revocation'), f.p);
+    for (const name of [
+      'get_day',
+      'get_handoff_brief',
+      'preview_recovery',
+    ] as const)
+      await expect(runTool(name, {}, p)).rejects.toMatchObject({
+        code: 'UNAUTHORIZED',
+      });
+    await expect(runTool('add_note', original, p)).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+    });
+    await expect(
+      requirePrincipal(
+        request('/mcp', undefined, undefined, {
+          authorization: `Bearer ${token.token}`,
+        }),
+        true,
+      ),
+    ).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
+    expect((await getCircle(f.circle.id)).version).toBe(2);
+  });
+
+  it('rechecks helper epochs and exact tenant scope for authorized reads', async () => {
+    const f = await owner();
+    const h = await helper(f);
+    const other = await owner();
+    await expect(getCircle(other.circle.id, h.p)).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
+    await revokeHelper(f.p, 'jo');
+    await expect(runTool('get_day', {}, h.p)).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+    });
+  });
+
+  it('edits an unassigned commitment once and rejects stale corrections', async () => {
+    const f = await owner();
+    const fields = {
+      title: 'Collect the bag',
+      details: 'Near the front door',
+      start: '2030-01-01T10:00:00.000Z',
+      end: '2030-01-01T10:15:00.000Z',
+      requiredCapabilities: ['company'],
+      dependsOn: [],
+    };
+    await runTool('add_commitment', { ...write(), ...fields }, f.p);
+    const id = (await getCircle(f.circle.id)).tasks[0]!.id;
+    const edit = {
+      expectedVersion: 1,
+      requestId: crypto.randomUUID(),
+      taskId: id,
+      ...fields,
+      title: 'Collect the blue bag',
+    };
+    await runTool('edit_commitment', edit, f.p);
+    expect(await runTool('edit_commitment', edit, f.p)).toMatchObject({
+      replayed: true,
+    });
+    const stored = await getCircle(f.circle.id);
+    expect(stored.tasks[0]).toMatchObject({
+      id,
+      version: 1,
+      title: 'Collect the blue bag',
+      status: 'open',
+    });
+    expect(stored.version).toBe(2);
+    await expect(
+      runTool(
+        'edit_commitment',
+        { ...edit, requestId: crypto.randomUUID() },
+        f.p,
+      ),
+    ).rejects.toMatchObject({ code: 'STALE_VERSION' });
+    const h = await helper(f);
+    await expect(
+      runTool(
+        'edit_commitment',
+        { ...edit, expectedVersion: 2, requestId: crypto.randomUUID() },
+        h.p,
+      ),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+  });
+
+  it('rejects edits and cancellations that break task dependencies', async () => {
+    const c = seedCircle(crypto.randomUUID());
+    c.tasks[1] = { ...c.tasks[1]!, status: 'blocked', assigneeId: null };
+    await createCircle(c);
+    const token = await issueSession(c.id, 'maya', 'demo');
+    const p = await requirePrincipal(request('/mcp', token.token), true);
+    const bag = c.tasks[1]!;
+    const edit = {
+      expectedVersion: 0,
+      requestId: crypto.randomUUID(),
+      taskId: bag.id,
+      title: bag.title,
+      details: bag.details,
+      start: bag.start,
+      end: c.tasks[2]!.end,
+      requiredCapabilities: bag.requiredCapabilities,
+      dependsOn: bag.dependsOn,
+    };
+    await expect(runTool('edit_commitment', edit, p)).rejects.toMatchObject({
+      code: 'DEPENDENCY',
+    });
+    await expect(
+      runTool(
+        'edit_commitment',
+        { ...edit, end: bag.end, dependsOn: [bag.id] },
+        p,
+      ),
+    ).rejects.toMatchObject({ code: 'DEPENDENCY' });
+    await expect(
+      runTool(
+        'cancel_commitment',
+        { expectedVersion: 0, requestId: crypto.randomUUID(), taskId: bag.id },
+        p,
+      ),
+    ).rejects.toMatchObject({ code: 'DEPENDENCY' });
+    expect((await getCircle(c.id)).version).toBe(0);
+  });
+
+  it('preserves cancelled records and prevents editing or cancelling an accepted handoff', async () => {
+    const f = await owner();
+    const fields = {
+      title: 'Unneeded visit',
+      details: 'Cancelled test',
+      start: '2030-01-01T10:00:00.000Z',
+      end: '2030-01-01T10:15:00.000Z',
+      requiredCapabilities: ['company'],
+      dependsOn: [],
+    };
+    await runTool('add_commitment', { ...write(), ...fields }, f.p);
+    const taskId = (await getCircle(f.circle.id)).tasks[0]!.id;
+    const cancelled = {
+      expectedVersion: 1,
+      requestId: crypto.randomUUID(),
+      taskId,
+    };
+    await runTool('cancel_commitment', cancelled, f.p);
+    expect(await runTool('cancel_commitment', cancelled, f.p)).toMatchObject({
+      replayed: true,
+    });
+    const c = await getCircle(f.circle.id);
+    expect(c.tasks).toHaveLength(0);
+    expect(c.archivedTasks).toHaveLength(1);
+    expect(c.archivedTasks![0]).toMatchObject({
+      task: { id: taskId, title: fields.title },
+      cancelledBy: 'owner',
+    });
+    expect(c.events.at(-1)?.action).toBe('cancel_commitment');
+    await runTool('add_commitment', { ...write(2), ...fields }, f.p);
+    const active = (await getCircle(f.circle.id)).tasks[0]!.id;
+    await runTool(
+      'offer_commitment',
+      {
+        expectedVersion: 3,
+        requestId: crypto.randomUUID(),
+        taskId: active,
+        candidateId: 'jo',
+      },
+      f.p,
+    );
+    const h = await helper(f);
+    await runTool(
+      'respond_to_handoff',
+      {
+        expectedVersion: 4,
+        requestId: crypto.randomUUID(),
+        taskId: active,
+        response: 'accept',
+      },
+      h.p,
+    );
+    await expect(
+      runTool(
+        'edit_commitment',
+        {
+          expectedVersion: 5,
+          requestId: crypto.randomUUID(),
+          taskId: active,
+          ...fields,
+        },
+        f.p,
+      ),
+    ).rejects.toMatchObject({ code: 'INVALID_TRANSITION' });
+    await expect(
+      runTool(
+        'cancel_commitment',
+        { expectedVersion: 5, requestId: crypto.randomUUID(), taskId: active },
+        f.p,
+      ),
+    ).rejects.toMatchObject({ code: 'INVALID_TRANSITION' });
+    expect((await getCircle(f.circle.id)).version).toBe(5);
+  });
+
+  it('preserves unavailable gaps when explicitly editing multiple availability windows', async () => {
+    const f = await owner();
+    const input = {
+      expectedVersion: 0,
+      requestId: crypto.randomUUID(),
+      memberId: 'jo',
+      canAccept: true,
+      capabilities: ['company'],
+      availability: [
+        { start: '2030-01-01T14:00:00Z', end: '2030-01-01T18:00:00Z' },
+        { start: '2030-01-01T10:00:00Z', end: '2030-01-01T12:00:00Z' },
+      ],
+    };
+    await runTool('set_availability', input, f.p);
+    expect(
+      (await getCircle(f.circle.id)).members.find((m) => m.id === 'jo')!
+        .availability,
+    ).toEqual([
+      { start: '2030-01-01T10:00:00.000Z', end: '2030-01-01T12:00:00.000Z' },
+      { start: '2030-01-01T14:00:00.000Z', end: '2030-01-01T18:00:00.000Z' },
+    ]);
+    await runTool(
+      'add_commitment',
+      {
+        ...write(1),
+        title: 'Gap visit',
+        details: '',
+        start: '2030-01-01T12:30:00Z',
+        end: '2030-01-01T13:00:00Z',
+        requiredCapabilities: ['company'],
+        dependsOn: [],
+      },
+      f.p,
+    );
+    const taskId = (await getCircle(f.circle.id)).tasks[0]!.id;
+    await expect(
+      runTool(
+        'offer_commitment',
+        {
+          expectedVersion: 2,
+          requestId: crypto.randomUUID(),
+          taskId,
+          candidateId: 'jo',
+        },
+        f.p,
+      ),
+    ).rejects.toMatchObject({ code: 'NOT_FEASIBLE' });
+    for (const fields of [
+      {
+        start: input.availability[0]!.start,
+        end: input.availability[0]!.end,
+        availability: input.availability,
+      },
+      { availability: [input.availability[0], input.availability[0]] },
+    ])
+      await expect(
+        runTool(
+          'set_availability',
+          {
+            ...input,
+            ...fields,
+            expectedVersion: 2,
+            requestId: crypto.randomUUID(),
+          },
+          f.p,
+        ),
+      ).rejects.toMatchObject({ code: 'INVALID_INPUT' });
+    expect((await getCircle(f.circle.id)).version).toBe(2);
   });
 });

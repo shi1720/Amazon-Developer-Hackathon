@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KindHandoff | Submission kit for Shivam Gupta</title>
+<style>
+:root{font-family:Inter,Arial,sans-serif;color:#172b44;background:#f4f7fc;line-height:1.6}*{box-sizing:border-box}body{margin:0}header{background:#13263e;color:white;padding:56px max(6vw,20px)}header small{color:#a9c5fa;letter-spacing:.15em}h1{font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-.04em;margin:20px 0}header p{max-width:720px;color:#d1dff2}main{max-width:1180px;margin:auto;padding:36px 20px}.links,nav{display:flex;flex-wrap:wrap;gap:10px}a{color:#244ea2}header a{color:#c1d8ff}.links a,nav a{border:1px solid #ced9e9;border-radius:9px;padding:9px 14px;text-decoration:none}header .links a{border-color:#486381}section{background:white;border:1px solid #dfe6f0;border-radius:16px;padding:24px;margin:24px 0;scroll-margin-top:20px}.heading{display:flex;align-items:center;justify-content:space-between;gap:20px}h2{font-size:22px;margin:0 0 16px}button{font:inherit;font-weight:600;white-space:nowrap;border:0;border-radius:9px;padding:9px 16px;background:#2e5cba;color:white;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #89b3ff;outline-offset:3px}textarea{width:100%;resize:vertical;border:1px solid #dbe3ef;border-radius:9px;padding:16px;font:15px/1.6 ui-monospace,Menlo,monospace;color:#233b55;background:#f9fbff}.hint{font-size:14px;color:#59718b}.status{min-height:24px;color:#315c43;font-size:14px}footer{padding:16px 0 40px;color:#59718b;font-size:14px}@media(max-width:600px){section{padding:18px}.heading{align-items:flex-start}button{font-size:14px}textarea{font-size:14px}}
+</style>
+<header><small>CARE, CARRIED FORWARD</small><h1>KindHandoff<br>Submission kit.</h1><p>Prepared for Shivam Gupta. Copy the field-ready story, testing instructions, video copy, and product feedback. The working app and reproducible source are linked below.</p><div class="links"><a href="https://kindhandoff.web.app">Open the app</a><a href="https://github.com/shi1720/Amazon-Developer-Hackathon">Source code</a><a href="KindHandoff-Demo.mp4">Demo video</a><a href="KindHandoff-Captions.srt">Captions</a><a href="KindHandoff-Pitch.pdf">Pitch deck</a><a href="KindHandoff-Judge-Brief.pdf">Judge brief</a></div></header>
+<main><nav aria-label="Submission fields"><a href="#story">Project story</a><a href="#pitch">Elevator pitch</a><a href="#testing">Testing instructions</a><a href="#video-title">YouTube title</a><a href="#video-description">YouTube description</a><a href="#open-source">Open Source fields</a><a href="#feedback">Product feedback</a></nav><p class="hint">Copy preserves Markdown. The demo uses a clearly disclosed AI voice and fictional household. Only enter a video URL after publication and playback verification.</p>
+<section id="story"><div class="heading"><h2>Project story</h2><button type="button" data-copy="story-text">Copy field</button></div><textarea id="story-text" aria-label="Project story" readonly rows="22"># KindHandoff
+
+Created by Shivam Gupta for the Amazon Developer Hackathon. Primary track: Alexa+. Additional mini challenge: Open Source.
+
+## Inspiration
+
+A cancelled ride can break more than a calendar entry. Someone still needs to pack the bag, find a driver, explain the change, and confirm that both people agreed. The facts may be scattered across a family chat while one person carries the work of assembling a new plan.
+
+KindHandoff focuses on that moment. We chose everyday support for a parent because the need is specific and understandable: help the household recover a disrupted afternoon, with a clear record of who has accepted responsibility. The demonstration uses a fictional family, not an invented personal caregiving story.
+
+## What it does
+
+Maya becomes unavailable for the afternoon. Two commitments need replacements: packing Arun's library bag at 14:30 and driving him to book club at 15:00. The ride depends on the bag being packed.
+
+Jo can access the house from 14:00 to 15:00 but cannot drive. Dev can drive but is only available from 14:45. KindHandoff checks those constraints together and proposes Jo for the bag and Dev for the ride.
+
+The coordinator reviews the change before applying it, then reviews the replacement plan before creating offers. Each named helper accepts through their own session. An offer is not counted as acceptance. Dev's accepted ride remains waiting until Jo records the bag as complete.
+
+A shared handoff brief shows unresolved work, accepted commitments, prerequisites, and attributed notes. Acknowledgments record the exact content revision read, so an earlier receipt cannot silently stand for a later plan.
+
+The public app includes a private fictional demo, email/password accounts, personal circles, single-use helper invitations, activity history, export, and circle deletion. Our focus is recovery, agreement, and readiness across linked tasks.
+
+## How we built it
+
+The React 19 and Vite 8 interface calls a real Model Context Protocol server through the official TypeScript SDK 1.30.0. It negotiates protocol 2025-11-25 and uses Streamable HTTP. The browser simulator and external MCP clients invoke the same validated workflow.
+
+The language interpreter supports a defined set of English requests. It is deterministic and visibly labelled as an Alexa+ simulation. No cloud language model or native Alexa connection is required for this submission path.
+
+Firebase Hosting serves the public app. A Node 22 Cloud Functions v2 backend handles the API and MCP endpoint. Firebase Authentication establishes coordinator identity; opaque HTTP-only sessions and scoped invitations establish application access. Firestore transactions check credentials, household membership, and the latest state version before committing changes. Content revisions are separate from storage revisions.
+
+We also built the additional MIT-licensed `@kindhandoff/guard` library. It provides reusable commitment transitions, coverage accounting, and candidate ranking. The application owns multi-task recovery, prerequisites, identity, persistence, and brief revisions.
+
+## Challenges we ran into
+
+The central challenge was defining what a promise means. Available, offered, accepted, ready, and completed must remain distinct, including when several people act at once.
+
+A simple chronological planner could assign the only driver to an earlier flexible task. We replaced that approach with bounded search that prioritizes constrained work and reports unresolved commitments. Concurrent invitation redemption, credential revocation, and stale updates required transaction checks at the point of the write. A separate content revision fixed the case where one helper's acknowledgment incorrectly made another helper's unchanged brief appear stale.
+
+Deployment also produced concrete friction. Two Hosting rewrites updating the same function caused a conflict; one combined rewrite resolved it. An explicit artifact cleanup policy was required before the Hosting release completed. These findings and their workarounds are documented in the product feedback.
+
+## Accomplishments that we're proud of
+
+We shipped a public application that carries the cancellation through to separate helper acceptance, dependency readiness, and a versioned handoff. The demo is backed by persistent state and real MCP calls.
+
+Production verification includes 15 MCP calls, 13 multi-user checks across four sessions, and 11 Firebase authentication checks. The repository also contains 54 unit tests and 23 Firestore integration checks. The additional open-source library has 106 tests and passing CI on Node 20, 22, and 24.
+
+Shivam Gupta is the project creator and product owner. The project was developed with AI-assisted research, implementation, testing, and preparation of submission materials. The demo video's synthetic narration is clearly labelled.
+
+## What we learned
+
+The important product words are ordinary ones. If two helpers interpret &quot;accepted&quot; differently, polished screens will not make the handoff reliable. Explicit states, exact-person authorization, and readable explanations make the workflow easier to inspect.
+
+We also learned that voice notes, calendars, and handoff summaries already exist. Our useful focus is the recovery sequence when a plan breaks. Commercial value depends on helpers participating and coordinators spending less time chasing confirmations. Creating more tasks alone would not establish that value.
+
+## What's next for KindHandoff
+
+The next step is a ten-interview discovery study followed by a five-household pilot. We will measure time to an accepted feasible replacement, follow-up effort, repeated helper use, and willingness to continue paying. No interviews, pilot outcomes, customers, or revenue are claimed yet.
+
+Our pricing hypothesis is $12 per household per month with every helper included. The cost model includes visible-page polling, MCP overhead, database reads, retention assumptions, and shared Firebase/GCP allowances. Billing is enabled; the model is not a promise of free operation or a measured margin.
+
+We then plan to pursue native Alexa+ onboarding and validate account linking and confirmation behavior. Broader language interpretation would retain the same authorization and state checks. The current product supports practical household help, without medication decisions or emergency monitoring. No AWS service or live Alexa integration is claimed.
+</textarea><div class="status" role="status" aria-live="polite"></div></section><section id="pitch"><div class="heading"><h2>Elevator pitch</h2><button type="button" data-copy="pitch-text">Copy field</button></div><textarea id="pitch-text" aria-label="Elevator pitch" readonly rows="3">KindHandoff helps families recover everyday support plans when a helper becomes unavailable. It finds feasible replacements, asks the named helpers to accept, and keeps the next task waiting until its prerequisite is done. A real MCP server powers the clearly labelled Alexa+ web simulation.</textarea><div class="status" role="status" aria-live="polite"></div></section><section id="testing"><div class="heading"><h2>Testing instructions</h2><button type="button" data-copy="testing-text">Copy field</button></div><textarea id="testing-text" aria-label="Testing instructions" readonly rows="22">### Open the working product
+
+Visit **https://kindhandoff.web.app** while signed out. A private fictional demo is created automatically. No account, API key, device, or payment is required to try it. The household and names are fictional. Use a fresh browser profile if you already have a session you want to keep.
+
+Account sign-in is a separate workflow: it creates or restores a private personal circle, which starts blank for a new account. Signing in is not required to load the fictional scenario.
+
+### Follow the recovery in about five minutes
+
+1. Start as **Maya** in the fictional demo. Select **I can't make it this afternoon**, or type **Maya is unavailable this afternoon.** The supported request opens a review; it does not apply the change yet.
+2. Review the affected tasks, displayed date, and time zone. Confirm the change. Both **Pack the library bag, 14:30 to 14:45 IST**, and **A lift to the library, 15:00 to 16:00 IST**, need replacements.
+3. Open **Why this plan?** Jo can enter the home from 14:00 to 15:00 but cannot drive. Dev can drive from 14:45. The proposed split is **Jo for the bag, Dev for the ride**. A preview does not create offers or claim acceptance.
+4. Create the two handoff offers. Open **Your circle** and create an invitation for Jo and another for Dev. Open each private, single-use invitation in a separate browser profile or isolated context, and join as the named helper. Use genuinely separate sessions; ordinary windows may share cookies.
+5. In Jo's helper session, accept the bag. In Dev's helper session, accept the ride. An offer remains uncovered until its named helper accepts it. Each invited helper sees their own identity and has no demo role switch.
+6. Observe Dev's accepted ride waiting for the bag. As Jo, mark the bag complete. Return to Dev and refresh or refocus the page. The ride's prerequisite is now complete. Acceptance and readiness are separate; do not mark the ride completed for this demonstration.
+7. As Dev, open **Handoff brief** and choose **I've read this handoff**. Observe the recorded content revision. Add a fictional note from the coordinator's session, then refresh Dev's brief. The earlier receipt still identifies the revision he read, with new updates to read.
+8. Open **Activity** and the **Live MCP execution trace**. Inspect the actual tool invocation and protocol information. These are real browser-to-server calls, not prerecorded response text.
+
+For a quick single-browser tour, the fictional demo also offers a role switch. Use the real invitations above to verify independent helper authorization.
+
+### Test a personal circle separately
+
+In a separate session, use **Settings &gt; Sign in to create a circle**. Register with email and password, then create a blank personal circle. Add a helper and a practical commitment. Reload to check persistence, export the circle, sign out, and sign back in to see the saved circle. Account recovery email delivery is outside the recorded automated checks. Use fictional details for evaluation; account and circle deletion are available when finished.
+
+### Reproduce the automated checks locally
+
+Prerequisites: Node.js **22.13 or later**, npm, and Java **21** for Firebase emulators. The isolated local check needs no cloud account or secret key.
+
+```sh
+git clone https://github.com/shi1720/Amazon-Developer-Hackathon.git
+cd Amazon-Developer-Hackathon
+npm ci
+npm run check
+npx firebase-tools@15.30.1 emulators:exec --only auth,firestore --project demo-kindhandoff &quot;npm run test:firestore &amp;&amp; node scripts/verify-local.mjs&quot;
+```
+
+For interactive development, use the [Firebase setup guide](https://github.com/shi1720/Amazon-Developer-Hackathon/blob/main/docs/firebase-deployment.md). To exercise the live deployment with fresh synthetic test households:
+
+```sh
+BASE_URL=https://kindhandoff.web.app npm run test:integration
+BASE_URL=https://kindhandoff.web.app npm run test:e2e
+```
+
+The optional live authentication proof creates and cleans up its own temporary synthetic account. It requires the explicit live-test flag:
+
+```sh
+ALLOW_LIVE_AUTH_TEST=1 BASE_URL=https://kindhandoff.web.app npm run test:auth
+```
+
+The recorded release evidence includes **15 production MCP calls**, **13 multi-user checks across four sessions**, **11 production Firebase authentication checks**, **54 unit tests**, and **23 Firestore integration checks**. The separate guard repository has **106 tests**, with CI on Node 20, 22, and 24. These are functional verification results, not a claim of load testing, clinical certification, or completed customer validation.</textarea><div class="status" role="status" aria-live="polite"></div></section><section id="video-title"><div class="heading"><h2>YouTube title</h2><button type="button" data-copy="video-title-text">Copy field</button></div><textarea id="video-title-text" aria-label="YouTube title" readonly rows="3">KindHandoff: One Cancellation, Two Commitments | Amazon Developer Hackathon</textarea><div class="status" role="status" aria-live="polite"></div></section><section id="video-description"><div class="heading"><h2>YouTube description</h2><button type="button" data-copy="video-description-text">Copy field</button></div><textarea id="video-description-text" aria-label="YouTube description" readonly rows="19">Maya cannot make it this afternoon. Her library-bag task and a ride both need replacements. KindHandoff finds a feasible split, waits for Jo and Dev to accept in their own sessions, and keeps the ride waiting until the bag is ready.
+
+Created by Shivam Gupta for the Amazon Developer Hackathon 2026.
+
+Try the public app: https://kindhandoff.web.app
+Source code and setup: https://github.com/shi1720/Amazon-Developer-Hackathon
+Additional open-source library: https://github.com/shi1720/kindhandoff-guard
+Test evidence: https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence
+
+This film demonstrates a fictional household using the working product. It uses an AI-generated OpenAI voice, not Shivam Gupta's recorded voice.
+
+Primary track: Alexa+. The clearly labelled, deterministic web simulator calls a real MCP server using protocol 2025-11-25 and Streamable HTTP. No live Alexa connection is claimed. Firebase Hosting, Cloud Functions, Firestore, and Firebase Authentication provide the deployed application.
+
+Additional mini challenge: Open Source, through the separate MIT-licensed @kindhandoff/guard library for commitment transitions, coverage accounting, and candidate ranking. No AWS services were used.
+
+The business hypothesis is $12 per household per month, with every helper included. Household discovery and pilot testing are next. No customer, revenue, or measured time-saving claims are made.
+
+KindHandoff supports practical help such as bags, rides, meals, and visits. Clear plans and accepted responsibility.</textarea><div class="status" role="status" aria-live="polite"></div></section><section id="open-source"><div class="heading"><h2>Open Source fields</h2><button type="button" data-copy="open-source-text">Copy field</button></div><textarea id="open-source-text" aria-label="Open Source fields" readonly rows="18">**GitHub username:** shi1720
+
+**Primary repository URL:** https://github.com/shi1720/Amazon-Developer-Hackathon
+
+**Additional project URL:** https://github.com/shi1720/kindhandoff-guard
+
+**Contribution URL:** https://github.com/shi1720/kindhandoff-guard/commit/04a15ea016e552e3c031b9ec371af2df6a1de105
+
+**License:** MIT. Copyright Shivam Gupta, 2026. The public repositories display their licenses.
+
+**What we contributed, how it works, and why it matters:**
+
+We created `@kindhandoff/guard`, a separate, dependency-free TypeScript library for auditable commitment transitions, honest coverage accounting, and deterministic candidate ranking. It preserves the distinction between an offer, acceptance by the proposed person, and completion. Candidate assessments explain time or capability exclusions.
+
+The library lets other tool-based workflows reuse these primitives without adopting a caregiving application or a particular language model. KindHandoff imports a vendored copy at `packages/handoff-guard/src/index.ts`. Multi-task recovery search, task prerequisites, authentication, storage, and brief content revisions belong to the application, not the library.
+
+The contribution was created during the hackathon window and is additional to the primary app. Verification includes 106 tests, a typed build, an executable adapter example, a package dry run, and a fresh tarball import check. CI passes on Node 20, 22, and 24. The package is not published to the npm registry; it can be built from the repository or packaged with `npm pack`.</textarea><div class="status" role="status" aria-live="polite"></div></section><section id="feedback"><div class="heading"><h2>Product feedback</h2><button type="button" data-copy="feedback-text">Copy field</button></div><textarea id="feedback-text" aria-label="Product feedback" readonly rows="22">### Alexa+ MCP toolkit documentation
+
+**Used for:** selecting the permitted simulated-experience route and understanding MCP protocol and transport requirements. Native preview onboarding was reviewed, not completed.
+
+**Worked well:** the simulator path enabled a working, inspectable workflow without a device or preview account. MCP provides a shared action contract for the simulator and a future Alexa client.
+
+**Needs work:** one ordered checklist should connect local MCP development, account linking, preview eligibility, and deployment. A multi-person reference example should show why a coordinator can propose while only the assigned helper can accept.
+
+**Onboarding and reuse:** the protocol requirements were explicit. We would build with it again, subject to native access and validation of consent and account-linking behavior. We have no native-device execution feedback to claim.
+
+### MCP TypeScript SDK 1.30.0
+
+**Used for:** the real server transport and browser/Node MCP clients.
+
+**Worked well:** typed registration, JSON schemas, structured results, and protocol negotiation make tool calls easy to inspect. Independent sessions exercise the same rules.
+
+**Needs work:** runtime/export compatibility needs clearer serverless examples. The earlier Worker prototype needed an official browser-build alias for `pkce-challenge`; the final Node 22 deployment does not need that alias.
+
+**Onboarding and reuse:** the import mismatch was the main setup friction. We would use the SDK again, while keeping authentication and business invariants explicit in the application.
+
+### Firebase Authentication
+
+**Used for:** email/password accounts and the backend's verified ID-token exchange into an opaque, HTTP-only application session. Helpers use scoped invitation sessions.
+
+**Worked well:** the Auth emulator enabled repeatable account and restored-circle tests. The final hosted flow was also exercised with real Firebase authentication. Browser SDK persistence is in memory and is cleared after the server-session exchange.
+
+**Needs work:** a missing emulator `appId` initially caused a generic initialization failure. A complete public SDK configuration fixed it. Two early hosted sign-in attempts had network/session errors; the cause was not established, and a traced retry succeeded. Removing an unnecessary forced token refresh simplified the final flow. Documentation should connect Hosting's `__session` cookie forwarding to custom backend sessions.
+
+**Onboarding and reuse:** email/password and the canonical hosting domain were configured; Google sign-in was not enabled. We would use Firebase Auth again, with further recovery, session-abuse, and real-user validation.
+
+### Firestore and Cloud Functions for Firebase
+
+**Used for:** durable household records, hashed credentials, unique coordinator ownership, bounded demo admission, and transactionally checked writes. A second-generation Node 22 function serves the API and MCP endpoint.
+
+**Worked well:** transactions reread credentials, membership, and versions at commit time. Twenty-three emulator integration checks exercise ownership, stale writes, concurrent invitations, token rotation, expiry, and revocation. Direct browser database access is denied, and the function uses a limited runtime service account.
+
+**Needs work:** documentation should clearly separate delayed TTL cleanup from authorization expiry. The app checks expiry during requests. Pricing spans multiple services and shared allowances, so our cost model makes polling, MCP overhead, reads, and retention assumptions explicit.
+
+**Onboarding and reuse:** we provisioned Standard Firestore in `us-central1`, configured the runtime identity, and linked the existing billing account. The function scales from zero to two instances; that is not a spending cap. We would use this stack for a bounded pilot, then measure contention and validate operational recovery before broader use.
+
+### Firebase Hosting, React, and Vite
+
+**Used for:** the public site, responsive interface, split sign-in/join bundles, same-origin API/MCP routing, and compiled production build.
+
+**Worked well:** the clean `kindhandoff.web.app` URL keeps invitations and accounts on one site. A compiled local server allows the production bundle to be exercised against emulators. Shared semantic controls and responsive layouts made the coordinator/helper experience coherent.
+
+**Needs work:** a first deployment created the function but stopped before Hosting release because Artifact Registry needed a cleanup policy. Seven-day cleanup resolved it. Two rewrites targeting the same function also caused a concurrent Cloud Run tag-update conflict; one combined rewrite resolved that failure. Partial-deployment status and recovery commands should be more prominent.
+
+**Onboarding and reuse:** relevant GCP APIs, routing, session forwarding, and public viewports were checked. We would use this stack again with scripted release verification and rollback instructions.
+
+### Earlier prototype tools
+
+**Used for:** the initial prototype used Sites, Vinext, Cloudflare Workers/D1, and ChatGPT gateway identity. That version is archived in the `sites-prototype` Git tag and is not the final Firebase runtime.
+
+**Worked well:** the scaffold accelerated interface and workflow exploration.
+
+**Needs work:** dependency compatibility, Worker package exports, and the distinction between hosting audience and app membership needed explicit verification.
+
+**Onboarding and reuse:** the final provider choice followed the requested Firebase deployment. We would consider the earlier tools again for suitable projects; no current Firebase behavior is attributed to them.
+
+### Browser speech recognition and synthesis
+
+**Used for:** optional reviewed speech input and optional spoken replies. Typing remains a complete way to use the product.
+
+**Worked well:** recognizing a transcript cannot automatically apply a cancellation; the review boundary remains visible.
+
+**Needs work:** support and permission behavior vary by browser. The microphone was not tested with recorded human audio in automated validation, so we make no recognition-accuracy claim.
+
+**Onboarding and reuse:** browser capability checks and a typed fallback are required. We would retain speech as optional input, then test accents, noise, privacy expectations, and accessibility with people.
+
+### TypeScript, Zod, Vitest, and GitHub Actions
+
+**Used for:** typed domain rules, validated tool inputs, regression tests, production builds, and reproducible CI in the app and additional library.
+
+**Worked well:** shared schemas and focused tests exposed ambiguous states and concurrency failures before recording the demo. The guard's Node 20, 22, and 24 matrix checks its declared runtime support separately from the Node 22 application.
+
+**Needs work:** passing unit tests alone did not establish correct helper identity or hosted routing. We added real HTTP, separate-session, authentication, and emulator concurrency checks. Small smoke-test timings must remain separate from production performance claims.
+
+**Onboarding and reuse:** pinned dependencies and documented npm commands make the checks reproducible. We would use this combination again and preserve tests around product invariants rather than mirror every implementation detail.
+
+### AI-assisted development
+
+**Used for:** research, implementation, testing, review, and submission preparation under Shivam Gupta's product direction.
+
+**Worked well:** separating implementation from independent review helped identify unclear commitment states, identity boundaries, and unsupported draft claims.
+
+**Needs work:** generated explanations required comparison with actual code. For example, the additional guard library exports transitions, coverage, and ranking; dependency readiness and brief acknowledgments belong to the application. We corrected that distinction in the submission.
+
+**Onboarding and reuse:** workspace and tool access made iteration possible. We would use AI assistance again with reproducible evidence and human control of the product and submission.
+
+### OpenAI speech generation for the demo
+
+**Used for:** English AI-generated narration of the recorded product demo. It is a submission-production tool, not the application's language interpreter or an Alexa runtime integration.
+
+**Worked well:** segment-based generation lets narration follow the exact product states and allows one segment to be regenerated without rerecording the entire film.
+
+**Needs work:** one generated closing segment omitted a short standalone final phrase. We rewrote the ending as one complete sentence, regenerated that segment, and confirmed the complete spoken transcript. Captions must be checked against the generated audio, not assumed to match the script automatically.
+
+**Onboarding and reuse:** the pipeline uses an authorized OpenAI API connection. We would use synthetic narration again with visible disclosure, transcript checks, and final listening review. The voice does not impersonate Shivam Gupta.</textarea><div class="status" role="status" aria-live="polite"></div></section>
+<footer>Created by Shivam Gupta. Alexa+ simulated-experience track and Open Source mini challenge. Public submission status is recorded in <a href="https://github.com/shi1720/Amazon-Developer-Hackathon/blob/main/docs/release-status.md">release status</a>.</footer></main>
+<script>document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{const area=document.getElementById(button.dataset.copy);const status=button.closest('section').querySelector('.status');try{await navigator.clipboard.writeText(area.value);status.textContent='Copied. Ready to paste into the submission field.';}catch{area.focus();area.select();status.textContent='Text selected. Use your keyboard copy shortcut.';}}));</script></html>

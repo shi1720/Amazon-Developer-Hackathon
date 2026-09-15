@@ -17,5 +17,15 @@
     "atomic token rotation",
     "helper session revocation",
     "persistent completed plan"
-  ]
+  ],
+  "provenance": {
+    "recordedDate": "2026-09-15",
+    "reportedBy": "Implementation lead from the completed deployment and live verification run",
+    "applicationUrl": "https://kindhandoff.web.app",
+    "sourceBaseline": "d668158",
+    "sourceScope": "Verified deployed working tree based on this commit. The final packaging commit and final source SHA are recorded separately after packaging.",
+    "releaseScope": "These full live suites followed the clean combined Firebase release. A later grammar-only Hosting release also succeeded. No additional full suite execution is asserted for that later Hosting-only change."
+  },
+  "claimBoundary": "Functional smoke verification with synthetic data. This is not a load test, uptime commitment, customer study, or native Alexa test.",
+  "sessionType": "Four independent cookie sessions"
 }

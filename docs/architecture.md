@@ -32,6 +32,17 @@ The browser actually initializes an SDK MCP connection and calls tools. There is
 6. Each mutation supplies the latest storage `version` and a UUID `requestId`. A version-checked transaction saves state, event, and retry receipt together. Stale writes fail; identical retries return the current state without repeating the action; reused IDs with different payloads or actors fail.
 7. `contentVersion` advances when substantive content changes. Acknowledgments advance storage version for concurrency but do not change the content being read. Two helpers can acknowledge the same brief, while a later note makes that brief stale.
 8. Shared notes are untrusted data, never agent instructions. The deterministic interpreter does not execute note text.
+9. Corrections and cancellations are limited to open or blocked commitments. Editing checks earlier dependencies and downstream timing; cancellation rejects any active dependency and preserves a full cancelled record. Neither action rewrites accepted, offered, or completed handoff evidence.
+
+## Corrections and availability contracts
+
+Every mutating tool still requires the current `expectedVersion` and a unique UUID `requestId`.
+
+- `edit_commitment` takes `taskId`, `title`, `details`, UTC `start`/`end`, `requiredCapabilities`, and `dependsOn`. Only the coordinator can edit an open or blocked task. Self-dependencies and overlapping dependency timing are rejected. The task revision and circle content revision advance, and any cached recovery plan is cleared.
+- `cancel_commitment` takes `taskId`. Only open or blocked tasks with no active dependents can be cancelled. The task leaves the active schedule; `circle.archivedTasks` retains `{task, cancelledAt, cancelledBy}` and is included in the coordinator's export. A cancellation is distinct from completion. There is no general archive/delete operation for completed commitments.
+- `set_availability` accepts either `availability: [{start, end}]` or the legacy single `start`/`end` pair, never both. Up to eight nonoverlapping UTC windows are accepted, including an empty list when no windows are available. Every interval is at most 24 hours. Gaps remain unavailable, and accepted commitments must remain feasible after the change. The helper may update their own profile; the coordinator may update any helper.
+
+Cancellation records are capped at 100 alongside the existing 100 active-task limit and 400 KB total payload bound. Reaching a bound returns a clear error instead of silently removing history. Exporting does not reset a storage limit; starting a replacement personal circle requires deleting the previous circle after exporting it.
 
 ## Replacement planning
 
@@ -47,7 +58,9 @@ Firebase Authentication verifies coordinator sign-in. A recent, verified ID toke
 
 The cookie is named `__session`, which Firebase Hosting forwards to Cloud Functions. It is HttpOnly, SameSite=Lax and Secure on HTTPS. A coordinator session lasts 24 hours. One-time helper invitations place a 256-bit token in a URL fragment and remove it on page load. Redemption is transactional. Helper sessions last up to seven days, limited by the lifetime of a demo circle.
 
-Each member has an access epoch, and the circle records the current MCP token hash. Revocation/rotation changes these markers transactionally. The final mutation transaction rechecks the authenticated session and marker, so even a principal captured before revocation cannot commit a new write. MCP tokens last up to 24 hours and only work as Bearer credentials on `/mcp`; they cannot administer accounts or invitations.
+Each member has an access epoch, and the circle records the current MCP token hash. Revocation/rotation changes these markers transactionally. Every tool first reads the circle and its authorization in one transaction, including read-only tools and idempotent replay responses. The final mutation transaction checks authorization again. A principal captured before revocation cannot subsequently read a newer circle or commit a write. Session and export routes also use the authorized read. MCP tokens last up to 24 hours and only work as Bearer credentials on `/mcp`; they cannot administer accounts or invitations.
+
+Cookie-derived session reissuance transactionally reads and consumes the original session. Logout and competing reissues cannot leave a revived owner cookie: only one reissue can consume a live parent. Fresh authentication through a recently verified Firebase ID token is a separate authorization path.
 
 Firestore TTL is enabled for `expiresAt` on circles, invitations and sessions. Expiration is also enforced in application authorization immediately; security never depends on eventual TTL deletion. Deleting a circle immediately removes its content and owner mapping. Outstanding token/invitation metadata becomes unusable because its circle is missing, then TTL reclaims it.
 
@@ -56,3 +69,5 @@ Firestore TTL is enabled for `expiresAt` on circles, invitations and sessions. E
 No LLM request is required for deterministic planning or the simulator. One persistent document avoids a series of partially completed database writes. The browser refreshes a visible circle every 12 seconds and when focus/visibility returns; hidden tabs do not poll. A manual refresh is always available. Limits: 100 commitments, 16 members, 100 notes, 250 activity events, 100 retry receipts and a 400 KB serialized household. Demo admission is globally bounded to 120 new circles per hour and 500 active circles, with 24-hour expiry; reset reuses the existing demo row. These conservative bounds suit a hackathon/pilot and require measured revision for broader launch.
 
 Application state has bounded retention; the activity view is not a permanent, tamper-proof compliance audit. No automatic helper notifications, push, SMS, billing, clinical logic, or background emergency escalation is implemented. Firebase sends account-recovery email only when a person explicitly requests it.
+
+An owner refresh currently performs six Firestore document reads, including the final transactional session/circle check. This is a code-derived budgeting count, not measured telemetry; transaction retries can add reads. The stronger revocation guarantee adds a read compared with the earlier nontransactional refresh. See [security semantics](security.md) and the [deployment procedure](firebase-deployment.md).

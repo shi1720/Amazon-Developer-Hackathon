@@ -1,0 +1,81 @@
+{
+  "ok": true,
+  "project": "kindhandoff",
+  "command": "npm run deploy:firebase -- --project kindhandoff",
+  "provenance": {
+    "recordedDate": "2026-09-15",
+    "reportedBy": "Implementation lead from the final clean deployment pipeline, exit 0",
+    "applicationUrl": "https://kindhandoff.web.app",
+    "sourceBaseline": "d668158",
+    "sourceScope": "Verified deployed working tree based on this commit. The final packaging commit and final source SHA are recorded separately after packaging.",
+    "releaseScope": "Final clean pipeline after stale-form and overnight day-view fixes. The production suite files retain the earlier live run against the unchanged backend; no fresh production latency is claimed."
+  },
+  "pipeline": {
+    "rootAndFunctionsCleanLockfileInstall": true,
+    "lint": true,
+    "typecheck": true,
+    "rootUnitTests": 54,
+    "productionBuild": true,
+    "firestoreEmulatorIntegrationChecks": 23,
+    "compiledLocalMcpCalls": 15,
+    "compiledLocalMultiUserChecks": 13,
+    "compiledLocalAuthenticationChecks": 11,
+    "combinedFirestoreFunctionsHostingDeployment": true,
+    "readOnlyPublicSmoke": true,
+    "dependencyAdvisories": {
+      "root": 0,
+      "functions": 0,
+      "scope": "Reported by the locked installs in this run, not a penetration test."
+    },
+    "compiledLocalMcp": {
+      "calls": 15,
+      "revision": 7,
+      "protocol": "2025-11-25",
+      "transport": "Streamable HTTP",
+      "medianMs": 30,
+      "p95Ms": 49,
+      "scope": "Single local emulator smoke run; not production performance."
+    },
+    "deployment": {
+      "firestoreRules": "deployed",
+      "hosting": "released",
+      "apiFunction": "unchanged; skipped by Firebase CLI"
+    },
+    "resolvedLocalFindings": [
+      "stale-form concurrency",
+      "overnight task day views"
+    ]
+  },
+  "readOnlyPublicSmokeScope": [
+    "public HTML entry",
+    "anonymous session JSON with no circle or signed-in identity",
+    "MCP GET returns 405 with POST allowed",
+    "public Firebase configuration matches kindhandoff"
+  ],
+  "separateLiveSuites": {
+    "mcpCalls": 15,
+    "multiUserChecks": 13,
+    "independentCookieSessions": 4,
+    "firebaseAuthenticationChecks": 11,
+    "syntheticAuthenticationCleanup": true,
+    "scope": "Previously completed production run against the same unchanged backend. No new full production suite or latency result is asserted for this final frontend release."
+  },
+  "guardLibrary": {
+    "tests": 106,
+    "scope": "Existing independently verified additional library; no new guard test run is claimed here."
+  },
+  "claimBoundary": "This record summarizes completed checks reported by the implementation lead. It is not a new execution by the documentation task, a GitHub Actions result for uncommitted source, a video artifact result, or a production capacity claim.",
+  "earlierHostingRelease": {
+    "purpose": "UI grammar polish",
+    "succeeded": true,
+    "verificationBoundary": "No new full pipeline or repeated live-suite run is asserted solely from this Hosting release.",
+    "scope": "The grammar-only publication preceded the final clean pipeline recorded here."
+  },
+  "postDeploymentBrowserRecheck": {
+    "staleFormAcrossTwoTabs": "passed on public app; stale Save disabled and reopened form shows latest details",
+    "overnightDayView": "passed on public app; next day shows From previous day",
+    "latestBrowserFixtureCleanup": "complete; exact fixture and associated records verified absent",
+    "verifiedAt": "2026-09-15T18:30:28Z"
+  },
+  "browserFixtureCleanupEvidence": "ui-fixture-cleanup.json"
+}

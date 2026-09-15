@@ -22,7 +22,7 @@ CW = W - 2*M
 REPO = 'https://github.com/shi1720/Amazon-Developer-Hackathon'
 RELEASE = json.loads((BASE / 'artifact-source' / 'release-status.json').read_text())
 APP_URL = RELEASE['applicationUrl']
-APP_ACCESS_LABEL = 'Public app — verified' if RELEASE['publicVerified'] else 'Hosted app — verification pending'
+APP_ACCESS_LABEL = 'Verified public app' if RELEASE['publicVerified'] else 'Hosted app verification pending'
 GUARD_REPO = 'https://github.com/shi1720/kindhandoff-guard'
 OUT.parent.mkdir(parents=True, exist_ok=True)
 c = canvas.Canvas(str(OUT), pagesize=A4)
@@ -123,9 +123,9 @@ y=heading('A pilot designed to test the promise',y)
 y=para('<b>10 planned interviews.</b> Coordinators, helpers, and adults receiving support.<br/><b>5 planned households.</b> A four-week pilot following a baseline diary.',M,y,CW,size=10.5)-10
 y=para('<b>Primary measure:</b> time from a cancellation to an accepted feasible replacement. Also measure coordinator follow-up effort, repeated helper participation, and voluntary paid continuation. These are planned measures, with no results yet.',M,y,CW,size=10.3)-20
 y=heading('Cost discipline',y)
-y=para('Proposed pilot budget: $10/month for five households. The polling-based serving scenario is $0 with unused allowances, or $0.39 when shared compute allowances are consumed. Billing is enabled; deployment resources, support, and usage changes add cost. Core planning needs no paid model call.',M,y,CW,size=10.1)-17
+y=para('Proposed pilot budget: $10/month for five households. The scenario budgets 2,016 database reads per household/day. Selected serving cost is $0 with unused allowances, or $0.39 if shared compute allowances are consumed. Billing is enabled. Deployment, support, and usage changes add cost.',M,y,CW,size=10.1)-17
 y=heading('Demo and next steps',y)
-y=para('Record the public video, run the household pilot, and pursue live Alexa+ onboarding. The additional Open Source contribution is '+link('@kindhandoff/guard',GUARD_REPO)+' under MIT.',M,y,CW,size=10.2)-9
+y=para('Publish the captioned video, run the household pilot, and pursue live Alexa+ onboarding. The additional Open Source contribution is '+link('@kindhandoff/guard',GUARD_REPO)+' under MIT.',M,y,CW,size=10.2)-9
 y=para('Public MIT repository: '+link('shi1720/Amazon-Developer-Hackathon',REPO),M,y,CW,size=9.6)-5
 y=para(APP_ACCESS_LABEL+': '+link('kindhandoff.web.app',APP_URL),M,y,CW,size=9.2)-11
 y=para('Sources (15 Sep 2026): '+link('Alexa+ MCP','https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html')+'; '+link('Caring Village','https://caringvillage.com/app/')+'; '+link('Family CareRelay','https://www.familycarerelay.com/')+'; '+link('Cloud Run','https://cloud.google.com/run/pricing')+'; '+link('Firestore','https://cloud.google.com/firestore/pricing')+'; '+link('Hosting','https://firebase.google.com/docs/hosting/usage-quotas-pricing')+'.',M,y,CW,size=8.5,leading=12,color='muted')

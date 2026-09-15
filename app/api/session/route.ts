@@ -24,7 +24,7 @@ export async function GET(request: Request) {
       profileName: context?.identity?.profileName ?? null,
       ...(p
         ? {
-            circle: publicCircle(await getCircle(p.circleId)),
+            circle: publicCircle(await getCircle(p.circleId, p)),
             memberId: p.memberId,
             kind: p.kind,
           }
@@ -54,7 +54,10 @@ export async function POST(request: Request) {
           'Demo mode does not accept personal profile fields.',
         );
       if (context?.principal?.kind === 'demo') {
-        const old = await getCircle(context.principal.circleId);
+        const old = await getCircle(
+          context.principal.circleId,
+          context.principal,
+        );
         const reset = seedCircle(old.id);
         reset.version = old.version + 1;
         reset.contentVersion = (old.contentVersion ?? old.version) + 1;

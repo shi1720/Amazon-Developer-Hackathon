@@ -1,170 +1,61 @@
-# KindHandoff — Devpost submission draft
+# KindHandoff
 
-**Project creator:** Shivam Gupta  
-**Primary track:** Alexa+  
-**Mini challenge:** Open Source — separate public MIT library verified.  
-**Draft prepared:** 15 September 2026
-
-> Submission copy for the implemented Firebase release. Add the public video URL after recording and review the personal eligibility/terms fields in Devpost.
-
-## Project name
-
-KindHandoff
-
-## Short tagline
-
-When plans change, practical family support gets a clear next step—and someone who accepts it.
-
-## Elevator pitch
-
-KindHandoff helps families recover everyday support plans when a helper becomes unavailable. It checks time, capabilities, home access, and task dependencies, then proposes workable replacements. Offers stay pending until the named helpers accept. A versioned handoff brief shows what changed and records who has read it.
+Created by Shivam Gupta for the Amazon Developer Hackathon. Primary track: Alexa+. Additional mini challenge: Open Source.
 
 ## Inspiration
 
-A cancelled ride often creates a second job: coordinating the replacement. One relative can get into the house but cannot drive. Another can drive but arrives too late to prepare what is needed. A family group chat may contain every relevant fact, yet someone still has to turn those facts into a workable plan and confirm that people agreed.
+A cancelled ride can break more than a calendar entry. Someone still needs to pack the bag, find a driver, explain the change, and confirm that both people agreed. The facts may be scattered across a family chat while one person carries the work of assembling a new plan.
 
-KindHandoff focuses on that coordination work. Its starting point is a small, practical question: when an afternoon changes, can the household see what needs to happen next and who has actually accepted responsibility?
-
-The demo uses a fictional family. The product does not depend on an invented personal caregiving story or claim outcomes from a pilot that has not happened.
+KindHandoff focuses on that moment. We chose everyday support for a parent because the need is specific and understandable: help the household recover a disrupted afternoon, with a clear record of who has accepted responsibility. The demonstration uses a fictional family, not an invented personal caregiving story.
 
 ## What it does
 
-KindHandoff turns a change of availability into a proposed recovery plan for practical support such as packing a bag, giving a ride, preparing a meal, or visiting.
+Maya becomes unavailable for the afternoon. Two commitments need replacements: packing Arun's library bag at 14:30 and driving him to book club at 15:00. The ride depends on the bag being packed.
 
-In our demonstration, Maya becomes unavailable for the afternoon. This affects both her 14:30–14:45 library-bag task and her 15:00–16:00 ride. Jo can enter the house from 14:00 to 15:00 but cannot drive. Dev can drive but is available only from 14:45 onward. The planner therefore proposes Jo for the bag and Dev for the ride.
+Jo can access the house from 14:00 to 15:00 but cannot drive. Dev can drive but is only available from 14:45. KindHandoff checks those constraints together and proposes Jo for the bag and Dev for the ride.
 
-The proposal remains visible for review. Creating an offer does not count as acceptance. Jo and Dev each accept their own commitments through their helper sessions. Dev's accepted ride still waits for the bag to be packed; when Jo completes that prerequisite, the ride becomes ready.
+The coordinator reviews the change before applying it, then reviews the replacement plan before creating offers. Each named helper accepts through their own session. An offer is not counted as acceptance. Dev's accepted ride remains waiting until Jo records the bag as complete.
 
-The updated brief explains the current plan. Acknowledgment records the particular brief version read, preserving the distinction between an earlier acknowledgment and a changed plan.
+A shared handoff brief shows unresolved work, accepted commitments, prerequisites, and attributed notes. Acknowledgments record the exact content revision read, so an earlier receipt cannot silently stand for a later plan.
+
+The public app includes a private fictional demo, email/password accounts, personal circles, single-use helper invitations, activity history, export, and circle deletion. Our focus is recovery, agreement, and readiness across linked tasks.
 
 ## How we built it
 
-The product combines a web application, a deterministic recovery planner, and a real Model Context Protocol server.
+The React 19 and Vite 8 interface calls a real Model Context Protocol server through the official TypeScript SDK 1.30.0. It negotiates protocol 2025-11-25 and uses Streamable HTTP. The browser simulator and external MCP clients invoke the same validated workflow.
 
-- **MCP integration:** `@modelcontextprotocol/sdk` version 1.30.0, the 2025-11-25 protocol specification, and Web Standard Streamable HTTP transport deployed on Firebase Cloud Functions. Tools execute the same household workflow used by the product.
-- **Planner:** Explicit time windows, helper capabilities, home access, and bag-to-ride dependencies determine feasible assignments. A proposed arrangement is explained before offers are created.
-- **Commitment handling:** The named helper accepts or declines their own offer. Prerequisites govern readiness, and brief acknowledgments are associated with a plan version.
-- **Identity and storage:** Firebase email/password sign-in for household creators, secure one-time helper invitations, and household-scoped records in Firestore, with membership enforced by the application.
-- **Simulation:** An explicitly labelled local, deterministic language simulator exercises the workflow. It supports defined requests and does not represent a live Alexa connection or an unrestricted cloud language model.
-- **Open-source contribution:** The separate @kindhandoff/guard library makes state transitions, coverage accounting, and candidate ranking reusable outside the app. The additional public MIT repository includes 106 passing tests and CI on Node 20, 22, and 24.
+The language interpreter supports a defined set of English requests. It is deterministic and visibly labelled as an Alexa+ simulation. No cloud language model or native Alexa connection is required for this submission path.
 
-Amazon documents Alexa+ support for MCP specification 2025-11-25 and Streamable HTTP. KindHandoff demonstrates that server through the permitted simulated-experience path; the submission does not claim certification or a live deployment on Alexa+. [Alexa+ MCP overview](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html), [technical requirements](https://www.developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html)
+Firebase Hosting serves the public app. A Node 22 Cloud Functions v2 backend handles the API and MCP endpoint. Firebase Authentication establishes coordinator identity; opaque HTTP-only sessions and scoped invitations establish application access. Firestore transactions check credentials, household membership, and the latest state version before committing changes. Content revisions are separate from storage revisions.
 
-## What was built during the hackathon
+We also built the additional MIT-licensed `@kindhandoff/guard` library. It provides reusable commitment transitions, coverage accounting, and candidate ranking. The application owns multi-task recovery, prerequisites, identity, persistence, and brief revisions.
 
-KindHandoff was built as a new project for this submission. The work includes the practical-support data model, constraint-based recovery planner, offer and acceptance workflow, prerequisite readiness, versioned briefs, authenticated household experience, helper invitations, persistent storage, MCP server, simulator, tests, and submission materials.
+## Challenges we ran into
 
-The repository history and release notes record the build dates and delivered scope. No pre-existing production customer base or deployed commercial service is claimed.
+The central challenge was defining what a promise means. Available, offered, accepted, ready, and completed must remain distinct, including when several people act at once.
 
-## Challenges we addressed
+A simple chronological planner could assign the only driver to an earlier flexible task. We replaced that approach with bounded search that prioritizes constrained work and reports unresolved commitments. Concurrent invitation redemption, credential revocation, and stale updates required transaction checks at the point of the write. A separate content revision fixed the case where one helper's acknowledgment incorrectly made another helper's unchanged brief appear stale.
 
-The difficult part is the meaning of a promise. A helper who is available has not necessarily agreed. An accepted ride is not ready if an earlier preparation task remains unfinished. An acknowledgment of yesterday's plan cannot silently become acknowledgment of today's changes.
+Deployment also produced concrete friction. Two Hosting rewrites updating the same function caused a conflict; one combined rewrite resolved it. An explicit artifact cleanup policy was required before the Hosting release completed. These findings and their workarounds are documented in the product feedback.
 
-KindHandoff represents those distinctions as product states and checks them in the underlying workflow. The same rules need to hold whether an action arrives from the interface, a helper session, or an MCP client.
+## Accomplishments that we're proud of
 
-A second challenge is honest simulation. The demonstration needs to work end to end without suggesting that a scripted language layer is live Alexa or a cloud AI model. The simulator identifies itself; the MCP server and persisted workflow are real.
+We shipped a public application that carries the cancellation through to separate helper acceptance, dependency readiness, and a versioned handoff. The demo is backed by persistent state and real MCP calls.
 
-## What makes it different
+Production verification includes 15 MCP calls, 13 multi-user checks across four sessions, and 11 Firebase authentication checks. The repository also contains 54 unit tests and 23 Firestore integration checks. The additional open-source library has 106 tests and passing CI on Node 20, 22, and 24.
 
-Care calendars, shared notes, AI summaries, and voice logging already exist. KindHandoff's focus is repairing a disrupted practical-support plan: identify all affected commitments, explain a feasible split between helpers, obtain their individual acceptance, and keep dependent work waiting until its prerequisite is done.
-
-We do not claim that no competitor can offer a similar workflow. The distinction we demonstrate is specific, observable, and testable.
-
-## Potential impact and business model
-
-The initial customer is a working adult coordinating regular support for a parent across several helpers. AARP and the National Alliance for Caregiving reported 63 million American family caregivers in 2025. That establishes the scale of caregiving; it is not a count of KindHandoff customers or paying households. [AARP report announcement](https://www.aarp.org/press/releases/2025-07-24-new-report-reveals-crisis-point-for-americas-63-million-family-caregivers.html)
-
-We plan to test a $12-per-household monthly subscription with every helper included. Our first validation step is a ten-interview discovery study followed by a five-household pilot. We will measure time to an accepted replacement, coordinator follow-up effort, repeated helper participation, and voluntary paid continuation. These are planned experiments, not completed results.
-
-The planner's core rules do not require a paid model call. A separate cost brief shows an explicit Firebase/GCP usage scenario and its exclusions. We have not claimed a measured production cost or gross margin.
+Shivam Gupta is the project creator and product owner. The project was developed with AI-assisted research, implementation, testing, and preparation of submission materials. The demo video's synthetic narration is clearly labelled.
 
 ## What we learned
 
-The product's most important words are ordinary ones: offered, accepted, waiting, ready, and completed. If they are unclear, a household can be looking at the same screen and still have different expectations.
+The important product words are ordinary ones. If two helpers interpret "accepted" differently, polished screens will not make the handoff reliable. Explicit states, exact-person authorization, and readable explanations make the workflow easier to inspect.
 
-We also learned from competitor research that voice notes and handoff summaries are established features. The stronger product focus is the moment a plan breaks—and the exact steps needed to make it workable again.
+We also learned that voice notes, calendars, and handoff summaries already exist. Our useful focus is the recovery sequence when a plan breaks. Commercial value depends on helpers participating and coordinators spending less time chasing confirmations. Creating more tasks alone would not establish that value.
 
-## What's next
+## What's next for KindHandoff
 
-1. Complete the ten-interview study and five-household pilot using the published research protocol.
-2. Improve invitation and helper flows based on observed adoption friction.
-3. Measure latency, database usage, planner behavior, and support effort with real usage before making scale or cost claims.
-4. Evaluate live Alexa+ onboarding where access is available, while retaining the standalone web experience.
-5. Add language-model interpretation only with explicit provenance, cost measurement, and the existing commitment checks intact.
+The next step is a ten-interview discovery study followed by a five-household pilot. We will measure time to an accepted feasible replacement, follow-up effort, repeated helper use, and willingness to continue paying. No interviews, pilot outcomes, customers, or revenue are claimed yet.
 
-## Validation evidence to attach
+Our pricing hypothesis is $12 per household per month with every helper included. The cost model includes visible-page polling, MCP overhead, database reads, retention assumptions, and shared Firebase/GCP allowances. Billing is enabled; the model is not a promise of free operation or a measured margin.
 
-Executed checks are linked below. The public video remains a human recording/upload step.
-
-- Test command and result: `npm run check`: lint, typecheck, 29 unit tests and production build passed. Additional guard library: 106 tests passed.
-- Browser end-to-end evidence: [Executed test evidence](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence)
-- MCP initialize/list/call evidence: [Executed test evidence](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence)
-- Required flow: both Maya commitments affected; Jo bag; Dev ride; helper-specific acceptance; ride blocked until bag completion; versioned brief acknowledgment.
-- Firebase persistence: 17 isolated emulator integration tests passed, including logout/reissuance and concurrent invitation races.
-- Actual hosted account workflow: 11 checks passed with a fresh synthetic Firebase account, including sign-in, persistence, export, logout and cleanup.
-- Isolation and invitation checks: 13 checks passed across four independent sessions, including invitation reuse denial, exact-helper acceptance, tenant isolation, token scope/rotation and revocation.
-
-Do not insert an invented test count, latency, success rate, or customer metric.
-
-## Limitations
-
-- The language experience shown is a deterministic web simulator. A live Alexa+ account/device connection and cloud-model interpretation are not claimed.
-- The initial domain is practical household support. Medication decisions, clinical recommendations, emergency monitoring, and emergency response are outside its scope.
-- Availability and capabilities come from household records; the product cannot know about unrecorded changes.
-- An accepted task is a recorded commitment, not proof that a real-world action happened. Completion requires a separate recorded action.
-- A brief acknowledgment records the version read. It does not prove comprehension or guarantee future action.
-- Commercial demand, willingness to pay, and production-scale operation require validation. The included research and cost documents label their assumptions.
-- There is no claimed AWS runtime integration. The AWS Builder mini challenge is not part of this draft entry.
-
-## Team credit
-
-**Shivam Gupta — project creator and product owner.**
-
-Shivam set the challenge brief, commercial priorities, and quality requirements, and owns the product and submission. KindHandoff is developed with AI-assisted research, implementation, testing, and preparation of draft materials.
-
-### Optional AI-use disclosure, if the submission asks
-
-> I used AI coding and research tools extensively to help implement the application, investigate competitors, test workflows, and prepare draft submission materials. I am the project creator and product owner. The repository, working demo, and test evidence show the resulting implementation. Any claims about personal contributions, testing, or customer research are limited to what actually occurred.
-
-## Built with — field-ready keywords
-
-TypeScript; React 19; Vite 8; Model Context Protocol; MCP SDK 1.30.0; Streamable HTTP; Firebase Hosting; Firebase Authentication; Cloud Functions for Firebase; Firestore; deterministic planning.
-
-
-## Links
-
-| Submission field | Value |
-| --- | --- |
-| Main public code repository | [shi1720/Amazon-Developer-Hackathon](https://github.com/shi1720/Amazon-Developer-Hackathon) |
-| Live application | [Hosted app](https://kindhandoff.web.app) — public Firebase application, verified with actual hosted MCP, multi-user and authentication tests |
-| Public demo video, under three minutes | **[INSERT VERIFIED PUBLIC YOUTUBE OR VIMEO URL]** |
-| MCP setup and run instructions | [MCP setup](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/integrations/alexa) |
-| License | MIT; verified in the public repository and GitHub About |
-
-## Open Source mini challenge — additional contribution
-
-**Status:** Public, MIT licensed, runnable, and CI passing on Node 20/22/24.
-
-- **GitHub username:** `shi1720`
-- **Main project repository:** `https://github.com/shi1720/Amazon-Developer-Hackathon`
-- **Additional contribution repository:** [shi1720/kindhandoff-guard](https://github.com/shi1720/kindhandoff-guard)
-- **Contribution URL:** [September 15 contribution](https://github.com/shi1720/kindhandoff-guard/commit/04a15ea016e552e3c031b9ec371af2df6a1de105)
-- **Final package name:** `@kindhandoff/guard`
-- **License:** MIT, verified in the public repository.
-
-### Short contribution description
-
-> The additional @kindhandoff/guard library provides commitment state transitions, coverage accounting, and candidate ranking for reuse in other coordination tools. KindHandoff applies these primitives to practical household support. The application separately implements identity and authorization checks, dependency readiness, and content-version acknowledgments. The library repository contains its implementation, tests, examples, and MIT license.
-
-
-## Product feedback
-
-Use the complete [observed product feedback and friction log](product-feedback.md) for this Devpost field. It documents tool purpose, what worked, onboarding, concrete friction, workarounds, feature requests, and whether we would build again. No AWS usage or native Alexa testing is claimed.
-
-### Feature requests to consider after verification
-
-- **Important:** A reference example for a multi-user MCP workflow where the proposer and the person who accepts responsibility have different identities.
-- **Important:** Examples for representing a stale proposal or a versioned acknowledgment consistently across voice and visual clients.
-- **Nice-to-have:** A conformance fixture that exercises initialization, tool calls, and error handling against a serverless Streamable HTTP endpoint.
-
-These are proposed requests based on the product's needs. Confirm whether current documentation or tooling already addresses them before submitting.
+We then plan to pursue native Alexa+ onboarding and validate account linking and confirmation behavior. Broader language interpretation would retain the same authorization and state checks. The current product supports practical household help, without medication decisions or emergency monitoring. No AWS service or live Alexa integration is claimed.

@@ -19,7 +19,7 @@ const C = {navy:'#102943', blue:'#2260df', ice:'#f6f8fb', white:'#ffffff', muted
 const REPO = 'https://github.com/shi1720/Amazon-Developer-Hackathon';
 const release = JSON.parse(await fs.readFile(path.join(sourceDir,'release-status.json'),'utf8'));
 const APP_URL = release.applicationUrl;
-const APP_ACCESS_LABEL = release.publicVerified ? 'Public app — verified' : 'Hosted app — verification pending';
+const APP_ACCESS_LABEL = release.publicVerified ? 'Verified public app' : 'Hosted app verification pending';
 const GUARD_REPO = 'https://github.com/shi1720/kindhandoff-guard';
 const GUARD_CONTRIBUTION = GUARD_REPO + '/commit/04a15ea016e552e3c031b9ec371af2df6a1de105';
 const presentation = Presentation.create({slideSize:{width:1280,height:720}});
@@ -63,10 +63,10 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  text(s,'cover-problem','A cancelled afternoon leaves\ntwo commitments to recover.',64,374,675,90,29,C.pale);
  text(s,'creator','Created by Shivam Gupta',64,585,680,38,24,C.white,true);
  const bag=node(s,'bag-node',856,178,326,134,C.pale);
- text(s,'bag-time','14:30–14:45',879,197,280,28,21,C.pale);
+ text(s,'bag-time','14:30-14:45',879,197,280,28,21,C.pale);
  text(s,'bag-task','Pack library bag',879,240,280,44,28,C.white,true);
  const ride=node(s,'ride-node',856,400,326,134,C.pale);
- text(s,'ride-time','15:00–16:00',879,419,280,28,21,C.pale);
+ text(s,'ride-time','15:00-16:00',879,419,280,28,21,C.pale);
  text(s,'ride-task','Give the ride',879,462,280,44,28,C.white,true);
  connect(s,bag,ride,'bag-to-ride-dependency',C.pale,'bottom','top');
  text(s,'prerequisite-label','Bag first',1060,341,145,32,18,C.pale);
@@ -79,8 +79,8 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  const table=s.tables.add({rows:4,columns:3,left:64,top:300,width:1152,height:278,columnWidths:[220,576,356],values:[
  ['Helper','Availability and capabilities','Planner proposal'],
  ['Maya','Unavailable all afternoon','Reassign both tasks'],
- ['Jo','Home access 14:00–15:00\nCannot drive','Bag 14:30–14:45'],
- ['Dev','Available from 14:45\nCan drive','Ride 15:00–16:00']
+ ['Jo','Home access 14:00-15:00\nCannot drive','Bag 14:30-14:45'],
+ ['Dev','Available from 14:45\nCan drive','Ride 15:00-16:00']
  ]});
  table.styleOptions={headerRow:true,bandedRows:false};
  for(let r=0;r<4;r++){
@@ -93,7 +93,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  table.cells.block({row:0,column:0,rowCount:4,columnCount:3}).assign({margins:{left:18,right:18,top:12,bottom:10},anchor:'center'});
  table.borders.assign({fill:C.line,width:1,style:'solid'});
  footer(s,'The proposed split respects time, home access, driving, and the bag prerequisite.');
- notes(s,'Illustrative product scenario supplied for this deck. The deterministic planner proposes Jo for the 14:30–14:45 bag task because she can access the house during that interval. Dev can provide the 15:00–16:00 ride but cannot cover the earlier bag interval because his availability starts at 14:45. A feasible proposal is not an accepted commitment.');
+ notes(s,'Illustrative product scenario supplied for this deck. The deterministic planner proposes Jo for the 14:30-14:45 bag task because she can access the house during that interval. Dev can provide the 15:00-16:00 ride but cannot cover the earlier bag interval because his availability starts at 14:45. A feasible proposal is not an accepted commitment.');
 }
 // 3. State semantics, with the bag completion as a separate prerequisite.
 {
@@ -131,7 +131,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  for(let i=0;i<3;i++)connect(s,ns[i],ns[i+1],'architecture-link-'+i,C.blue);
  text(s,'auth-note','Firebase email/password sign-in and one-time helper invitations.',64,595,1152,40,23,C.navy);
  footer(s,'Deterministic language simulation. Live Alexa+ onboarding remains a next step.');
- notes(s,'Architecture supplied by the implementation team. React 19.3 and Vite 8.3 frontend on Firebase Hosting. MCP server uses @modelcontextprotocol/sdk 1.30.0, Streamable HTTP, and protocol 2025-11-25 in Cloud Functions v2 on Node 22. Authenticated tools validate inputs and membership, use deterministic planning and @kindhandoff/guard, and write household-scoped Firestore Standard records with version-aware transactions. Firebase Authentication email/password establishes account identity and the app uses a secure __session cookie plus one-time helper invitations. Firestore and Functions run in us-central1. Runtime settings: 256 MiB, 1 CPU, concurrency 40, minInstances 0, maxInstances 2, timeout 30 seconds. Seven-day artifact cleanup is configured. The guard library provides state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and contentVersion brief acknowledgments. The deterministic browser language simulator uses Client and StreamableHTTPClientTransport to make real HTTP MCP initialize and tools/call requests. External MCP clients use the same server. No load-test result, native Alexa connection, cloud LLM, or AWS use is asserted. '+release.verificationSummary+' Amazon documentation: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html and https://www.developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html.');
+ notes(s,'Architecture supplied by the implementation team. React 19.3 and Vite 8.3 frontend on Firebase Hosting. MCP server uses @modelcontextprotocol/sdk 1.30.0, Streamable HTTP, and protocol 2025-11-25 in Cloud Functions v2 on Node 22. Authenticated tools validate inputs and membership, use deterministic planning and @kindhandoff/guard, and write household-scoped Firestore Standard records with version-aware transactions. Firebase Authentication email/password establishes account identity and the app uses a secure __session cookie plus one-time helper invitations. Firestore and Functions run in us-central1. Runtime settings: 256 MiB, 1 CPU, concurrency 40, minInstances 0, maxInstances 2, timeout 30 seconds. Seven-day artifact cleanup is configured. The guard library provides state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and contentVersion brief acknowledgments. The deterministic browser language simulator uses Client and StreamableHTTPClientTransport to make real HTTP MCP initialize and tools/call requests. External MCP clients use the same server. No load-test result, native Alexa connection, cloud LLM, or AWS use is asserted. '+'Public workflow verification is documented in the repository evidence.'+' Amazon documentation: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html and https://www.developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html.');
 }
 // 5. Honest category comparison. Native table preserves editability.
 {
@@ -166,7 +166,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  text(s,'business-rationale','Charging per helper would\ndiscourage participation.',642,394,574,100,29,C.muted);
  text(s,'cost-discipline','Deterministic core rules keep\npaid model calls optional.',642,518,574,89,28,C.navy);
  footer(s,'Pre-pilot. No interviews, paying customers, or revenue claimed.');
- notes(s,'The $12 per household per month price is an unvalidated hypothesis. The market-and-business.md brief proposes testing a $9–15 range after real use. All helpers are included to avoid a seat-pricing incentive against participation. No traction or financial results exist in the materials provided. The Firebase cost brief is arithmetic from declared visible-page polling, query, retention, and allocated-time assumptions. Four 15-minute visible sessions yield 304 refreshes per household/day, with one GET /api/session each. Five document reads per refresh and 20 per MCP action remain conservative budgets. With the other model assumptions, selected serving charges at five households fit unused allowances, or are about $0.39/month if the shared Cloud Run compute allowance is already consumed. The proposed $10 pilot operating allowance also anticipates deployment resources and uncertainty; it is neither an invoice forecast nor a cap. Billing is enabled. Builds, images, support, acquisition, and optional model calls are separate. Source rates: https://cloud.google.com/run/pricing , https://cloud.google.com/firestore/pricing , https://firebase.google.com/docs/hosting/usage-quotas-pricing . Related category price reference: https://caringvillage.com/pricing/ .');
+ notes(s,'The $12 per household per month price is an unvalidated hypothesis. The market-and-business.md brief proposes testing a $9-15 range after real use. All helpers are included to avoid a seat-pricing incentive against participation. No traction or financial results exist in the materials provided. The Firebase cost brief is arithmetic from declared visible-page polling, query, retention, and allocated-time assumptions. Four 15-minute visible sessions yield 304 refreshes per household/day, with one GET /api/session each. Six document reads per authenticated refresh reflect transactional authorization. The model budgets six reads for every refresh and other API request, plus 20 per MCP action, totaling 2,016 reads per household/day pending telemetry. With the other model assumptions, selected serving charges at five households fit unused allowances, or are about $0.39/month if the shared Cloud Run compute allowance is already consumed. The proposed $10 pilot operating allowance also anticipates deployment resources and uncertainty; it is neither an invoice forecast nor a cap. Billing is enabled. Builds, images, support, acquisition, and optional model calls are separate. Source rates: https://cloud.google.com/run/pricing , https://cloud.google.com/firestore/pricing , https://firebase.google.com/docs/hosting/usage-quotas-pricing . Related category price reference: https://caringvillage.com/pricing/ .');
 }
 // 7. Planned study and decision metric.
 {
@@ -185,7 +185,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
 {
  const s=addSlide(8,'The bag-to-ride demo','One cancellation, a feasible split, and responsibility each helper accepts.',true);
  text(s,'next-label','Next steps',64,316,610,52,33,C.white,true);
- text(s,'next-one','Record the public demo video',64,396,780,42,29,C.pale);
+ text(s,'next-one','Publish the captioned demo video',64,396,780,42,29,C.pale);
  text(s,'next-two','Run the household pilot',64,458,780,42,29,C.pale);
  text(s,'next-three','Complete live Alexa+ onboarding',64,520,780,42,29,C.pale);
  text(s,'contribution-label','Open Source',935,324,281,37,24,C.pale,true);
@@ -194,7 +194,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  text(s,'contribution-role','State transitions\nCoverage + ranking\nMIT license',935,477,281,110,23,C.pale);
  linkedText(s,'repo-link','github.com/shi1720/Amazon-Developer-Hackathon',REPO,64,606,1152,27,18,C.white);
  linkedText(s,'hosted-url',APP_ACCESS_LABEL+': kindhandoff.web.app',APP_URL,64,645,1152,28,17,C.pale);
- notes(s,'Creator: Shivam Gupta. Public MIT main repository: '+REPO+'. Firebase application: '+APP_URL+'. '+release.verificationSummary+' No public video URL has been claimed. The additional Open Source contribution is @kindhandoff/guard, public and MIT licensed: '+GUARD_REPO+'. Contribution: '+GUARD_CONTRIBUTION+'. The library covers state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and content-version acknowledgments. Next steps include recording a public English video under three minutes, household research, and live Alexa+ onboarding where access permits.');
+ notes(s,'Creator: Shivam Gupta. Public MIT main repository: '+REPO+'. Firebase application: '+APP_URL+'. '+'Public workflow verification is documented in the repository evidence.'+' No public video URL has been claimed. The additional Open Source contribution is @kindhandoff/guard, public and MIT licensed: '+GUARD_REPO+'. Contribution: '+GUARD_CONTRIBUTION+'. The library covers state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and content-version acknowledgments. Next steps include publishing the English captioned video under three minutes, household research, and live Alexa+ onboarding where access permits.');
 }
 
 const candidatePath=path.join(buildDir,'KindHandoff-Pitch-candidate.pptx');

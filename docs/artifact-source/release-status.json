@@ -1,8 +1,69 @@
 {
   "applicationUrl": "https://kindhandoff.web.app",
   "publicVerified": true,
-  "verifiedAt": "2026-09-15T16:45:43Z",
-  "testedSource": "e3e8c5f",
+  "verifiedAt": "2026-09-15T18:30:28Z",
+  "testedSource": "d668158",
   "ciUrl": "https://github.com/shi1720/Amazon-Developer-Hackathon/actions/runs/34996577422",
-  "verificationSummary": "The implementation lead confirmed the public Firebase release at kindhandoff.web.app. Signed-out browser entry and the reviewed cancellation-to-Jo/Dev-plan-to-offers flow passed at desktop width 1365 and mobile width 390 without horizontal overflow. Against production, 15 HTTP MCP calls passed using protocol 2025-11-25, 13 multi-user checks passed across four sessions, and 11 real Firebase Authentication checks passed, including new-account verification, secure cookie, private-circle persistence, sign-in, export, sign-out, and deletion. Root unit tests (29) and Firestore integration checks (17) passed; main CI passed for source e3e8c5f. The separate browser authentication and invitation walkthrough was still in progress when this confirmation was recorded. No customer, load-test, live Alexa, cloud LLM, or AWS outcome is claimed."
+  "verificationSummary": "The implementation lead confirmed the final clean Firebase pipeline passed with exit 0: locked root/Functions installs reported zero vulnerabilities, lint/typecheck/build and 54 unit tests passed, as did 23 Firestore emulator checks and compiled local 15 MCP, 13 multi-user, and 11 Auth emulator checks. Firestore rules and Hosting deployed; the API function was unchanged and skipped. Public HTML/session/MCP/configuration smoke checks passed. Earlier production 15 MCP, 13 multi-user across four sessions, and 11 real Firebase Authentication checks remain recorded against the unchanged backend. The local video is encoded at 169 seconds and 1920x1080; the implementation lead verified Chrome playback with no media error. Video export checks, all shot previews, 28 decoded frames, and browser playback passed. Targeted public-browser checks passed for stale forms across two tabs and overnight day views. The latest browser fixture and associated records were deleted and verified absent. Public video upload and Devpost submission remain pending. No native Alexa, cloud LLM application, AWS, customer, or capacity outcome is claimed.",
+  "latestLocalVerification": {
+    "rootUnitTests": 54,
+    "firestoreIntegrationChecks": 23,
+    "mcpCalls": 15,
+    "multiUserChecks": 13,
+    "authenticationChecks": 11,
+    "reportedBy": "implementation lead",
+    "productionRecheckPending": false,
+    "scope": "Final clean release pipeline passed lint, typecheck, 54 units, production build, 23 Firestore checks, and compiled local 15/13/11 MCP/multi-user/Auth emulator proofs.",
+    "mcpLatency": {
+      "medianMs": 30,
+      "p95Ms": 49,
+      "environment": "local emulators",
+      "revision": 7
+    }
+  },
+  "sourceScope": "The implementation lead deployed and verified the updated working tree based on d668158. The final packaging commit is not yet recorded here.",
+  "ciScope": "The linked GitHub Actions run verified the earlier Firebase migration at e3e8c5f. Current local and production results below were reported after the new deployment; the old CI run is not evidence for uncommitted changes.",
+  "latestProductionVerification": {
+    "mcpCalls": 15,
+    "multiUserChecks": 13,
+    "independentSessions": 4,
+    "firebaseAuthenticationChecks": 11,
+    "passed": true,
+    "reportedBy": "implementation lead",
+    "performanceClaim": "No load or capacity claim is derived from these functional checks.",
+    "scope": "Earlier live run against the same backend, which Firebase skipped as unchanged during the final deployment. No fresh production latency is claimed."
+  },
+  "releasePipelineEvidence": "../evidence/firebase-release-pipeline.json",
+  "subsequentHostingRelease": {
+    "purpose": "UI grammar polish",
+    "succeeded": true,
+    "additionalFullSuiteRunClaimed": false
+  },
+  "localVideo": {
+    "file": "../deliverables/KindHandoff-Demo.mp4",
+    "exists": true,
+    "reportedDurationSeconds": 169,
+    "reportedResolution": [
+      1920,
+      1080
+    ],
+    "browserPlaybackVerified": true,
+    "editorialReviewComplete": true,
+    "publicUploadComplete": false,
+    "reportedBy": "implementation lead",
+    "reviewScope": "Automated export/decode checks, all shot previews, 28 decoded frames, and actual Chrome playback. Not a continuous human audiovisual screening.",
+    "captionCount": 39,
+    "framesPerSecond": 24
+  },
+  "postDeploymentBrowserRecheck": {
+    "staleForm": "passed",
+    "overnightDayView": "passed",
+    "latestBrowserFixtureCleanup": "complete and verified",
+    "verifiedAt": "2026-09-15T18:30:28Z"
+  },
+  "browserFixtureCleanup": {
+    "status": "complete",
+    "recordedAt": "2026-09-15T18:30:31.872Z",
+    "evidence": "../evidence/ui-fixture-cleanup.json"
+  }
 }

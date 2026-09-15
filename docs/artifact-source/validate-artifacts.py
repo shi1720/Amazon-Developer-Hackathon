@@ -12,7 +12,7 @@ assert type(release['publicVerified']) is bool,'Public verification must be expl
 assert release['applicationUrl']=='https://kindhandoff.web.app','Final Firebase URL'
 if release['publicVerified']:
     assert release['verifiedAt'] and release['verificationSummary'],'Production verification evidence summary required'
-expected_status='Public app — verified' if release['publicVerified'] else 'Hosted app — verification pending'
+expected_status='Verified public app' if release['publicVerified'] else 'Hosted app verification pending'
 report={'pdfs':[],'pptx':{},'hosted_status':expected_status,'visual_review_required':True,'claim_boundary':'File structure, text and metadata checks only. Does not establish product tests, visual quality, native PowerPoint behavior, or a signed-in production application session.'}
 for name,count in files:
     reader=PdfReader(out/name)
@@ -26,8 +26,9 @@ for name,count in files:
     for stale in ['private access','Cloudflare','Workers/D1','D1 storage','ChatGPT sign-in','chatgpt.site']:
         assert stale not in content,(name,'outdated runtime text',stale)
     if not release['publicVerified']:
-        assert 'Public app — verified' not in content,(name,'unsupported public verification claim')
+        assert 'Verified public app' not in content,(name,'unsupported public verification claim')
     assert '\ufffd' not in content,(name,'replacement glyph')
+    assert chr(8212) not in content,(name,'em dash in PDF copy')
     report['pdfs'].append({'file':name,'pages':len(reader.pages),'author':reader.metadata.author,'bytes':(out/name).stat().st_size})
 with ZipFile(out/'KindHandoff-Pitch.pptx') as z:
     slides=[n for n in z.namelist() if n.startswith('ppt/slides/slide') and n.endswith('.xml')]
@@ -40,6 +41,9 @@ with ZipFile(out/'KindHandoff-Pitch.pptx') as z:
         assert root.findall('.//a:tbl',ns),n
     all_slide_text='\n'.join(''.join(ET.fromstring(z.read(n)).itertext()) for n in slides)
     assert expected_status in all_slide_text,'PowerPoint release verification label'
+    assert chr(8212) not in all_slide_text,'em dash in slide copy'
+    for note in [n for n in z.namelist() if n.startswith('ppt/notesSlides/notesSlide') and n.endswith('.xml')]:
+        assert chr(8212) not in z.read(note).decode(),'em dash in speaker notes'
     for stale in ['private access','Cloudflare','Workers/D1','D1 storage','ChatGPT sign-in','chatgpt.site']:
         assert stale not in all_slide_text,('PowerPoint outdated runtime text',stale)
     assert any('https://github.com/shi1720/kindhandoff-guard' in z.read(n).decode() for n in z.namelist() if n.startswith('ppt/slides/_rels/')),'PowerPoint guard repository link'

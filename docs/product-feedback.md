@@ -50,7 +50,7 @@ Sources: [overview](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-tool
 
 **Used for:** persistent circles, hashed session/invitation records, unique coordinator ownership, bounded demo admission, and transactionally checked workflow changes. A Node 22 second-generation HTTP function serves both the JSON API and MCP.
 
-**What worked:** transactions can reread a credential and membership epoch immediately before committing a change. Seventeen emulator integration tests exercise ownership, compare-and-swap, concurrent invitations, token rotation, expiry, and revoked in-flight principals. Browser Firestore rules deny direct access; the runtime uses its own limited service account.
+**What worked:** transactions can reread a credential and membership epoch immediately before committing a change. Twenty-three emulator integration tests exercise ownership, compare-and-swap, concurrent invitations, token rotation, expiry, and revoked in-flight principals. Browser Firestore rules deny direct access; the runtime uses its own limited service account.
 
 **Needs work:** delayed TTL cleanup must be distinguished from authorization expiry. KindHandoff checks expiry during requests and treats TTL as eventual storage cleanup. Pricing spans several services, so the cost brief states its request/read assumptions and shared free allowances.
 

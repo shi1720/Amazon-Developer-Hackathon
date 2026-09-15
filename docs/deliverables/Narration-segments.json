@@ -1,0 +1,72 @@
+{
+  "project": "KindHandoff",
+  "creator": "Shivam Gupta",
+  "narration_type": "AI-generated OpenAI voice; not a recording of Shivam Gupta",
+  "word_count": 293,
+  "target_video_seconds": 175,
+  "timing_status": "Editorial target windows. Retime to actual generated audio and actual screen capture before final video/captions.",
+  "disclosure": {
+    "opening": "AI narration | Fictional demo",
+    "description": "This video uses an AI-generated OpenAI voice. It is not Shivam Gupta's recorded voice.",
+    "closing": "Created by Shivam Gupta | AI-generated narration"
+  },
+  "speech_direction": "Clear, warm, matter-of-fact English. Read MCP as separate letters. Say KindHandoff as Kind Handoff. Do not imitate a named person. Leave a brief natural pause between sentences; root editor will time the captured UI to the actual audio.",
+  "segments": [
+    {
+      "id": "01-change",
+      "target_start_seconds": 0,
+      "target_end_seconds": 15,
+      "text": "Maya can't make it this afternoon. The coordinator reviews the change and confirms it. One cancellation has now disrupted two commitments. This is KindHandoff, created by Shivam Gupta.",
+      "capture": "Start on the signed-out fictional demo as Maya. At 0:02 choose the supported afternoon request. Show the review card, including both tasks. Click Confirm change by 0:07 and show the resulting two open commitments before 0:10. Keep the AI narration and Fictional demo labels visible."
+    },
+    {
+      "id": "02-chain",
+      "target_start_seconds": 15,
+      "target_end_seconds": 31,
+      "text": "In this fictional household, Maya was going to pack Arun's library bag at two thirty, then drive him to book club at three. The ride depends on the bag being ready.",
+      "capture": "Show Pack the library bag at 14:30 to 14:45 and A lift to the library at 15:00 to 16:00 IST. Keep the actual displayed date visible. Show the bag prerequisite."
+    },
+    {
+      "id": "03-plan",
+      "target_start_seconds": 31,
+      "target_end_seconds": 54,
+      "text": "Jo can enter the house between two and three, but cannot drive. Dev can drive, but is only free from two forty-five. The planner checks availability, capabilities, and conflicting commitments. It proposes Jo for the bag and Dev for the ride.",
+      "capture": "Open Why this plan? in the actual replacement preview. Show Jo's home access 14:00 to 15:00 and no driving; Dev's driving and 14:45 start. Show Jo bag and Dev ride. Do not create offers until the next segment."
+    },
+    {
+      "id": "04-accept",
+      "target_start_seconds": 54,
+      "target_end_seconds": 78,
+      "text": "A proposed plan is still only a proposal. The coordinator creates two handoff offers. Jo opens her private invitation and accepts the bag. Dev accepts the ride in his own session. Until each named helper accepts, the task stays uncovered.",
+      "capture": "Click Create 2 handoff offers. Show awaiting acceptance. Open real Jo and Dev invitations in separate isolated browser contexts and accept each assigned offer. Show helper identity. Do not use the demo role switch for this identity proof. Hide token fragments and invitation secrets."
+    },
+    {
+      "id": "05-ready",
+      "target_start_seconds": 78,
+      "target_end_seconds": 102,
+      "text": "Watch Dev's ride. It is accepted, but still waiting for the bag. Jo records the bag as packed. Only then does the ride become ready. Agreement and readiness stay separate, so an unfinished prerequisite cannot hide behind a name on the calendar.",
+      "capture": "In Dev's actual session show accepted ride still waiting for bag. In Jo's actual session complete the bag. Return to Dev and use focus refresh or Refresh circle if needed. Show ready state. Do not mark the ride complete."
+    },
+    {
+      "id": "06-brief",
+      "target_start_seconds": 102,
+      "target_end_seconds": 123,
+      "text": "The handoff brief shows what changed and what remains. Dev acknowledges this specific revision. A later update does not rewrite that receipt. The circle can see who agreed, what is ready, and which version each person read.",
+      "capture": "Open Handoff brief as Dev. Click I've read this handoff and show Dev read revision plus Up to date. In the coordinator session add a short fictional note, then refresh Dev's brief to show the earlier receipt and New updates to read. If a note is not captured, omit that visual claim and retain only the original versioned receipt."
+    },
+    {
+      "id": "07-tech",
+      "target_start_seconds": 123,
+      "target_end_seconds": 149,
+      "text": "The browser's bounded language simulator makes real MCP calls using the November twenty-fifth, twenty twenty-five protocol and Streamable HTTP. Activity shows the execution trace. Firebase provides sign-in and persistent household records. The simulator is deterministic; no live Alexa connection is claimed.",
+      "capture": "Show Activity and Live MCP execution trace with protocol 2025-11-25. Include a short separately recorded real Firebase account sign-in and persisted-circle inset if available, labelled Separate account session. Keep Alexa+ simulation label visible. No invented terminal output."
+    },
+    {
+      "id": "08-close",
+      "target_start_seconds": 149,
+      "target_end_seconds": 169,
+      "text": "KindHandoff starts with everyday support: bags, rides, meals, and visits. The pricing hypothesis is twelve dollars per household per month, with every helper included. Household validation comes next. Clear plans and accepted responsibility.",
+      "capture": "Return to the ready afternoon, then close on kindhandoff.web.app, Created by Shivam Gupta, and $12/household/month - pricing hypothesis. End with AI-generated narration disclosure. Hold the closing card until no later than 2:55."
+    }
+  ]
+}

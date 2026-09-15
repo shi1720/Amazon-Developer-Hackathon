@@ -18,7 +18,8 @@
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "dev:server": "tsx watch functions/local.ts",
     "test:auth": "node scripts/auth-proof.mjs",
-    "test:firestore": "node scripts/firestore-test.mjs"
+    "test:firestore": "node scripts/firestore-test.mjs",
+    "deploy:firebase": "node scripts/deploy-firebase.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

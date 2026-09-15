@@ -5,8 +5,8 @@
   "calls": 15,
   "revision": 7,
   "latency": {
-    "medianMs": 34,
-    "p95Ms": 50
+    "medianMs": 30,
+    "p95Ms": 49
   },
   "checks": [
     "end-to-end recovery",
@@ -18,5 +18,13 @@
     "persistence",
     "cross-origin rejection",
     "missing auth rejection"
-  ]
+  ],
+  "provenance": {
+    "recordedDate": "2026-09-15",
+    "reportedBy": "Implementation lead from final clean release pipeline, exit 0",
+    "runtime": "Compiled local production bundle against Firebase Auth and Firestore emulators",
+    "sourceBaseline": "d668158",
+    "sourceScope": "Updated working tree, final packaging SHA pending."
+  },
+  "claimBoundary": "Local emulator verification only. These results are not production timings or a new cloud-authentication test."
 }

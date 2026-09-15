@@ -9,7 +9,9 @@ import json
 DAYS = D(30)
 REFRESHES = D(4) * D(76)  # four users; initial refresh + 75 twelve-second polls
 REQUESTS_PER_HOUSEHOLD_DAY = REFRESHES + 6 * 3 + 12
-READS_PER_HOUSEHOLD_DAY = REFRESHES * 5 + 6 * 20 + 12 * 5
+# Six reads per authenticated refresh reflect transactional authorization.
+# MCP and other-request budgets remain conservative pending measured telemetry.
+READS_PER_HOUSEHOLD_DAY = REFRESHES * 6 + 6 * 20 + 12 * 6
 
 
 def scenario(households):
@@ -59,6 +61,6 @@ def scenario(households):
 
 if __name__ == '__main__':
     assert REQUESTS_PER_HOUSEHOLD_DAY == 334
-    assert READS_PER_HOUSEHOLD_DAY == 1700
+    assert READS_PER_HOUSEHOLD_DAY == 2016
     print(json.dumps([scenario(h) for h in [5, 20, 1000]], indent=2,
                      default=lambda value: str(value)))

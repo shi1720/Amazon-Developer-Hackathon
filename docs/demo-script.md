@@ -1,69 +1,91 @@
 # KindHandoff demo film
 
+**Completed film:** [KindHandoff-Demo.mp4](deliverables/KindHandoff-Demo.mp4), 169 seconds, with [final timed captions](deliverables/KindHandoff-Captions.srt). Export and sampled visual review passed; public upload remains pending. The timing windows and production steps below are the original reproduction plan, not unfinished recording work.
+
 ## One cancellation. Two commitments. A workable afternoon.
 
-**Target runtime:** 2 minutes 55 seconds, including a short closing card.  
-**Format:** English narration by Shivam Gupta over a recording of the working product.  
-**Data:** Fictional household and helper identities, visibly labelled.  
-**Submission requirement:** Publish the final film publicly on YouTube or Vimeo; keep the entire video below three minutes.
+**Target runtime:** 2 minutes 55 seconds, including the closing hold. The final export must stay under three minutes.
 
-**Recording target:** The confirmed public Firebase release at [kindhandoff.web.app](https://kindhandoff.web.app). Production MCP, multi-user, and authentication checks have passed. Record the real hosted interactions below and rehearse the browser sequence once before capturing the final take.
+**Narration:** 293 words in English, generated with an OpenAI voice. This is not Shivam Gupta's recorded voice.
+
+**Creator:** Shivam Gupta.
+
+**Data:** Fictional household and helper identities, visibly labelled.
+
+**Working app:** [kindhandoff.web.app](https://kindhandoff.web.app).
+
+Use the actual public product for every state change. The first ten seconds show the cancellation review and confirmed result. Account login is a separate inset because signing in creates or restores a personal circle, not the fictional demo.
+
+## Required disclosure
+
+- Opening overlay: **AI narration | Fictional demo**.
+- Closing credit: **Created by Shivam Gupta | AI-generated narration**.
+- Video description: **This video uses an AI-generated OpenAI voice. It is not Shivam Gupta's recorded voice.**
 
 ## Verbatim narration
 
-I'm Shivam Gupta. Maya just cancelled this afternoon. For this family, one change breaks two commitments. KindHandoff turns that disruption into a plan people actually accept.
+Maya can't make it this afternoon. The coordinator reviews the change and confirms it. One cancellation has now disrupted two commitments. This is KindHandoff, created by Shivam Gupta.
 
-This fictional household has two linked tasks. Maya was going to pack a library bag at two thirty, then give a ride at three. Her cancellation affects both. The ride depends on the bag being packed.
+In this fictional household, Maya was going to pack Arun's library bag at two thirty, then drive him to book club at three. The ride depends on the bag being ready.
 
-Here is why the suggested plan matters. Jo can enter the house between two and three, but cannot drive. Dev can drive, but is only available from two forty-five. The planner checks those constraints and proposes Jo for the bag, Dev for the ride.
+Jo can enter the house between two and three, but cannot drive. Dev can drive, but is only free from two forty-five. The planner checks availability, capabilities, and conflicting commitments. It proposes Jo for the bag and Dev for the ride.
 
-I review the proposal before creating offers. They remain pending until each named helper accepts. Jo accepts her bag task in her own helper view. Dev accepts his ride separately. Every acceptance belongs to the person taking responsibility.
+A proposed plan is still only a proposal. The coordinator creates two handoff offers. Jo opens her private invitation and accepts the bag. Dev accepts the ride in his own session. Until each named helper accepts, the task stays uncovered.
 
-Watch the ride. Even after Dev accepts, it is still waiting for the bag. Jo records the bag as packed, and the ride becomes ready. That small dependency is the difference between having two names on a calendar and having a workable afternoon.
+Watch Dev's ride. It is accepted, but still waiting for the bag. Jo records the bag as packed. Only then does the ride become ready. Agreement and readiness stay separate, so an unfinished prerequisite cannot hide behind a name on the calendar.
 
-The updated handoff brief shows what changed and what remains. Dev acknowledges this specific version. If the plan changes again, the record still tells us which version he read. People can see what was agreed, by whom, and when.
+The handoff brief shows what changed and what remains. Dev acknowledges this specific revision. A later update does not rewrite that receipt. The circle can see who agreed, what is ready, and which version each person read.
 
-Behind this is a real MCP server using the November twenty-fifth, twenty twenty-five specification and Streamable HTTP. The web language simulator is explicitly deterministic. Firebase provides email-and-password sign-in, persistent household records, and the public web app. Helper invitations keep responsibilities separate. This is a simulated experience, with no live Alexa connection claimed.
+The browser's bounded language simulator makes real MCP calls using the November twenty-fifth, twenty twenty-five protocol and Streamable HTTP. Activity shows the execution trace. Firebase provides sign-in and persistent household records. The simulator is deterministic; no live Alexa connection is claimed.
 
-KindHandoff starts with practical support: bags, rides, meals, and visits. The business hypothesis is a household subscription, with every helper included. The promise is simple: make the next step clear, and make responsibility something people actually accept.
+KindHandoff starts with everyday support: bags, rides, meals, and visits. The pricing hypothesis is twelve dollars per household per month, with every helper included. Household validation comes next. Clear plans and accepted responsibility.
 
 ## Timed shot list
 
-| Time | Picture / action | Narration paragraph | Evidence the viewer should see |
-| --- | --- | --- | --- |
-| 0:00–0:14 | Start on the live fictional afternoon. At 0:02, enter “Maya is unavailable this afternoon.” Submit by 0:05, review and confirm the change; show the two affected commitments before 0:10. Keep the small “Fictional demonstration household” label visible. | 1 | The product performs the cancellation in the first ten seconds. No opening animation or title-only preamble. |
-| 0:14–0:35 | Hold on the two affected tasks and the preview. Trace the bag-to-ride dependency without repeating the cancellation. | 2 | Bag: 14:30–14:45. Ride: 15:00–16:00. Both are impacted. |
-| 0:35–0:58 | Show the planner's explanation and helper constraints, including their displayed dates. | 3 | Jo: home access 14:00–15:00, cannot drive. Dev: driving, available from 14:45. Proposed assignment matches both. |
-| 0:58–1:22 | Review and create offers. Briefly show the real invitation flow, then Jo and Dev in isolated helper sessions accepting only their own offers. | 4 | Pending does not display as accepted. Named helper identity is visible; invitation tokens are not. |
-| 1:22–1:44 | Show Dev's accepted ride waiting. Switch to Jo, complete the bag task, then return to the ride. Use the actual focus/visibility refresh or Refresh control to reveal the latest state. | 5 | The ride changes from waiting on a prerequisite to ready only after bag completion. Do not mark the ride completed unless demonstrating that later action. |
-| 1:44–2:06 | Open the updated brief and acknowledge it in Dev's helper view. | 6 | Brief version and the acknowledgment record are readable. |
-| 2:06–2:35 | Open the real MCP inspection/evidence view. Show protocol version, tool invocation, response, and persistent state. A separate inset can show Firebase email/password sign-in, labelled “Account sign-in — separate session.” | 7 | Real MCP request/response; SDK details may appear visually. Firestore-backed state, honest simulator label, and the verified Firebase domain. |
-| 2:35–2:55 | Return to the ready afternoon plan. End on “KindHandoff · Clear plans. Accepted responsibility.” and the verified demo/repository URL. | 8 | A coherent result and a restrained commercial hypothesis. |
+These are editorial target windows. Use the actual generated audio and word timestamps to align the final edit. Preserve the action order and give each important result time to be read.
 
-The narration is 315 words (counted as whitespace-separated words). Read at a natural pace near 125–130 words per minute and allow short pauses for the state changes. Rehearse once with the actual recording; trim pauses before cutting evidence. The final export must remain under 3:00.
+| Target time | Shot and action | Evidence to keep readable |
+| --- | --- | --- |
+| 0:00 to 0:15 | Start on Maya's fictional afternoon. At 0:02, choose the supported afternoon request. Show its review card, then click **Confirm change** by 0:07. Show the affected tasks before 0:10. | Both commitments are affected by one confirmed change. The first input alone does not apply the cancellation. |
+| 0:15 to 0:31 | Show the bag and ride, their actual displayed date, and the prerequisite. | Bag 14:30 to 14:45 IST; ride 15:00 to 16:00 IST. The ride needs the bag ready. |
+| 0:31 to 0:54 | Open **Why this plan?** in the actual preview. Show the candidate constraints and proposed split. | Jo has home access from 14:00 to 15:00, without driving. Dev drives from 14:45. Jo gets the bag, Dev the ride. |
+| 0:54 to 1:18 | Click **Create 2 handoff offers**. Show pending offers. Open actual Jo and Dev invitations in isolated sessions and accept each assigned task. | Each named helper's identity is visible. Offers do not count as acceptance. Do not use the demo role switch as proof of separate identity. |
+| 1:18 to 1:42 | In Dev's session, show the accepted ride waiting. Switch to Jo, complete the bag, then return to Dev and refresh or refocus. | Only bag completion satisfies the ride's prerequisite. The ride itself remains uncompleted. |
+| 1:42 to 2:03 | As Dev, open **Handoff brief**, click **I've read this handoff**, and show the receipt. In the coordinator session, add a short fictional note; refresh Dev's brief. | The receipt names the content revision. The later update leaves that receipt intact and creates new updates to read. |
+| 2:03 to 2:29 | Open **Activity > Live MCP execution trace**. Show a real invocation. If included, cut to a separately recorded Firebase sign-in and persisted-circle inset labelled **Separate account session**. | Actual protocol 2025-11-25, real tool call, clear simulator label, Firebase domain. No invented output or live Alexa claim. |
+| 2:29 to 2:49 | Return to the ready afternoon, then the closing card. | Public app URL; creator credit; **$12/household/month, pricing hypothesis**; **Clear plans and accepted responsibility.** |
+| 2:49 to 2:55 | Hold the closing card while audio finishes naturally. | AI-generated narration disclosure. Total duration remains below 3:00. |
 
 ## Recording procedure
 
-1. In a fresh browser profile or isolated context, open the verified Firebase application while signed out. Let the app create its fictional demo circle automatically. Confirm the displayed dates, time zone, task windows, helper capabilities, and prerequisite match the shot list.
-2. Keep this fictional demo circle as the coordinator's recording session. Create actual one-time invitations for Jo and Dev and open them in two separate isolated browser profiles or contexts. Ordinary windows and same-profile private windows may share cookies; use genuinely isolated sessions. Account sign-in opens a separate blank personal circle, so show it only in a separate inset if desired. Make identities clear without exposing invitation tokens or session cookies.
-3. Run the complete flow once without recording. Confirm both cancellations, correct proposals, separate acceptance, dependency readiness, and a versioned acknowledgment. After rehearsal, prepare a fresh fictional demo circle and fresh helper invitations for the recorded take.
-4. Record the application at a readable resolution, preferably 1920×1080. Keep the cursor deliberate and zoom text enough to read in the final video.
-5. Record the narration verbatim in a quiet room. A laptop or phone microphone is sufficient if speech is clear.
-6. Cut between actual states and interactions. Do not animate a success state that the product did not produce. If an action is sped up, preserve its order and outcome.
-7. Add English captions. Use only original assets or assets licensed for the video; no music is needed.
-8. Watch the final export from beginning to end. Confirm no real household data, tokens, email addresses, private keys, or unrelated browser tabs appear.
-9. Publish the final export publicly, then open the public URL in a signed-out browser to confirm it plays without requesting access.
+1. Open the public app while signed out in a fresh browser profile or isolated context. Let it create its fictional demo automatically. Verify the displayed dates, IST windows, tasks, capabilities, and prerequisite before recording.
+2. Keep this fictional circle as the coordinator's session. Create real single-use invitations for Jo and Dev. Open them in two genuinely isolated browser contexts and join as each named helper. Prepare clean windows that show identity without exposing invitation secrets, tokens, cookies, or unrelated tabs.
+3. Rehearse the complete sequence once. Confirm that the afternoon request opens a review first, both tasks become affected after confirmation, Jo and Dev receive the correct offers, each helper accepts, the bag unlocks ride readiness, and the brief records a content revision. Prepare a fresh fictional circle and fresh invitations for the take.
+4. Record the actual working interface at a readable resolution. Capture complete interactions and hold the results. Avoid tiny text, rapid scrolling, and cursor movement that obscures the state change.
+5. Generate each narration segment from [Narration-segments.json](deliverables/Narration-segments.json). Listen to each output and compare it with [Narration.txt](deliverables/Narration.txt). Regenerate any omitted or incorrect phrase. Do not treat a model transcript as proof that every spoken word is correct without listening.
+6. Align actual captures to the generated audio. Cuts and modest speed changes can shorten navigation, but must preserve event order and actual outcomes. Do not create a success state in the edit. A Firebase login inset must be a real separate account session; it must not appear to create the seeded fictional household.
+7. Use [Captions-source.json](deliverables/Captions-source.json) for the intended wording and phrase boundaries. [Captions-draft.srt](deliverables/Captions-draft.srt) contains editorial timing only. Replace its timings using the actual audio and inspect the final subtitles. Keep captions to two readable lines, avoid isolated one-word cues, and preserve names and protocol numbers.
+8. Add the disclosure overlays and original closing card. No third-party footage or music is needed. Keep the public URL and pricing hypothesis legible.
+9. Watch and listen to the final export from start to finish. Check every caption, timing, identity, accepted state, prerequisite transition, and version receipt. Confirm the final video is under three minutes, then publish it publicly and verify playback while signed out.
 
-## Final release check
+## Reproduction checklist
 
-- [ ] The public film is under three minutes, in English, and opens with the working product.
-- [ ] The cancellation is submitted by five seconds and its affected tasks appear before ten seconds.
-- [ ] The demo labels the household as fictional and the language simulator as deterministic.
-- [ ] Both cancelled commitments appear, with the correct time windows.
-- [ ] Jo and Dev's constraints explain the proposed split.
-- [ ] Each helper accepts their own offer; offers are never shown as completed coverage.
-- [ ] The ride waits for the bag and becomes ready after bag completion.
-- [ ] The brief acknowledgment visibly refers to a version.
-- [ ] The MCP sequence is a real recorded invocation.
-- [ ] The film does not claim live Alexa, cloud AI, AWS usage, customers, or measured savings.
-- [ ] The final name and verified URLs are consistent across product, repository, video, and submission.
+- [ ] The video is public, in English, captioned, and under three minutes.
+- [ ] The opening shows the review and confirmed cancellation, with affected tasks before ten seconds.
+- [ ] AI narration and fictional demo data are disclosed; the voice is not attributed to a human recording.
+- [ ] Both commitments and the Jo/Dev constraints are readable and match the actual app.
+- [ ] The preview precedes offers; each named helper accepts in a separate session.
+- [ ] Dev's accepted ride waits until Jo records bag completion.
+- [ ] Acknowledgment visibly names a content revision; any later change shown actually occurred.
+- [ ] The MCP trace is recorded from real execution and the simulator remains labelled.
+- [ ] Captions match the generated audio and do not contain dangling one-word cues.
+- [ ] No live Alexa, AWS, customer, revenue, or measured-saving claim appears.
+- [ ] The final video URL is copied into [submission-fields.md](submission-fields.md) after public playback verification.
+
+## Source files
+
+- [Verbatim narration](deliverables/Narration.txt)
+- [Eight narration segments and capture instructions](deliverables/Narration-segments.json)
+- [Caption wording and natural phrase boundaries](deliverables/Captions-source.json)
+- [Editorial-only draft subtitles](deliverables/Captions-draft.srt)
+- [YouTube title, description, and judge testing instructions](submission-fields.md)

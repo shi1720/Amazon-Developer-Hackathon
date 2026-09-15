@@ -375,13 +375,25 @@ export default function SignIn() {
           >
             {busy ? (
               <>
-                <LoaderCircle size={18} aria-hidden="true" />
+                <LoaderCircle
+                  size={18}
+                  aria-hidden="true"
+                  className="loading-spin"
+                />
                 {reset ? 'Sending reset email…' : 'Opening your circle…'}
               </>
             ) : !ready ? (
               <>
-                <LoaderCircle size={18} aria-hidden="true" />
-                Connecting securely…
+                {!initializationFailed && (
+                  <LoaderCircle
+                    size={18}
+                    aria-hidden="true"
+                    className="loading-spin"
+                  />
+                )}
+                {initializationFailed
+                  ? 'Sign-in unavailable'
+                  : 'Connecting securely…'}
               </>
             ) : reset ? (
               <>

@@ -1713,3 +1713,285 @@ blockquote cite {
     display: none;
   }
 }
+
+/* Day navigation and explicit editing controls share the main surface. */
+.day-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.date-control {
+  display: grid;
+  gap: 7px;
+  min-width: 170px;
+  flex: 1;
+}
+.date-control label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #58718d;
+  font-size: 12px;
+  font-weight: 550;
+}
+.date-control input {
+  width: 100%;
+  max-width: 230px;
+  min-height: 42px;
+  background: #fff;
+  border: 1px solid #cad8e5;
+  border-radius: 9px;
+  color: var(--foreground);
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 14px;
+}
+.day-navigation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.day-navigation .icon-button {
+  min-width: 42px;
+  min-height: 42px;
+}
+.mobile-voice-jump {
+  display: none;
+}
+.sync-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #fff7e9;
+  border: 1px solid #ead5ad;
+  color: #79581e;
+  padding: 13px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.sync-banner > span {
+  flex: 1;
+  min-width: 180px;
+}
+.sync-banner > svg {
+  flex-shrink: 0;
+}
+.reconnect-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+.empty-state > .text-button {
+  margin-top: 12px;
+}
+.detail-edit-actions {
+  padding: 0 0 22px;
+  margin: 0;
+}
+.availability-editor {
+  display: grid;
+  gap: 16px;
+}
+.availability-window {
+  padding: 16px;
+  border: 1px solid #d9e3ee;
+  background: #f7f9fc;
+  border-radius: 12px;
+}
+.window-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.availability-editor .form-hint,
+.dependency-editor .form-hint {
+  margin: 0;
+}
+.dependency-choices {
+  display: grid;
+  gap: 12px;
+  max-height: 235px;
+  overflow: auto;
+  margin-top: 14px;
+  padding: 5px;
+}
+.app-form .dependency-choices .check-label {
+  align-items: flex-start;
+  gap: 10px;
+}
+.dependency-choices small {
+  display: block;
+  font-size: 11px;
+  color: #617a95;
+  font-weight: 400;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.cancel-confirmation {
+  padding-top: 10px;
+}
+.cancel-confirmation h3 {
+  font-size: 18px;
+  font-weight: 550;
+}
+.cancel-confirmation p {
+  margin-top: 8px;
+  color: #667b92;
+  font-size: 14px;
+}
+.supported-requests {
+  margin-top: 18px;
+  border-top: 1px solid #ffffff26;
+  padding-top: 15px;
+  color: #c4d5e5;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.supported-requests summary {
+  cursor: pointer;
+  color: #e2edf6;
+  font-weight: 550;
+}
+.supported-requests p {
+  margin-top: 10px;
+}
+.supported-requests ul {
+  margin: 10px 0;
+  padding-left: 18px;
+}
+.supported-requests li + li {
+  margin-top: 5px;
+}
+#voice-desk {
+  scroll-margin-top: 20px;
+}
+.brief-assignment > span {
+  flex: 0 0 104px;
+  max-width: 104px;
+  line-height: 1.6;
+}
+.task-title,
+.task-card p,
+.member-heading > div,
+.brief-assignment > p,
+.brief-block blockquote,
+.dependency-choices span,
+.plan-assignment,
+.cancel-confirmation,
+.join-card,
+.page-heading > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.member-heading > .chip {
+  flex-shrink: 0;
+}
+.loading-spin {
+  animation: loading-rotation 1s linear infinite;
+}
+@keyframes loading-rotation {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 800px) {
+  .mobile-voice-jump {
+    display: inline-flex;
+    min-height: 42px;
+  }
+  .ribbon-detail.identity-detail {
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    color: #355577;
+    font-size: 12px;
+  }
+  .app-form input:not([type='checkbox']),
+  .app-form textarea,
+  .date-control input,
+  .voice-input input {
+    font-size: 16px;
+  }
+  .app-form input:not([type='checkbox']) {
+    min-height: 44px;
+  }
+  .icon-button {
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .task-actions .text-button,
+  .member-actions .text-button {
+    min-height: 40px;
+  }
+  .helper-inbox {
+    padding: 20px;
+  }
+  .brief-assignment {
+    gap: 12px;
+  }
+  .brief-assignment > span {
+    flex-basis: 82px;
+    max-width: 82px;
+    font-size: 12px;
+  }
+  .join-page {
+    padding: 20px 16px;
+  }
+  .join-card {
+    padding: 26px 22px;
+  }
+  .join-card h1 {
+    font-size: 30px;
+  }
+  .availability-window {
+    padding: 13px;
+  }
+  .task-sheet {
+    padding: 34px 22px;
+  }
+}
+@media (max-width: 380px) {
+  .topbar {
+    height: auto;
+    min-height: 72px;
+    padding: 12px 4%;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .header-actions {
+    margin-left: auto;
+  }
+  .date-control {
+    min-width: 150px;
+  }
+  .day-navigation {
+    margin-left: auto;
+  }
+  .mobile-voice-jump {
+    width: 100%;
+    min-height: 30px;
+  }
+  .member-heading {
+    flex-wrap: wrap;
+  }
+  .member-heading > .chip {
+    margin-left: 0;
+  }
+  .status-strip {
+    gap: 16px;
+    padding: 16px 12px;
+  }
+  .status-strip > div {
+    gap: 8px;
+  }
+  .stat-number {
+    font-size: 28px;
+  }
+}

@@ -3,19 +3,19 @@
   "application_url": "https://kindhandoff.web.app",
   "author": "Shivam Gupta",
   "visual_review": "All eight rendered pitch pages and both brief pages inspected individually. No clipping, overlaps, reversed arrows, or unreadable links observed.",
-  "changes": "Firebase Hosting / Functions v2 / Firestore / Firebase Auth architecture; public verified URL; current cost scenario; brief footer spacing corrected.",
+  "changes": "Updated submission copy, public verification label, and six-read refresh cost scenario totaling 2,016 document reads per household/day. All eight pitch slides and both brief pages were rendered and inspected after the changes.",
   "files": {
     "KindHandoff-Pitch.pptx": {
-      "sha256": "acf6ba39443ee3bf7f1c58e75907774777b66a1e3f56ed34bae8391651994b1e",
-      "bytes": 41867
+      "sha256": "2b4d9f279dcb1070f4c241d68e240daf4a6c857b462004279f1488eb63b6fe2b",
+      "bytes": 41134
     },
     "KindHandoff-Pitch.pdf": {
-      "sha256": "b2e0461533c041cbb2a484bca0513b5a9737de22b72682235c7ed01d6cd341b8",
-      "bytes": 211888
+      "sha256": "76b816b0a41b446fb9dcef071d8ce4766d0c0c34f7dfe9f0417ab8ace6c79b58",
+      "bytes": 211773
     },
     "KindHandoff-Judge-Brief.pdf": {
-      "sha256": "9d04c4f8eed8631676ddff779f6826d7880db2b6e43703d9f0ec4d5c5978aa69",
-      "bytes": 35395
+      "sha256": "535fa7f77fe7e4f40804e6d3a63c39a6aef5aacb484ef04deb01c494a7bb72cf",
+      "bytes": 35359
     }
   },
   "reviewed_images": [
@@ -30,5 +30,6 @@
     "brief-1.png",
     "brief-2.png"
   ],
-  "product_validation_boundary": "Product production results supplied by implementation lead and recorded separately in artifact-source/release-status.json. Artifact QA is not a product or native PowerPoint test."
+  "product_validation_boundary": "Product production results supplied by implementation lead and recorded separately in artifact-source/release-status.json. Artifact QA is not a product or native PowerPoint test.",
+  "videoBoundary": "This record covers only the PPTX and two listed PDFs. No completed video export, captions aligned to a final film, upload, or public video playback is claimed here."
 }

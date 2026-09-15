@@ -1,0 +1,334 @@
+{
+  "project": "KindHandoff",
+  "creator": "Shivam Gupta",
+  "source_policy": "Actual browser captures only. Declared crops and source-frame holds improve legibility. No product state is composited or invented.",
+  "excluded_captures": [
+    "04-jo-join"
+  ],
+  "segments": [
+    {
+      "id": "01-change",
+      "number": "01 / THE CHANGE",
+      "title": "One change. Two gaps.",
+      "detail": "Maya cannot help this afternoon. The coordinator reviews the affected commitments before confirming the change.",
+      "min_duration": 16,
+      "shots": [
+        {
+          "name": "01-review",
+          "weight": 5,
+          "label": "Review the person, time, and affected work"
+        },
+        {
+          "name": "01-confirm",
+          "weight": 11,
+          "label": "Confirmed change; two commitments need a handoff"
+        }
+      ]
+    },
+    {
+      "id": "02-chain",
+      "number": "02 / THE DEPENDENCY",
+      "title": "The bag comes first.",
+      "detail": "Pack the bag at 14:30. Give Arun a lift at 15:00. The ride depends on that earlier handoff.",
+      "min_duration": 14,
+      "shots": [
+        {
+          "name": "02-chain",
+          "weight": 5,
+          "label": "Two linked commitments, one afternoon"
+        },
+        {
+          "name": "02-chain",
+          "frame": 4,
+          "crop": [
+            45,
+            240,
+            850,
+            750
+          ],
+          "weight": 9,
+          "label": "Actual task cards; times and prerequisite visible"
+        }
+      ]
+    },
+    {
+      "id": "03-plan",
+      "number": "03 / A FEASIBLE PLAN",
+      "title": "Help that fits.",
+      "detail": "Jo has home access. Dev can drive. The planner checks their available times and existing commitments together.",
+      "min_duration": 20,
+      "shots": [
+        {
+          "name": "03-helpers-detail",
+          "frame": 4,
+          "crop": [
+            55,
+            25,
+            850,
+            345
+          ],
+          "weight": 5,
+          "label": "Jo: home access, 14:00 to 15:00"
+        },
+        {
+          "name": "03-helpers-detail",
+          "frame": 0,
+          "crop": [
+            55,
+            742,
+            850,
+            999
+          ],
+          "weight": 4,
+          "label": "Dev: driving, available from 14:45"
+        },
+        {
+          "name": "03-explain",
+          "frame": 1,
+          "crop": [
+            899,
+            490,
+            1332,
+            792
+          ],
+          "weight": 4.5,
+          "label": "Actual reasons: availability, capabilities, and conflicts"
+        },
+        {
+          "name": "03-explain",
+          "frame": 1,
+          "crop": [
+            899,
+            164,
+            1332,
+            478
+          ],
+          "weight": 6.5,
+          "label": "Actual proposal: Jo for the bag, Dev for the ride"
+        }
+      ]
+    },
+    {
+      "id": "04-accept",
+      "number": "04 / PERSONAL ACCEPTANCE",
+      "title": "An offer needs a yes.",
+      "detail": "Jo and Dev accept in their own sessions. An offer alone does not cover a commitment.",
+      "min_duration": 23,
+      "shots": [
+        {
+          "name": "04-offers",
+          "weight": 6.8,
+          "label": "Coordinator creates two offers",
+          "lead": 3.8
+        },
+        {
+          "name": "04-jo-invitation",
+          "crop": [
+            430,
+            75,
+            1080,
+            770
+          ],
+          "weight": 1.1,
+          "label": "Jo opens her own private invitation"
+        },
+        {
+          "name": "04-jo-before",
+          "weight": 1.2,
+          "label": "Jo’s helper session: bag offer pending"
+        },
+        {
+          "name": "04-jo-accepted",
+          "weight": 1.3,
+          "label": "Jo’s helper session: acceptance recorded"
+        },
+        {
+          "name": "04-dev-invitation",
+          "crop": [
+            385,
+            150,
+            980,
+            850
+          ],
+          "weight": 1.1,
+          "label": "Dev opens a separate private invitation"
+        },
+        {
+          "name": "04-dev-before",
+          "weight": 1.0,
+          "label": "Dev’s helper session: ride offer pending"
+        },
+        {
+          "name": "05-waiting",
+          "weight": 10.5,
+          "label": "Dev accepted. The ride still waits for the bag."
+        }
+      ]
+    },
+    {
+      "id": "05-ready",
+      "number": "05 / READY TO GO",
+      "title": "Agreed. Then ready.",
+      "detail": "An accepted ride still waits for an unfinished prerequisite. Jo completes the bag before Dev’s ride becomes ready.",
+      "min_duration": 23,
+      "shots": [
+        {
+          "name": "05-waiting",
+          "crop": [
+            45,
+            225,
+            805,
+            830
+          ],
+          "weight": 6.2,
+          "label": "Dev’s accepted ride is waiting for the bag"
+        },
+        {
+          "name": "05-bag-done",
+          "crop": [
+            68,
+            75,
+            935,
+            740
+          ],
+          "weight": 2.3,
+          "label": "Jo’s session: bag completion recorded"
+        },
+        {
+          "name": "05-ready-detail",
+          "crop": [
+            45,
+            395,
+            805,
+            845
+          ],
+          "weight": 14.5,
+          "label": "Dev’s session: earlier handoff complete"
+        }
+      ]
+    },
+    {
+      "id": "06-brief",
+      "number": "06 / A SHARED RECORD",
+      "title": "Keep the next person in the loop.",
+      "detail": "Dev reads revision 11. A new note creates revision 12. His earlier receipt stays attached to the version he read.",
+      "min_duration": 22,
+      "shots": [
+        {
+          "name": "06-brief-before",
+          "weight": 6.1,
+          "label": "Dev’s shared handoff brief"
+        },
+        {
+          "name": "06-receipt",
+          "crop": [
+            55,
+            65,
+            805,
+            775
+          ],
+          "weight": 3.2,
+          "label": "Dev has read revision 11: up to date"
+        },
+        {
+          "name": "06-new-update",
+          "crop": [
+            55,
+            85,
+            805,
+            775
+          ],
+          "weight": 6.7,
+          "label": "Revision 12; Dev’s revision 11 receipt remains"
+        },
+        {
+          "name": "06-new-update",
+          "crop": [
+            80,
+            537,
+            783,
+            749
+          ],
+          "weight": 6,
+          "label": "Earlier revision 11 receipt remains after the new note"
+        }
+      ]
+    },
+    {
+      "id": "07-tech",
+      "number": "07 / WORKING SOFTWARE",
+      "title": "Real calls. Durable records.",
+      "detail": "MCP 2025-11-25 over Streamable HTTP. Firebase sign-in and saved circles. A deterministic Alexa+ simulation.",
+      "min_duration": 26,
+      "shots": [
+        {
+          "name": "07-trace-detail",
+          "frame": 12,
+          "crop": [
+            55,
+            540,
+            852,
+            912
+          ],
+          "weight": 14.2,
+          "label": "Actual MCP trace from this demonstration"
+        },
+        {
+          "name": "07-auth-signin",
+          "crop": [
+            395,
+            65,
+            970,
+            895
+          ],
+          "weight": 2.0,
+          "label": "Separate account session: Firebase sign-in"
+        },
+        {
+          "name": "07-auth-persisted",
+          "weight": 3.5,
+          "label": "Separate account session: full reload preserves the circle"
+        },
+        {
+          "name": "07-trace-detail",
+          "frame": 12,
+          "crop": [
+            55,
+            540,
+            852,
+            912
+          ],
+          "weight": 6.3,
+          "label": "Bounded simulator; no live Alexa connection claimed"
+        }
+      ]
+    },
+    {
+      "id": "08-close",
+      "number": "08 / THE NEXT STEP",
+      "title": "Care, carried forward.",
+      "detail": "Everyday help, with clear responsibility. A working product today and a household validation study next.",
+      "min_duration": 22,
+      "closing": true,
+      "closing_after": 7.2,
+      "shots": [
+        {
+          "name": "08-ready-day",
+          "weight": 3,
+          "label": "The shared fictional household"
+        },
+        {
+          "name": "05-ready-detail",
+          "crop": [
+            45,
+            395,
+            805,
+            845
+          ],
+          "weight": 19,
+          "label": "The bag is done. The accepted ride is ready."
+        }
+      ]
+    }
+  ]
+}
