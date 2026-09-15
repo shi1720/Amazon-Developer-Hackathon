@@ -1695,3 +1695,21 @@ blockquote cite {
   box-shadow: none !important;
   background: transparent !important;
 }
+
+@media (max-width: 380px) {
+  .topbar .wordmark {
+    font-size: 20px;
+    gap: 7px;
+  }
+  .topbar .brand-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+  }
+  .topbar .account-button {
+    white-space: nowrap;
+  }
+  .topbar .account-button svg {
+    display: none;
+  }
+}
