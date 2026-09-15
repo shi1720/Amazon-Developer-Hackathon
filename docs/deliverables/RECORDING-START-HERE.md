@@ -19,11 +19,11 @@ The export is **1920 x 1080 at 24 fps**, with **39 timed captions**. Full decodi
 
 This was automated export validation and sampled agent visual review, not a continuous human audiovisual screening. The fictional household and AI narration remain clearly labelled.
 
-## Published video and remaining submission
+## Published video and completed submission
 
 The [YouTube video](https://youtu.be/t7e00FzIk2M) is public. Its thumbnail, English SRT captions, and AI-narration disclosure are in place. The implementation lead verified signed-out playback at 169.021 seconds and a visible public transcript.
 
-The [Devpost draft](https://devpost.com/software/kindhandoff), project 1184871, is **not submitted**. Finish the existing [finalization workflow](https://devpost.com/submit-to/30992-build-ship-shape-amazon-developer-hackathon/manage/submissions/1184871-kindhandoff/finalization) after Shivam completes the three personal eligibility declarations and reviews the final Official Rules/Devpost Terms agreement. The implementation lead verified all 23 non-eligibility additional fields after reload. No additional recording or video upload is required for this draft.
+The [Devpost entry](https://devpost.com/software/kindhandoff), project 1184871, is **submitted to the Build, Ship, Shape: Amazon Developer Hackathon**. Shivam completed the final step, and the implementation lead verified the "Project submitted!" confirmation and hackathon listing on 16 September 2026. No further recording, upload, or submission step remains.
 
 ## Reproduction sources
 

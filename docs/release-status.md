@@ -39,11 +39,11 @@ See the [release pipeline record](evidence/firebase-release-pipeline.json) and [
 
 Detailed references: [evidence](evidence/README.md), [security and operating scope](../SECURITY.md), [Firebase setup](firebase-deployment.md), [submission fields](submission-fields.md).
 
-## Public video and Devpost draft
+## Public video and submitted Devpost entry
 
 The [YouTube demo](https://youtu.be/t7e00FzIk2M) is published publicly with the prepared title and description, original thumbnail, English SRT captions, and AI-narration disclosure. The implementation lead verified signed-out in-app-browser playback, a **169.021-second** duration, and a visible public transcript. The local master remains a 169-second, 1920 x 1080, 24 fps export.
 
-The [Devpost project](https://devpost.com/software/kindhandoff) exists as **draft 1184871**. The implementation lead verified that all 23 non-eligibility additional fields persisted after reload, with no empty answers. Gallery images, captions, creator credit, and the working video embed were also verified. **The hackathon entry has not been submitted.** Shivam must personally complete the three eligibility declarations (age of majority, eligible jurisdiction, and no disqualifying employment or agency relationship), review the final Official Rules/Devpost Terms agreement, and submit. The [finalization page](https://devpost.com/submit-to/30992-build-ship-shape-amazon-developer-hackathon/manage/submissions/1184871-kindhandoff/finalization) is the remaining submission workflow. The earlier CAPTCHA and video-publication gates are no longer the current status.
+The [Devpost entry](https://devpost.com/software/kindhandoff), project **1184871**, is **submitted to the Build, Ship, Shape: Amazon Developer Hackathon**. Shivam completed the final step. On **16 September 2026**, the implementation lead observed the "Project submitted!" confirmation and the "SUBMITTED TO" hackathon listing. All 23 non-eligibility additional fields, gallery images and captions, creator credit, the working video embed, and the submission-kit attachment had been verified after saving. There are no remaining submission actions. Devpost permits edits until the stated deadline of 23 October 2026 at 3:00 p.m. EDT.
 
 The creator and product owner is **Shivam Gupta**. AI assistance supported development and submission preparation. No real household pilot, native Alexa deployment, or AWS integration is represented as completed. The deadline is **October 24, 2026 at 00:30 IST**.
 

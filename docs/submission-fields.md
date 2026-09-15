@@ -1,6 +1,6 @@
 # KindHandoff submission fields
 
-Prepared for Shivam Gupta. The project story is ready to paste from [devpost-submission.md](devpost-submission.md). The English demo is published at [https://youtu.be/t7e00FzIk2M](https://youtu.be/t7e00FzIk2M), with verified signed-out playback and uploaded English captions. The [Devpost draft](https://devpost.com/software/kindhandoff) exists as project 1184871 and is not submitted.
+Prepared for Shivam Gupta. The project story is ready to paste from [devpost-submission.md](devpost-submission.md). The English demo is published at [https://youtu.be/t7e00FzIk2M](https://youtu.be/t7e00FzIk2M), with verified signed-out playback and uploaded English captions. The [Devpost entry](https://devpost.com/software/kindhandoff), project 1184871, is submitted to the Build, Ship, Shape: Amazon Developer Hackathon. The submission confirmation was verified on 16 September 2026.
 
 ## Project name
 
@@ -33,9 +33,9 @@ KindHandoff helps families recover everyday support plans when a helper becomes 
 - **Executed verification evidence:** https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence
 - **Product feedback and friction log:** https://github.com/shi1720/Amazon-Developer-Hackathon/blob/main/docs/product-feedback.md
 - **Public demo video:** https://youtu.be/t7e00FzIk2M
-- **Devpost project draft:** https://devpost.com/software/kindhandoff
-- **Devpost status:** Draft 1184871, not submitted. All 23 non-eligibility additional fields persisted after reload. Three personal eligibility declarations and the final Official Rules/Devpost Terms agreement remain for Shivam, followed by final submission.
-- **Finalization:** https://devpost.com/submit-to/30992-build-ship-shape-amazon-developer-hackathon/manage/submissions/1184871-kindhandoff/finalization
+- **Devpost entry:** https://devpost.com/software/kindhandoff
+- **Devpost status:** Submitted. Project ID: 1184871. Shivam completed the final step, and the implementation lead observed the Devpost "Project submitted!" confirmation and the hackathon listing on 16 September 2026.
+- **Manage submission:** https://devpost.com/submit-to/30992-build-ship-shape-amazon-developer-hackathon/manage/submissions/1184871-kindhandoff/finalization
 
 ## Built with
 

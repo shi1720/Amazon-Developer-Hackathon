@@ -109,7 +109,7 @@ Our first audience is a working adult coordinating routine support for a parent 
 - [Product feedback and observed friction log](docs/product-feedback.md)
 - [Rubric review and changes](docs/rubric-review.md)
 
-The demo uses actual app captures, a fictional household, and clearly disclosed AI-generated narration. The [video source and export checks](docs/video-source/README.md) document its production. The [YouTube video](https://youtu.be/t7e00FzIk2M) is public with uploaded English captions and verified signed-out playback. The [Devpost project](https://devpost.com/software/kindhandoff) exists as a draft and has not been submitted. Current status is tracked in [release status](docs/release-status.md).
+The demo uses actual app captures, a fictional household, and clearly disclosed AI-generated narration. The [video source and export checks](docs/video-source/README.md) document its production. The [YouTube video](https://youtu.be/t7e00FzIk2M) is public with uploaded English captions and verified signed-out playback. The [Devpost project](https://devpost.com/software/kindhandoff) was submitted to the Build, Ship, Shape: Amazon Developer Hackathon, with the Devpost confirmation verified on 16 September 2026. Current status is tracked in [release status](docs/release-status.md).
 
 All product code and submission materials were created during September 2026 for this entry. Shared framework dependencies and their licenses remain their authors' work. KindHandoff is MIT licensed; attribution to Shivam Gupta appears in the product, repository, and submission materials.
 

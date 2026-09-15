@@ -6,11 +6,11 @@
   "changes": "Added the verified public YouTube demo link to pitch slide 8 and brief page 2. Re-rendered both PDFs and the finalized PPTX. Inspected both changed pages; all eight other rendered pages are byte-identical to the previously reviewed images.",
   "files": {
     "KindHandoff-Pitch.pptx": {
-      "sha256": "baab0c8af2991382b6e9939f61154d7f4e70417fcfc067e81ccb28a6b9f3cf75",
-      "bytes": 41249
+      "sha256": "c79719013f79bd93215f8687d246c969c3bab6a4abd0f079677ab6ba2729c3e8",
+      "bytes": 41306
     },
     "KindHandoff-Pitch.pdf": {
-      "sha256": "205efd560fa04d3120bac151e76215bfe5ae82f57c1fced03b5532e8916de280",
+      "sha256": "200e7ed06f04ded0552e71e14953444439328d4c5a6203e1fe44f4e507076927",
       "bytes": 213260
     },
     "KindHandoff-Judge-Brief.pdf": {
@@ -31,5 +31,6 @@
     "brief-2.png"
   ],
   "product_validation_boundary": "Product production results supplied by implementation lead and recorded separately in artifact-source/release-status.json. Artifact QA is not a product or native PowerPoint test.",
-  "videoBoundary": "This record covers only the PPTX and two listed PDFs. Public video playback, captions, and duration were verified separately by the implementation lead and recorded in release-status.json."
+  "videoBoundary": "This record covers only the PPTX and two listed PDFs. Public video playback, captions, and duration were verified separately by the implementation lead and recorded in release-status.json.",
+  "submissionStatusUpdate": "Updated slide 8 speaker notes to the submitted status verified on 16 September 2026. The finalized PPTX was re-rendered; all ten pitch/brief PNGs are byte-identical to the previously reviewed images."
 }

@@ -4,7 +4,7 @@
   "verifiedAt": "2026-09-15T18:30:28Z",
   "testedSource": "e5e0170034d4dddab184d2bb3468356f8ae0dee9",
   "ciUrl": "https://github.com/shi1720/Amazon-Developer-Hackathon/actions/workflows/ci.yml",
-  "verificationSummary": "The implementation lead confirmed the final clean Firebase pipeline passed with exit 0: locked root/Functions installs reported zero vulnerabilities, lint/typecheck/build and 54 unit tests passed, as did 23 Firestore emulator checks and compiled local 15 MCP, 13 multi-user, and 11 Auth emulator checks. Firestore rules and Hosting deployed; the API function was unchanged and skipped. Public HTML/session/MCP/configuration smoke checks passed. Earlier production 15 MCP, 13 multi-user across four sessions, and 11 real Firebase Authentication checks remain recorded against the unchanged backend. The local video is encoded at 169 seconds and 1920x1080; the implementation lead verified Chrome playback with no media error. Video export checks, all shot previews, 28 decoded frames, and browser playback passed. Targeted public-browser checks passed for stale forms across two tabs and overnight day views. The latest browser fixture and associated records were deleted and verified absent. The video is published publicly at https://youtu.be/t7e00FzIk2M; signed-out playback and the public English transcript were verified. Devpost project 1184871 exists as a draft and is not submitted. No native Alexa, cloud LLM application, AWS, customer, or capacity outcome is claimed.",
+  "verificationSummary": "The implementation lead confirmed the final clean Firebase pipeline passed with exit 0: locked root/Functions installs reported zero vulnerabilities, lint/typecheck/build and 54 unit tests passed, as did 23 Firestore emulator checks and compiled local 15 MCP, 13 multi-user, and 11 Auth emulator checks. Firestore rules and Hosting deployed; the API function was unchanged and skipped. Public HTML/session/MCP/configuration smoke checks passed. Earlier production 15 MCP, 13 multi-user across four sessions, and 11 real Firebase Authentication checks remain recorded against the unchanged backend. The local video is encoded at 169 seconds and 1920x1080; the implementation lead verified Chrome playback with no media error. Video export checks, all shot previews, 28 decoded frames, and browser playback passed. Targeted public-browser checks passed for stale forms across two tabs and overnight day views. The latest browser fixture and associated records were deleted and verified absent. The video is published publicly at https://youtu.be/t7e00FzIk2M; signed-out playback and the public English transcript were verified. Devpost project 1184871 was submitted to the Build, Ship, Shape: Amazon Developer Hackathon. On 2026-09-16, after Shivam completed the final step, the implementation lead observed the \"Project submitted!\" confirmation and \"SUBMITTED TO\" hackathon listing. No native Alexa, cloud LLM application, AWS, customer, or capacity outcome is claimed.",
   "latestLocalVerification": {
     "rootUnitTests": 54,
     "firestoreIntegrationChecks": 23,
@@ -80,14 +80,15 @@
   "devpost": {
     "url": "https://devpost.com/software/kindhandoff",
     "projectId": 1184871,
-    "status": "draft",
-    "submitted": false,
+    "status": "submitted",
+    "submitted": true,
     "finalizationUrl": "https://devpost.com/submit-to/30992-build-ship-shape-amazon-developer-hackathon/manage/submissions/1184871-kindhandoff/finalization",
     "nonEligibilityAdditionalFieldsVerified": 23,
-    "remainingActions": [
-      "Shivam completes three personal eligibility declarations",
-      "Shivam reviews the final Official Rules and Devpost Terms agreement",
-      "Final prize entry submission"
-    ]
+    "remainingActions": [],
+    "verifiedDate": "2026-09-16",
+    "confirmation": "Project submitted!",
+    "hackathon": "Build, Ship, Shape: Amazon Developer Hackathon",
+    "confirmationObservedBy": "implementation lead",
+    "finalStepCompletedBy": "Shivam Gupta"
   }
 }

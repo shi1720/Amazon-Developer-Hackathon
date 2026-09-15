@@ -55,6 +55,6 @@ The creator credit identifies Shivam Gupta as project creator and product owner.
 
 ## Publication assets
 
-The English captioned demo is public at [YouTube](https://youtu.be/t7e00FzIk2M), with signed-out playback and the uploaded English subtitle track verified. The [Devpost project](https://devpost.com/software/kindhandoff) remains draft 1184871, not submitted. Personal eligibility declarations, the final rules/terms agreement, and submission remain for Shivam.
+The English captioned demo is public at [YouTube](https://youtu.be/t7e00FzIk2M), with signed-out playback and the uploaded English subtitle track verified. The [Devpost entry](https://devpost.com/software/kindhandoff), project 1184871, is submitted to the Build, Ship, Shape: Amazon Developer Hackathon. Shivam completed the final step, and the implementation lead verified the submission confirmation on 16 September 2026.
 
 `build-thumbnail.py` produces the 1280 × 720 YouTube thumbnail. `build-thumbnail.py --devpost` produces the 1200 × 800 Devpost variant. Both keep the title and diagram inside a central crop-safe area, and both PNGs were visually inspected.

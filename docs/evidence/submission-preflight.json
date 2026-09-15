@@ -21,8 +21,12 @@
   "devpost": {
     "url": "https://devpost.com/software/kindhandoff",
     "submissionId": 1184871,
-    "status": "draft",
-    "submitted": false,
+    "status": "submitted",
+    "submitted": true,
+    "confirmationText": "Project submitted!",
+    "submissionBadge": "SUBMITTED TO: Build, Ship, Shape: Amazon Developer Hackathon",
+    "signedOutPublicPageVerified": true,
+    "finalPersonalActionCompletedBy": "Shivam Gupta",
     "storySavedAndRendered": true,
     "judgeWalkthroughLinkVerified": true,
     "galleryImagesWithVerifiedCaptions": 2,
@@ -35,19 +39,15 @@
     "openSourceMiniChallenge": true,
     "awsBuilderMiniChallenge": false,
     "attachmentVerifiedAfterReload": "KindHandoff-Submission-Kit.zip",
-    "attachmentBytes": 6966723,
-    "attachmentSha256": "9e26a3e53d496f77a1c410582ca966f8f1dc3674d2f3e1436351dbfb73752091",
-    "remainingActions": [
-      "Shivam completes the three personal eligibility declarations",
-      "Shivam reviews the Official Rules and Devpost Terms agreement",
-      "Shivam completes the final prize-entry submission"
-    ]
+    "attachmentBytes": 6966566,
+    "attachmentSha256": "6fe780670613cd75d331ae7ca3639907aaa4b35683b34737017254e2a90ee24a",
+    "remainingActions": []
   },
   "repositories": {
     "bothPublic": true,
     "bothDetectMitLicense": true,
-    "applicationCi": "https://github.com/shi1720/Amazon-Developer-Hackathon/actions/runs/35008250500",
+    "applicationCi": "https://github.com/shi1720/Amazon-Developer-Hackathon/actions/runs/35012270667",
     "applicationCiConclusion": "success"
   },
-  "scope": "Actual browser form, rendered preview, signed-out YouTube player, and GitHub metadata checks. This is not a Devpost submission receipt or a guarantee of judging outcome."
+  "scope": "Actual saved form, rendered project, signed-out YouTube player, public Devpost page, explicit submission confirmation, and GitHub metadata checks. No judging outcome is guaranteed."
 }
