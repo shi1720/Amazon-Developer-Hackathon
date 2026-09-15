@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
@@ -19,8 +20,10 @@ W, H = A4
 M = 36
 CW = W - 2*M
 REPO = 'https://github.com/shi1720/Amazon-Developer-Hackathon'
-PREVIEW = 'https://shivam-amazon-hackathon.sg127977958.chatgpt.site'
-PREVIEW_CONFIRMED = False
+RELEASE = json.loads((BASE / 'artifact-source' / 'release-status.json').read_text())
+APP_URL = RELEASE['applicationUrl']
+APP_ACCESS_LABEL = 'Public app — verified' if RELEASE['publicVerified'] else 'Hosted app — verification pending'
+GUARD_REPO = 'https://github.com/shi1720/kindhandoff-guard'
 OUT.parent.mkdir(parents=True, exist_ok=True)
 c = canvas.Canvas(str(OUT), pagesize=A4)
 c.setTitle('KindHandoff - Judge and Product Brief')
@@ -32,7 +35,7 @@ def para(text, x, y, w, size=10.6, leading=None, color='navy', bold=False):
     style=ParagraphStyle('p',fontName='NotoSans-Bold' if bold else 'NotoSans',fontSize=size,leading=leading or size*1.43,textColor=colors.HexColor(C[color]),alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,allowWidows=0,allowOrphans=0)
     p=Paragraph(text,style)
     _,h=p.wrap(w,H)
-    if y-h<32:
+    if y-h<48:
         raise ValueError(f'Paragraph overflows page: bottom={y-h:.1f}, text={text[:80]}')
     p.drawOn(c,x,y-h)
     return y-h
@@ -95,8 +98,8 @@ y=heading('What each commitment means',y)
 y=para('<b>Offered:</b> the named helper has yet to accept. <b>Accepted:</b> that helper has taken responsibility. <b>Ready:</b> prerequisites allow the task to start.',M,y,CW)-9
 y=para('Dev accepts his ride, but it waits for Jo to record the bag as packed. A handoff acknowledgment also records the specific plan version read.',M,y,CW)-23
 y=heading('The system behind the handoff',y)
-y=para('The deterministic web language simulator makes real HTTP calls to the MCP server. It uses SDK 1.30.0, specification 2025-11-25, and Web Standard Streamable HTTP. The <b>@kindhandoff/guard</b> library handles state transitions, coverage, and ranking. App code owns dependency readiness and versioned acknowledgments. D1 stores household-scoped data and checks the version before writing, so a stale plan cannot silently overwrite a newer one.',M,y,CW,size=10.2)-8
-y=para('Owner sign-in and one-time helper invitations establish identity. The prototype covers practical support. Live Alexa+ onboarding and household validation remain next steps.',M,y,CW,size=10.2,color='muted')
+y=para('The deterministic web simulator calls a real MCP server using SDK 1.30.0, specification 2025-11-25, and Streamable HTTP. Firebase Hosting serves the React app; Cloud Functions v2 runs the Node 22 API. Firestore stores household-scoped records with version-aware transactions. The <b>@kindhandoff/guard</b> library provides state transitions, coverage, and ranking; app code owns dependency readiness and versioned acknowledgments.',M,y,CW,size=10.2)-8
+y=para('Firebase email/password sign-in, secure sessions, and one-time helper invitations establish identity. Live Alexa+ onboarding and household validation remain next steps.',M,y,CW,size=10.2,color='muted')
 footer(1)
 c.showPage()
 
@@ -120,13 +123,12 @@ y=heading('A pilot designed to test the promise',y)
 y=para('<b>10 planned interviews.</b> Coordinators, helpers, and adults receiving support.<br/><b>5 planned households.</b> A four-week pilot following a baseline diary.',M,y,CW,size=10.5)-10
 y=para('<b>Primary measure:</b> time from a cancellation to an accepted feasible replacement. Also measure coordinator follow-up effort, repeated helper participation, and voluntary paid continuation. These are planned measures, with no results yet.',M,y,CW,size=10.3)-20
 y=heading('Cost discipline',y)
-y=para('Modelled Workers/D1 cost: $5/month at 1,000 households, assuming 40 API requests per household per day, 10 ms CPU per request, and 2 MB per household. This unmeasured scenario excludes managed hosting, authentication, support, and optional model costs. The core planner requires no paid model call.',M,y,CW,size=10.1)-17
+y=para('Proposed pilot budget: $10/month for five households. The polling-based serving scenario is $0 with unused allowances, or $0.39 when shared compute allowances are consumed. Billing is enabled; deployment resources, support, and usage changes add cost. Core planning needs no paid model call.',M,y,CW,size=10.1)-17
 y=heading('Demo and next steps',y)
-y=para('Record the public video, run the household pilot, and pursue live Alexa+ onboarding. The additional Open Source contribution is <b>@kindhandoff/guard</b> under MIT.',M,y,CW,size=10.2)-9
-y=para('Repository: '+link('shi1720/Amazon-Developer-Hackathon',REPO),M,y,CW,size=9.6)-5
-preview_label='Application' if PREVIEW_CONFIRMED else 'Preview (deployment pending)'
-y=para(preview_label+': '+link('shivam-amazon-hackathon.sg127977958.chatgpt.site',PREVIEW),M,y,CW,size=9.2)-11
-y=para('Sources: '+link('Alexa+ MCP','https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html')+'; '+link('Caring Village features','https://caringvillage.com/app/')+'; '+link('Family CareRelay','https://www.familycarerelay.com/')+'; '+link('Workers pricing','https://developers.cloudflare.com/workers/platform/pricing/')+'; '+link('D1 pricing','https://developers.cloudflare.com/d1/platform/pricing/')+'. Reviewed 15 September 2026.',M,y,CW,size=8.5,leading=12,color='muted')
+y=para('Record the public video, run the household pilot, and pursue live Alexa+ onboarding. The additional Open Source contribution is '+link('@kindhandoff/guard',GUARD_REPO)+' under MIT.',M,y,CW,size=10.2)-9
+y=para('Public MIT repository: '+link('shi1720/Amazon-Developer-Hackathon',REPO),M,y,CW,size=9.6)-5
+y=para(APP_ACCESS_LABEL+': '+link('kindhandoff.web.app',APP_URL),M,y,CW,size=9.2)-11
+y=para('Sources (15 Sep 2026): '+link('Alexa+ MCP','https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html')+'; '+link('Caring Village','https://caringvillage.com/app/')+'; '+link('Family CareRelay','https://www.familycarerelay.com/')+'; '+link('Cloud Run','https://cloud.google.com/run/pricing')+'; '+link('Firestore','https://cloud.google.com/firestore/pricing')+'; '+link('Hosting','https://firebase.google.com/docs/hosting/usage-quotas-pricing')+'.',M,y,CW,size=8.5,leading=12,color='muted')
 footer(2)
 c.save()
 print({'output':str(OUT),'page_1_bottom':'validated by paragraph bounds','page_2_content_bottom':round(y,1)})

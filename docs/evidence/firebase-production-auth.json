@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "checks": 11,
+  "environment": "Firebase production",
+  "evidence": [
+    "forged identity headers rejected",
+    "invalid Firebase token rejected",
+    "verified token exchange and secure cookie",
+    "signed-in identity before circle creation",
+    "blank personal circle",
+    "one circle per coordinator",
+    "owner MCP identity",
+    "export",
+    "logout revocation",
+    "sign-in restores persisted circle",
+    "confirmed deletion"
+  ]
+}

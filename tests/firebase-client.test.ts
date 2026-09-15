@@ -92,7 +92,7 @@ describe('Firebase browser session bootstrap', () => {
     expect(sdk.sendPasswordResetEmail).not.toHaveBeenCalled();
   });
 
-  it('exchanges a refreshed token without sending a password to the application server', async () => {
+  it('exchanges the fresh sign-in token without sending a password to the application server', async () => {
     const client = await import('../lib/firebase-client');
     await client.authenticateEmail(
       'signin',
@@ -104,7 +104,7 @@ describe('Firebase browser session bootstrap', () => {
       'person@example.com',
       'local-fixture-password',
     );
-    expect(sdk.user.getIdToken).toHaveBeenCalledWith(true);
+    expect(sdk.user.getIdToken).toHaveBeenCalledWith();
     expect(fetchMock).toHaveBeenCalledWith('/api/auth', {
       method: 'POST',
       credentials: 'same-origin',

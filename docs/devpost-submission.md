@@ -52,9 +52,9 @@ Amazon documents Alexa+ support for MCP specification 2025-11-25 and Streamable 
 
 ## What was built during the hackathon
 
-KindHandoff is being developed as a new project for this submission. The work includes the practical-support data model, constraint-based recovery planner, offer and acceptance workflow, prerequisite readiness, versioned briefs, authenticated household experience, helper invitations, persistent storage, MCP server, simulator, tests, and submission materials.
+KindHandoff was built as a new project for this submission. The work includes the practical-support data model, constraint-based recovery planner, offer and acceptance workflow, prerequisite readiness, versioned briefs, authenticated household experience, helper invitations, persistent storage, MCP server, simulator, tests, and submission materials.
 
-The repository history and release notes should provide the exact build dates and final scope. No pre-existing production customer base or deployed commercial service is claimed.
+The repository history and release notes record the build dates and delivered scope. No pre-existing production customer base or deployed commercial service is claimed.
 
 ## Challenges we addressed
 
@@ -100,6 +100,8 @@ Executed checks are linked below. The public video remains a human recording/upl
 - Browser end-to-end evidence: [Executed test evidence](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence)
 - MCP initialize/list/call evidence: [Executed test evidence](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/docs/evidence)
 - Required flow: both Maya commitments affected; Jo bag; Dev ride; helper-specific acceptance; ride blocked until bag completion; versioned brief acknowledgment.
+- Firebase persistence: 17 isolated emulator integration tests passed, including logout/reissuance and concurrent invitation races.
+- Actual hosted account workflow: 11 checks passed with a fresh synthetic Firebase account, including sign-in, persistence, export, logout and cleanup.
 - Isolation and invitation checks: 13 checks passed across four independent sessions, including invitation reuse denial, exact-helper acceptance, tenant isolation, token scope/rotation and revocation.
 
 Do not insert an invented test count, latency, success rate, or customer metric.
@@ -128,14 +130,13 @@ Shivam set the challenge brief, commercial priorities, and quality requirements,
 
 TypeScript; React 19; Vite 8; Model Context Protocol; MCP SDK 1.30.0; Streamable HTTP; Firebase Hosting; Firebase Authentication; Cloud Functions for Firebase; Firestore; deterministic planning.
 
-**Release editor:** Add the actual frontend framework and final package versions from the lockfile. Do not list Bedrock, AgentCore, a live Alexa integration, or an unused model provider.
 
 ## Links
 
 | Submission field | Value |
 | --- | --- |
 | Main public code repository | [shi1720/Amazon-Developer-Hackathon](https://github.com/shi1720/Amazon-Developer-Hackathon) |
-| Live application | [Hosted app](https://kindhandoff.web.app) — public Firebase deployment; hosted verification in progress |
+| Live application | [Hosted app](https://kindhandoff.web.app) — public Firebase application, verified with actual hosted MCP, multi-user and authentication tests |
 | Public demo video, under three minutes | **[INSERT VERIFIED PUBLIC YOUTUBE OR VIMEO URL]** |
 | MCP setup and run instructions | [MCP setup](https://github.com/shi1720/Amazon-Developer-Hackathon/tree/main/integrations/alexa) |
 | License | MIT; verified in the public repository and GitHub About |
@@ -155,7 +156,6 @@ TypeScript; React 19; Vite 8; Model Context Protocol; MCP SDK 1.30.0; Streamable
 
 > The additional @kindhandoff/guard library provides commitment state transitions, coverage accounting, and candidate ranking for reuse in other coordination tools. KindHandoff applies these primitives to practical household support. The application separately implements identity and authorization checks, dependency readiness, and content-version acknowledgments. The library repository contains its implementation, tests, examples, and MIT license.
 
-**Release editor:** Keep only the capabilities present in the published library and verify its relationship to the main application. Publishing the main application alone does not satisfy the additional-project requirement.
 
 ## Product feedback
 

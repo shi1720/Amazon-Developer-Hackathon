@@ -63,6 +63,8 @@ npx firebase-tools@15.30.1 deploy --only firestore,functions,hosting --project k
 
 No LLM API key, paid voice service, service-account JSON key, or AWS credential is required. Firebase's browser configuration is public project identification; it is not a server secret. Database permissions and server authentication enforce access.
 
+Static HTML entry points use `no-cache` so returning browsers revalidate releases; hashed assets use long-lived immutable caching. API and MCP responses use `no-store`.
+
 ## Authentication and request routing
 
 Firebase Hosting forwards only the specially named `__session` cookie to the backend; other cookies must not be used for authentication. Browser calls use the same origin. External MCP clients use dedicated Bearer tokens on `/mcp`. The API constructs request URLs from the configured `PUBLIC_ORIGIN` (default `https://kindhandoff.web.app`) and strips upstream identity headers. The canonical public URL should be used for invitations and integrations.

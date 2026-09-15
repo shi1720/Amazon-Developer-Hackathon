@@ -17,9 +17,11 @@ const { resolvePresentationFont, finalizePresentation } = await import(pathToFil
 const family = resolvePresentationFont({fontFamily: 'Noto Sans'});
 const C = {navy:'#102943', blue:'#2260df', ice:'#f6f8fb', white:'#ffffff', muted:'#52677b', line:'#cbd6e2', pale:'#aebfd3'};
 const REPO = 'https://github.com/shi1720/Amazon-Developer-Hackathon';
-const PREVIEW = 'https://shivam-amazon-hackathon.sg127977958.chatgpt.site';
-// Keep false until the final deployment and signed-out verification succeed.
-const PREVIEW_CONFIRMED = false;
+const release = JSON.parse(await fs.readFile(path.join(sourceDir,'release-status.json'),'utf8'));
+const APP_URL = release.applicationUrl;
+const APP_ACCESS_LABEL = release.publicVerified ? 'Public app — verified' : 'Hosted app — verification pending';
+const GUARD_REPO = 'https://github.com/shi1720/kindhandoff-guard';
+const GUARD_CONTRIBUTION = GUARD_REPO + '/commit/04a15ea016e552e3c031b9ec371af2df6a1de105';
 const presentation = Presentation.create({slideSize:{width:1280,height:720}});
 presentation.theme.colorScheme={name:'KindHandoff',themeColors:{accent1:C.blue,accent2:C.navy,accent3:C.muted,accent4:C.pale,accent5:C.ice,accent6:C.line,bg1:C.white,bg2:C.ice,tx1:C.navy,tx2:C.muted,dk1:C.navy,dk2:C.muted,lt1:C.white,lt2:C.ice,hlink:C.white,folHlink:C.pale}};
 await Promise.all([buildDir,outputDir,finalizedDir].map(p=>fs.mkdir(p,{recursive:true})));
@@ -112,12 +114,12 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
 }
 // 4. One set of domain rules behind all clients.
 {
- const s=addSlide(4,'Shared rules behind the workflow','Local simulator and MCP clients use the same validated workflow.');
+ const s=addSlide(4,'Shared rules behind the workflow','Web simulator and external MCP clients use the same validated workflow.');
  const specs=[
- {x:64,w:255,title:'Client',a:'Web simulator',b:'External MCP client'},
- {x:361,w:255,title:'MCP server',a:'SDK 1.30.0',b:'Streamable HTTP\nSpec 2025-11-25'},
+ {x:64,w:255,title:'Firebase Hosting',a:'Web simulator',b:'React 19.3\nVite 8.3'},
+ {x:361,w:255,title:'Functions v2 / MCP',a:'SDK 1.30.0',b:'Streamable HTTP\nSpec 2025-11-25'},
  {x:658,w:255,title:'Validated tools',a:'Identity + input checks',b:'Planner + handoff guard'},
- {x:955,w:261,title:'D1 storage',a:'Household-scoped data',b:'Version check on write\nCompare and swap'}
+ {x:955,w:261,title:'Firestore',a:'Household-scoped data',b:'Version check on write\nTransaction'}
  ];
  const ns=[];
  for(let i=0;i<specs.length;i++){
@@ -127,9 +129,9 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
   text(s,'architecture-b-'+i,a.b,a.x+17,464,a.w-34,84,21,C.muted);
  }
  for(let i=0;i<3;i++)connect(s,ns[i],ns[i+1],'architecture-link-'+i,C.blue);
- text(s,'auth-note','Owner sign-in and one-time helper invitations establish who may act.',64,595,1152,40,23,C.navy);
+ text(s,'auth-note','Firebase email/password sign-in and one-time helper invitations.',64,595,1152,40,23,C.navy);
  footer(s,'Deterministic language simulation. Live Alexa+ onboarding remains a next step.');
- notes(s,'Architecture supplied by the implementation team. MCP server uses @modelcontextprotocol/sdk 1.30.0, Web Standard Streamable HTTP, and protocol 2025-11-25 on a Cloudflare Worker. Authenticated tools validate inputs and membership, use deterministic planning and @kindhandoff/guard, and write household-scoped data to D1 with optimistic version checks / compare-and-swap. Owner identity uses ChatGPT sign-in and helpers use secure one-time invitations. The guard library provides state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and contentVersion brief acknowledgments. The deterministic browser language simulator uses Client and StreamableHTTPClientTransport to make real HTTP MCP initialize and tools/call requests. External MCP clients use the same server. No test pass count, load-test result, native Alexa connection, or cloud LLM use is asserted. Amazon documentation: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html and https://www.developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html.');
+ notes(s,'Architecture supplied by the implementation team. React 19.3 and Vite 8.3 frontend on Firebase Hosting. MCP server uses @modelcontextprotocol/sdk 1.30.0, Streamable HTTP, and protocol 2025-11-25 in Cloud Functions v2 on Node 22. Authenticated tools validate inputs and membership, use deterministic planning and @kindhandoff/guard, and write household-scoped Firestore Standard records with version-aware transactions. Firebase Authentication email/password establishes account identity and the app uses a secure __session cookie plus one-time helper invitations. Firestore and Functions run in us-central1. Runtime settings: 256 MiB, 1 CPU, concurrency 40, minInstances 0, maxInstances 2, timeout 30 seconds. Seven-day artifact cleanup is configured. The guard library provides state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and contentVersion brief acknowledgments. The deterministic browser language simulator uses Client and StreamableHTTPClientTransport to make real HTTP MCP initialize and tools/call requests. External MCP clients use the same server. No load-test result, native Alexa connection, cloud LLM, or AWS use is asserted. '+release.verificationSummary+' Amazon documentation: https://developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-overview.html and https://www.developer.amazon.com/docs/alexaplus/add-ons/mcp-toolkit-quickstart.html.');
 }
 // 5. Honest category comparison. Native table preserves editability.
 {
@@ -164,7 +166,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  text(s,'business-rationale','Charging per helper would\ndiscourage participation.',642,394,574,100,29,C.muted);
  text(s,'cost-discipline','Deterministic core rules keep\npaid model calls optional.',642,518,574,89,28,C.navy);
  footer(s,'Pre-pilot. No interviews, paying customers, or revenue claimed.');
- notes(s,'The $12 per household per month price is an unvalidated hypothesis. The market-and-business.md brief proposes testing a $9–15 range after real use. All helpers are included to avoid a seat-pricing incentive against participation. No traction or financial results exist in the materials provided. The cost brief is arithmetic from declared Workers/D1 assumptions, not an observed cost of operating KindHandoff. Runtime costs exclude managed hosting, identity-provider charges, support, acquisition, and optional model calls. Related category price reference: https://caringvillage.com/pricing/ .');
+ notes(s,'The $12 per household per month price is an unvalidated hypothesis. The market-and-business.md brief proposes testing a $9–15 range after real use. All helpers are included to avoid a seat-pricing incentive against participation. No traction or financial results exist in the materials provided. The Firebase cost brief is arithmetic from declared visible-page polling, query, retention, and allocated-time assumptions. Four 15-minute visible sessions yield 304 refreshes per household/day, with one GET /api/session each. Five document reads per refresh and 20 per MCP action remain conservative budgets. With the other model assumptions, selected serving charges at five households fit unused allowances, or are about $0.39/month if the shared Cloud Run compute allowance is already consumed. The proposed $10 pilot operating allowance also anticipates deployment resources and uncertainty; it is neither an invoice forecast nor a cap. Billing is enabled. Builds, images, support, acquisition, and optional model calls are separate. Source rates: https://cloud.google.com/run/pricing , https://cloud.google.com/firestore/pricing , https://firebase.google.com/docs/hosting/usage-quotas-pricing . Related category price reference: https://caringvillage.com/pricing/ .');
 }
 // 7. Planned study and decision metric.
 {
@@ -179,7 +181,7 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  footer(s,'Also measure follow-up effort, repeated helper use, and voluntary paid continuation.');
  notes(s,'This is a research plan. Ten qualitative interviews include six primary coordinators, two helpers, and two adults receiving support. Five consenting households with at least three participants each would enter a four-week pilot after a baseline diary. Primary metric is time from a cancellation to accepted feasible replacement of all affected commitments. Secondary evidence includes follow-up effort, repeated helper participation, and voluntary paid continuation. Planned targets and detailed limitations are in customer-discovery.md. No interviews or pilots are reported as completed.');
 }
-// 8. Demo access and next work, with preview status explicit.
+// 8. Demo access and next work, with production verification status explicit.
 {
  const s=addSlide(8,'The bag-to-ride demo','One cancellation, a feasible split, and responsibility each helper accepts.',true);
  text(s,'next-label','Next steps',64,316,610,52,33,C.white,true);
@@ -187,12 +189,12 @@ function linkedText(slide,name,labelText,url,x,y,w,h,size,color){
  text(s,'next-two','Run the household pilot',64,458,780,42,29,C.pale);
  text(s,'next-three','Complete live Alexa+ onboarding',64,520,780,42,29,C.pale);
  text(s,'contribution-label','Open Source',935,324,281,37,24,C.pale,true);
- text(s,'contribution-name','@kindhandoff/guard',935,379,281,88,25,C.white,true);
+ const contribution=text(s,'contribution-name','@kindhandoff/guard',935,379,281,88,25,C.white,true);
+ contribution.text.get('@kindhandoff/guard').link={uri:GUARD_REPO,isExternal:true};
  text(s,'contribution-role','State transitions\nCoverage + ranking\nMIT license',935,477,281,110,23,C.pale);
- const state=PREVIEW_CONFIRMED?'Application':'Preview, deployment pending';
  linkedText(s,'repo-link','github.com/shi1720/Amazon-Developer-Hackathon',REPO,64,606,1152,27,18,C.white);
- text(s,'preview-url',state+': shivam-amazon-hackathon.sg127977958.chatgpt.site',64,645,1152,28,17,C.pale);
- notes(s,'Creator: Shivam Gupta. Main repository: '+REPO+'. Preview target: '+PREVIEW+'. At authoring time deployment is pending, so this deck labels the URL as preview only. No public video URL has been claimed. The additional Open Source contribution is @kindhandoff/guard with an MIT license; verify the published separate repository and contribution link before final submission. Next steps include recording a public English video under three minutes, household research, and live Alexa+ onboarding where access permits.');
+ linkedText(s,'hosted-url',APP_ACCESS_LABEL+': kindhandoff.web.app',APP_URL,64,645,1152,28,17,C.pale);
+ notes(s,'Creator: Shivam Gupta. Public MIT main repository: '+REPO+'. Firebase application: '+APP_URL+'. '+release.verificationSummary+' No public video URL has been claimed. The additional Open Source contribution is @kindhandoff/guard, public and MIT licensed: '+GUARD_REPO+'. Contribution: '+GUARD_CONTRIBUTION+'. The library covers state transitions, coverage accounting, and candidate ranking. App code owns dependency readiness, exact identity authorization, and content-version acknowledgments. Next steps include recording a public English video under three minutes, household research, and live Alexa+ onboarding where access permits.');
 }
 
 const candidatePath=path.join(buildDir,'KindHandoff-Pitch-candidate.pptx');

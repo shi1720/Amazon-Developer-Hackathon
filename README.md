@@ -15,9 +15,11 @@ KindHandoff helps families repair everyday support plans when someone becomes un
 
 **Alexa+ primary track:** a working, explicitly labelled browser simulation calling a real **MCP 2025-11-25 server over Streamable HTTP**. No API key or paid model is required. Native Alexa+ deployment is a separate, documented integration step; this submission does not claim it.
 
-![KindHandoff on mobile](docs/screenshots/mobile.png)
+![KindHandoff recovery plan](docs/screenshots/recovery.png)
 
-[KindHandoff on Firebase](https://kindhandoff.web.app). Public deployment verification is in progress. See the release status for the exact verified state.
+[Mobile screenshot](docs/screenshots/mobile.png) · [Desktop screenshot](docs/screenshots/desktop.png)
+
+**[Open KindHandoff](https://kindhandoff.web.app)** · Public Firebase app. Try a private fictional demo immediately, or sign in to create your own circle.
 
 ## The afternoon that explains the product
 
@@ -109,4 +111,4 @@ All product code and submission materials were created during September 2026 for
 
 ## Current scope
 
-This is a working, tested MVP for practical support, with production deployment work documented in [release status](docs/release-status.md). It has not undergone a clinical, privacy-compliance, independent security, or production-load certification. It does not monitor emergencies, make medication decisions, infer real-world completion, or automatically send notifications. The pilot must validate household adoption and operational costs before a paid launch.
+This is a working, tested MVP for practical support, with verified Firebase deployment documented in [release status](docs/release-status.md). It has not undergone a clinical, privacy-compliance, independent security, or production-load certification. It does not monitor emergencies, make medication decisions, infer real-world completion, or automatically send notifications. The pilot must validate household adoption and operational costs before a paid launch.

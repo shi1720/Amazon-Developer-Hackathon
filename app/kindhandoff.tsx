@@ -309,7 +309,9 @@ export default function KindHandoff() {
       setReply(
         result.plan.assignments.length
           ? 'Here’s a feasible way to carry the day forward. These are suggestions until you create the offers and each helper accepts.'
-          : 'No feasible replacement yet. Update the circle’s availability or arrange help directly.',
+          : result.plan.unresolved.length
+            ? 'No feasible replacement yet. Update the circle’s availability or arrange help directly.'
+            : 'No unassigned commitments need a new plan. Check the day for any offers still awaiting acceptance.',
       );
     }
     return result?.plan ?? null;
@@ -694,7 +696,10 @@ export default function KindHandoff() {
               ))}
             </div>
             <div>
-              <strong>One circle. {c.members.length} helping hands.</strong>
+              <strong>
+                One circle. {c.members.length} helping{' '}
+                {c.members.length === 1 ? 'hand' : 'hands'}.
+              </strong>
               <p>Every handoff has a person behind it.</p>
             </div>
           </div>
@@ -1312,8 +1317,8 @@ export default function KindHandoff() {
                       <h3>Connect an MCP client</h3>
                       <p>
                         Generate a coordinator token for an MCP client. It
-                        expires in 24 hours. Keep it private. The web voice desk
-                        is an Alexa+ simulation; native Alexa onboarding is
+                        expires within 24 hours. Keep it private. The web voice
+                        desk is an Alexa+ simulation; native Alexa onboarding is
                         separate.
                       </p>
                       <button
@@ -2016,8 +2021,9 @@ export default function KindHandoff() {
             <div className="share-result">
               <p>
                 Anyone with this unused link can join as{' '}
-                <strong>{invite.name}</strong>. It expires in 7 days and can
-                only be used once.
+                <strong>{invite.name}</strong>. It expires on{' '}
+                {datedStamp(invite.expiresAt, c.timeZone)} ({c.timeZone}) and
+                can only be used once.
               </p>
               <textarea
                 readOnly
@@ -2052,7 +2058,7 @@ export default function KindHandoff() {
                 <textarea readOnly value={token.token} />
               </label>
               <p>
-                Expires in 24 hours. Use the Authorization: Bearer header. This
+                {token.expiresIn}. Use the Authorization: Bearer header. This
                 grants coordinator access; create only for a client you trust.
               </p>
               <button className="button" onClick={() => copy(token.token)}>

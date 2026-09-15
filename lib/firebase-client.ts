@@ -172,7 +172,9 @@ async function initializeClientAuth(): Promise<Auth> {
     ? getAuth(app)
     : initializeAuth(app, {
         persistence: inMemoryPersistence,
-        popupRedirectResolver: browserPopupRedirectResolver,
+        ...(googleSignInEnabled
+          ? { popupRedirectResolver: browserPopupRedirectResolver }
+          : {}),
       });
   const emulatorUrl = buildEnvironment?.VITE_FIREBASE_AUTH_EMULATOR;
   if (emulatorUrl) {
@@ -200,7 +202,9 @@ async function exchangeSession(
   accountCreated: boolean,
 ): Promise<void> {
   try {
-    const idToken = await user.getIdToken(true);
+    // Sign-in just obtained a fresh token. Avoid an unnecessary refresh round trip;
+    // the server independently verifies revocation and the recent auth_time.
+    const idToken = await user.getIdToken();
     const response = await fetch('/api/auth', {
       method: 'POST',
       credentials: 'same-origin',

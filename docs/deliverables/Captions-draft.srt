@@ -1,159 +1,135 @@
 1
-00:00:00,000 --> 00:00:03,800
-I'm Shivam Gupta, and this is KindHandoff. When several
+00:00:00,000 --> 00:00:07,000
+I'm Shivam Gupta. Maya just cancelled this
+afternoon. For this family, one change
 
 2
-00:00:03,800 --> 00:00:07,600
-people help someone they love, a change of plans
+00:00:07,000 --> 00:00:12,923
+breaks two commitments. KindHandoff turns
+that disruption into a plan people
 
 3
-00:00:07,600 --> 00:00:11,400
-creates a new job: finding out who can take
+00:00:12,923 --> 00:00:14,000
+actually accept.
 
 4
-00:00:11,400 --> 00:00:15,200
-over, and whether they actually agreed. KindHandoff makes that
+00:00:14,000 --> 00:00:22,167
+This fictional household has two linked
+tasks. Maya was going to pack a library
 
 5
-00:00:15,200 --> 00:00:19,000
-work visible.
+00:00:22,167 --> 00:00:30,917
+bag at two thirty, then give a ride at
+three. Her cancellation affects both. The
 
 6
-00:00:19,000 --> 00:00:23,800
-Meet our fictional household. Maya was going to pack
+00:00:30,917 --> 00:00:35,000
+ride depends on the bag being packed.
 
 7
-00:00:23,800 --> 00:00:28,600
-a library bag at two thirty, then provide a
+00:00:35,000 --> 00:00:43,364
+Here is why the suggested plan matters. Jo
+can enter the house between two and three,
 
 8
-00:00:28,600 --> 00:00:33,400
-ride at three. I tell the simulator: “Maya is
+00:00:43,364 --> 00:00:50,682
+but cannot drive. Dev can drive, but is
+only available from two forty-five. The
 
 9
-00:00:33,400 --> 00:00:38,200
-unavailable this afternoon.” Both commitments now need replacements. The
+00:00:50,682 --> 00:00:58,000
+planner checks those constraints and
+proposes Jo for the bag, Dev for the ride.
 
 10
-00:00:38,200 --> 00:00:43,000
-ride also depends on the bag being packed.
+00:00:58,000 --> 00:01:05,579
+I review the proposal before creating
+offers. They remain pending until each
 
 11
-00:00:43,000 --> 00:00:47,600
-Here is why the suggested plan matters. Jo can
+00:01:05,579 --> 00:01:15,053
+named helper accepts. Jo accepts her bag
+task in her own helper view. Dev accepts
 
 12
-00:00:47,600 --> 00:00:52,200
-enter the house between two and three, but cannot
+00:01:15,053 --> 00:01:21,368
+his ride separately. Every acceptance
+belongs to the person taking
 
 13
-00:00:52,200 --> 00:00:56,800
-drive. Dev can drive, but is only available from
+00:01:21,368 --> 00:01:22,000
+responsibility.
 
 14
-00:00:56,800 --> 00:01:01,400
-two forty-five. The planner checks those constraints and proposes
+00:01:22,000 --> 00:01:30,186
+Watch the ride. Even after Dev accepts, it
+is still waiting for the bag. Jo records
 
 15
-00:01:01,400 --> 00:01:06,000
-Jo for the bag, Dev for the ride.
+00:01:30,186 --> 00:01:37,349
+the bag as packed, and the ride becomes
+ready. That small dependency is the
 
 16
-00:01:06,000 --> 00:01:10,600
-I review the proposal before creating offers. They remain
+00:01:37,349 --> 00:01:44,000
+difference between having two names on a
+calendar and having a workable afternoon.
 
 17
-00:01:10,600 --> 00:01:15,200
-pending until each named helper accepts. Jo accepts her
+00:01:44,000 --> 00:01:50,769
+The updated handoff brief shows what
+changed and what remains. Dev acknowledges
 
 18
-00:01:15,200 --> 00:01:19,800
-bag task in her own helper view. Dev accepts
+00:01:50,769 --> 00:01:58,667
+this specific version. If the plan changes
+again, the record still tells us which
 
 19
-00:01:19,800 --> 00:01:24,400
-his ride separately. Every acceptance belongs to the person
+00:01:58,667 --> 00:02:06,000
+version he read. People can see what was
+agreed, by whom, and when.
 
 20
-00:01:24,400 --> 00:01:29,000
-taking responsibility.
+00:02:06,000 --> 00:02:13,250
+Behind this is a real MCP server using the
+November twenty-fifth, twenty twenty-five
 
 21
-00:01:29,000 --> 00:01:33,400
-Watch the ride. Even after Dev accepts, it is
+00:02:13,250 --> 00:02:18,827
+specification and Streamable HTTP. The web
+language simulator is explicitly
 
 22
-00:01:33,400 --> 00:01:37,800
-still waiting for the bag. Jo records the bag
+00:02:18,827 --> 00:02:22,173
+deterministic. Firebase provides
+email-and-password sign-in, persistent
 
 23
-00:01:37,800 --> 00:01:42,200
-as packed, and the ride becomes ready. That small
+00:02:22,173 --> 00:02:28,308
+household records, and the public web app.
+Helper invitations keep responsibilities
 
 24
-00:01:42,200 --> 00:01:46,600
-dependency is the difference between having two names on
+00:02:28,308 --> 00:02:35,000
+separate. This is a simulated experience,
+with no live Alexa connection claimed.
 
 25
-00:01:46,600 --> 00:01:51,000
-a calendar and having a workable afternoon.
+00:02:35,000 --> 00:02:40,946
+KindHandoff starts with practical support:
+bags, rides, meals, and visits. The
 
 26
-00:01:51,000 --> 00:01:55,200
-The updated handoff brief shows what changed and what
+00:02:40,946 --> 00:02:46,351
+business hypothesis is a household
+subscription, with every helper included.
 
 27
-00:01:55,200 --> 00:01:59,400
-remains. Dev acknowledges this specific version. If the plan
+00:02:46,351 --> 00:02:53,378
+The promise is simple: make the next step
+clear, and make responsibility something
 
 28
-00:01:59,400 --> 00:02:03,600
-changes again, the record still tells us which version
-
-29
-00:02:03,600 --> 00:02:07,800
-he read. People can see what was agreed, by
-
-30
-00:02:07,800 --> 00:02:12,000
-whom, and when.
-
-31
-00:02:12,000 --> 00:02:17,000
-Behind this is a real MCP server using the
-
-32
-00:02:17,000 --> 00:02:22,000
-November twenty-fifth, twenty twenty-five specification and Streamable HTTP. The
-
-33
-00:02:22,000 --> 00:02:27,000
-web language simulator is explicitly deterministic. This demonstration uses
-
-34
-00:02:27,000 --> 00:02:32,000
-persistent household data, real sign-in, and separate helper invitations;
-
-35
-00:02:32,000 --> 00:02:37,000
-it does not claim a live Alexa connection.
-
-36
-00:02:37,000 --> 00:02:40,600
-KindHandoff starts with practical support: bags, rides, meals, and
-
-37
-00:02:40,600 --> 00:02:44,200
-visits. We plan to test a household subscription, with
-
-38
-00:02:44,200 --> 00:02:47,800
-every helper included. The promise is simple: make the
-
-39
-00:02:47,800 --> 00:02:51,400
-next step clear, and make responsibility something people actually
-
-40
-00:02:51,400 --> 00:02:55,000
-accept.
+00:02:53,378 --> 00:02:55,000
+people actually accept.

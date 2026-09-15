@@ -1,0 +1,8 @@
+{
+  "applicationUrl": "https://kindhandoff.web.app",
+  "publicVerified": true,
+  "verifiedAt": "2026-09-15T16:45:43Z",
+  "testedSource": "e3e8c5f",
+  "ciUrl": "https://github.com/shi1720/Amazon-Developer-Hackathon/actions/runs/34996577422",
+  "verificationSummary": "The implementation lead confirmed the public Firebase release at kindhandoff.web.app. Signed-out browser entry and the reviewed cancellation-to-Jo/Dev-plan-to-offers flow passed at desktop width 1365 and mobile width 390 without horizontal overflow. Against production, 15 HTTP MCP calls passed using protocol 2025-11-25, 13 multi-user checks passed across four sessions, and 11 real Firebase Authentication checks passed, including new-account verification, secure cookie, private-circle persistence, sign-in, export, sign-out, and deletion. Root unit tests (29) and Firestore integration checks (17) passed; main CI passed for source e3e8c5f. The separate browser authentication and invitation walkthrough was still in progress when this confirmation was recorded. No customer, load-test, live Alexa, cloud LLM, or AWS outcome is claimed."
+}

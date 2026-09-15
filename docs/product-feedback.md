@@ -40,7 +40,7 @@ Sources: [overview](https://developer.amazon.com/docs/alexaplus/add-ons/mcp-tool
 
 **What worked:** the Auth emulator supports repeatable account creation, token exchange, sign-out, and restored-circle tests without real email delivery. The browser uses in-memory Firebase persistence and clears its client identity after the exchange.
 
-**Needs work:** documentation should prominently connect Firebase Hosting's `__session` cookie forwarding behavior to custom backend sessions. A missing emulator `appId` initially produced a generic client initialization failure; adding a complete public SDK configuration fixed it.
+**Needs work:** two initial hosted browser sign-in attempts encountered a network error and then a session-opening error; a traced retry succeeded. The cause was not established, so no vendor-wide defect is claimed. We removed an unnecessary forced token-refresh round trip after a fresh sign-in, while retaining server verification of recent authentication. Documentation should prominently connect Firebase Hosting's `__session` cookie forwarding behavior to custom backend sessions. A missing emulator `appId` initially produced a generic client initialization failure; adding a complete public SDK configuration fixed it.
 
 **Onboarding:** initialized email/password through the project configuration, added the canonical hosting domain, and exercised both emulator and deployed authentication. Google sign-in remains disabled because it was not configured.
 

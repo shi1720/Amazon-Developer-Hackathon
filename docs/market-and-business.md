@@ -5,7 +5,7 @@
 **Business and market brief · 15 September 2026**  
 **Status:** Pre-pilot product hypothesis. No customer interviews, revenue, retention, or measured savings are claimed in this document.
 
-**Release target:** Firebase project `kindhandoff`, with planned public URL [kindhandoff.web.app](https://kindhandoff.web.app). The Firebase migration is in progress; public deployment and the hosted sign-in flow are not yet claimed as verified here.
+**Public release:** Firebase project `kindhandoff`, at [kindhandoff.web.app](https://kindhandoff.web.app). The implementation team verified signed-out desktop/mobile entry, cancellation-to-offers, and production MCP, multi-user, and Firebase Authentication checks. This establishes the recorded technical workflows, not customer adoption or production-scale capacity.
 
 ### The problem we are choosing
 
@@ -74,7 +74,7 @@ This is arithmetic using official published rates reviewed on 15 September 2026 
 
 #### Final stack and cost controls
 
-The target runtime is **Firebase Hosting + Cloud Functions v2 + Firestore Standard + Firebase Authentication email/password**. The function configuration is `us-central1`, 256 MiB memory, 1 CPU, concurrency 40, zero minimum instances, two maximum instances, and a 30-second timeout. Firestore is the `(default)` Standard database in `us-central1`, with the free tier enabled. The runtime service account uses `datastore.user` and `firebaseauth.viewer`; identity and household membership remain separate application checks.
+The implemented runtime is **Firebase Hosting + Cloud Functions v2 (Node 22) + Firestore Standard + Firebase Authentication email/password**, with a React 19.3/Vite 8.3 frontend and secure `__session` cookie. The function configuration is `us-central1`, 256 MiB memory, 1 CPU, concurrency 40, zero minimum instances, two maximum instances, and a 30-second timeout. Firestore is the `(default)` Standard database in `us-central1`, with the free tier enabled. The runtime service account uses `datastore.user` and `firebaseauth.viewer`; identity and household membership remain separate application checks. Seven-day artifact cleanup is configured.
 
 The existing Google Cloud billing account is linked because the server runtime requires the Blaze plan. Free allowances reduce eligible charges; linking billing does not make all future usage free. Zero minimum instances avoids paying to keep a baseline instance warm. Maximum instances is a scaling setting, not a total spending cap. The runtime has not been established to support the larger scenario below. [Firebase serverless hosting](https://firebase.google.com/docs/hosting/serverless-overview), [function resource and scaling controls](https://firebase.google.com/docs/functions/manage-functions)
 
@@ -92,9 +92,9 @@ Use the **v2** pricing reference: Google's functions pricing overview directs cu
 #### Load, queries, and retention assumptions
 
 - **Household activity:** Four active people per household; each opens one 15-minute visible session per day. Assume an initial refresh plus 75 scheduled refreshes at 12-second intervals: **304 household refreshes/day**. Polling stops while the page is hidden. This is an intentionally active pilot scenario, not observed engagement.
-- **Refresh cost:** Two HTTP requests per refresh, covering session and circle reads. Budget **five Firestore document reads per refresh**, pending measured telemetry. This gives 608 HTTP requests and 1,520 reads per household/day.
+- **Refresh cost:** The current UI issues **one `GET /api/session` per refresh**, including the session and circle data. Budget **five Firestore document reads per refresh**, pending measured telemetry. This gives 304 HTTP requests and 1,520 budgeted reads per household/day. The HTTP count follows the inspected implementation; the document-read count remains an estimate.
 - **MCP actions:** Six actions per household/day. Budget three HTTP requests per action for initialization, discovery, and the tool call; **20 total document reads per action** cover its authentication, state, and transaction work. Actual client session reuse and exact read counts are not yet measured.
-- **Other requests:** Twelve additional API requests per household/day at five reads each for miscellaneous views, invitation handling, or retries. Total budget: **638 HTTP requests and 1,700 document reads per household/day**. This is more conservative than counting one database read per user action; it remains an assumption, not a guarantee.
+- **Other requests:** Twelve additional API requests per household/day at five reads each for focus/visibility refreshes, manual refreshes, invitation handling, or retries. Total budget: **334 HTTP requests and 1,700 document reads per household/day**. The refresh request count is observed in code; the activity level, auxiliary calls, and document-read budget are scenario assumptions.
 - **Writes:** Six committed changes per household/day, with three document writes per change: **18 writes/day**. Adjust for the actual transaction shape and retries after instrumentation.
 - **Function time:** **0.3 seconds of allocated billable time per HTTP request**, at 1 CPU and 0.25 GiB. This placeholder includes database waiting and a startup/retry allowance. It is not a CPU-profile result. The model assumes no concurrency savings; overlapping requests can share an instance, but slow calls or cold starts can raise time. Long-lived idle streams are excluded.
 - **Stored data:** **2 MiB aggregate per household**, including current records, indexes, and a proposed 90-day event history. No audio/video upload. Assuming one event per committed change, bounded retention eventually needs six ordinary event deletions per household/day. Retention is a proposed operational policy; this document does not claim that an automatic purge already exists. Export or delete pilot data when a household leaves. If automatic Firestore TTL is selected, its deletion charges are separate and have no free allowance.
@@ -109,28 +109,28 @@ Firestore bills documents and some index-entry reads; broad queries, security-ru
 | 30-day scenario | 5-household pilot | 20 households | 1,000-household sensitivity |
 | --- | ---: | ---: | ---: |
 | Monthly active people assumed | 20 | 80 | 4,000 |
-| HTTP requests/month | 95,700 | 382,800 | 19,140,000 |
-| Allocated vCPU-seconds/month | 28,710 | 114,840 | 5,742,000 |
-| GiB-seconds/month | 7,177.5 | 28,710 | 1,435,500 |
+| HTTP requests/month | 50,100 | 200,400 | 10,020,000 |
+| Allocated vCPU-seconds/month | 15,030 | 60,120 | 3,006,000 |
+| GiB-seconds/month | 3,757.5 | 15,030 | 751,500 |
 | Firestore reads/day | 8,500 | 34,000 | 1,700,000 |
 | Firestore writes/day | 90 | 360 | 18,000 |
 | Ordinary retention deletes/day | 30 | 120 | 6,000 |
 | Aggregate Firestore storage | 0.0098 GiB | 0.0391 GiB | 1.9531 GiB |
 | Hosting transfer/month | 2.4 GB | 9.6 GB | 480 GB |
-| Cloud Run usage, full allowance available | $0.00 | $0.00 | $143.03 |
+| Cloud Run usage, full allowance available | $0.00 | $0.00 | $72.01 |
 | Firestore operations + storage | $0.00 | $0.00 | $14.99 |
 | Hosting transfer + retained releases | $0.00 | $0.00 | $70.50 |
 | Email/password authentication | $0.00 | $0.00 | $0.00 |
-| **Selected serving subtotal** | **$0.00** | **$0.00** | **$228.52** |
-| **Subtotal if Cloud Run allowances were used elsewhere** | **$0.75** | **$2.98** | **$234.54** |
+| **Selected serving subtotal** | **$0.00** | **$0.00** | **$157.50** |
+| **Subtotal if Cloud Run allowances were used elsewhere** | **$0.39** | **$1.56** | **$163.52** |
 
-Example: 20 × 638 × 30 = 382,800 HTTP requests. At the assumed 0.3 seconds, that is 114,840 vCPU-seconds. For 1,000 households, Firestore read overage is (1,700,000 − 50,000) × 30 × $0.03 / 100,000 = $14.85; storage adds approximately $0.14. Reproduce the arithmetic with `artifact-source/firebase-cost-scenario.py`.
+Example: 20 × 334 × 30 = 200,400 HTTP requests. At the assumed 0.3 seconds, that is 60,120 vCPU-seconds. For 1,000 households, Firestore read overage is (1,700,000 − 50,000) × 30 × $0.03 / 100,000 = $14.85; storage adds approximately $0.14. Reproduce the arithmetic with `artifact-source/firebase-cost-scenario.py`.
 
 **This is a serving subtotal, not a $0 hosting promise.** At 20 households the transfer assumption is already close to the conservatively modelled 10 GB allowance. Doubling visible session time, adding heavy attachments, reconnecting frequently, or leaving polling active in background tabs can change the result materially. The 1,000-household column is a cost sensitivity; it is not evidence that the two-instance configuration, database layout, or helper experience can support that traffic.
 
 #### Deployment costs, exclusions, and a pilot budget
 
-Deployment has its own resources. As an illustration, keeping 1 GiB of function container images for 720 hours costs roughly **$0.05/month** when the shared 0.5 GiB Artifact Registry allowance is available, or roughly $0.10 when it is already used. Twenty two-minute builds would be 40 build-minutes. On `e2-standard-2` in the default pool they could fit the current 2,500-minute billing-account allowance; with no allowance, those minutes cost $0.24. The real build machine and retained image size must be checked; these examples are not added to the serving table as if measured. [Artifact Registry pricing](https://cloud.google.com/artifact-registry/pricing), [Cloud Build pricing](https://cloud.google.com/build/pricing)
+Deployment has its own resources. Seven-day artifact cleanup is configured; billable storage still depends on the average size of retained images. As an illustration, an average 1 GiB retained over 720 hours costs roughly **$0.05/month** when the shared 0.5 GiB Artifact Registry allowance is available, or roughly $0.10 when it is already used. Twenty two-minute builds would be 40 build-minutes. On `e2-standard-2` in the default pool they could fit the current 2,500-minute billing-account allowance; with no allowance, those minutes cost $0.24. The real build machine and retained image size must be checked; these examples are not added to the serving table as if measured. [Artifact Registry pricing](https://cloud.google.com/artifact-registry/pricing), [Cloud Build pricing](https://cloud.google.com/build/pricing)
 
 The subtotal excludes build-source buckets, direct function internet egress, logging beyond included usage, extended log retention, backup/PITR, automatic TTL deletion, security scanning, transactional email providers, payments, tax, customer acquisition, and human support. It is not a gross-margin calculation. A ten-minute support conversation may cost more than months of one household's serving cost.
 
